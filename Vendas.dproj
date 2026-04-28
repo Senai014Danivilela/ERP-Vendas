@@ -157,8 +157,8 @@
         <DCCReference Include="relatorio\uRelCadProdutoComGrupoCategoria.pas">
             <Form>frmRelCadPRodutoComGrupoCategoria</Form>
         </DCCReference>
-        <DCCReference Include="relatorio\uRelVendaPorData.pas">
-            <Form>frmRelVendaPorData</Form>
+        <DCCReference Include="relatorio\uRelProVenda2.pas">
+            <Form>frmRelProVenda2</Form>
         </DCCReference>
         <DCCReference Include="heranca\uFuncaoCriptografia.pas"/>
         <DCCReference Include="cadastro\UCadUsuario.pas">
@@ -203,6 +203,10 @@
         <DCCReference Include="classes\cCredito.pas"/>
         <DCCReference Include="processo\uProCredito.pas">
             <Form>frmProCredito</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="relatorio\uRelVendaPorData.pas">
+            <Form>frmRelVendaPorData</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

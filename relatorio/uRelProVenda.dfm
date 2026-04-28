@@ -11,12 +11,13 @@ object frmrRelProVenda: TfrmrRelProVenda
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object RLDBText3: TRLDBText
-    Left = 6
-    Top = 5
+    Left = 150
+    Top = 149
     Width = 57
     Height = 16
     DataField = 'produtoId'

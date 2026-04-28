@@ -24,7 +24,7 @@ uses
   uSelecionarData in 'relatorio\uSelecionarData.pas' {frmSelecionarData},
   uRelCategorias in 'relatorio\uRelCategorias.pas' {frmRelCategoria},
   uRelCadProdutoComGrupoCategoria in 'relatorio\uRelCadProdutoComGrupoCategoria.pas' {frmRelCadPRodutoComGrupoCategoria},
-  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData},
+  uRelProVenda2 in 'relatorio\uRelProVenda2.pas' {frmRelProVenda2},
   uFuncaoCriptografia in 'heranca\uFuncaoCriptografia.pas',
   UCadUsuario in 'cadastro\UCadUsuario.pas' {frmCadUsuario},
   cCadUsuario in 'classes\cCadUsuario.pas',
@@ -43,7 +43,8 @@ uses
   uConCategoria in 'Consulta\uConCategoria.pas' {frmConCategoria},
   cArquivoIni in 'classes\cArquivoIni.pas',
   cCredito in 'classes\cCredito.pas',
-  uProCredito in 'processo\uProCredito.pas' {frmProCredito};
+  uProCredito in 'processo\uProCredito.pas' {frmProCredito},
+  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData};
 
 {$R *.res}
 
@@ -51,6 +52,5 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TMenuPrincipal, MenuPrincipal);
-  Application.CreateForm(TfrmProCredito, frmProCredito);
   Application.Run;
 end.

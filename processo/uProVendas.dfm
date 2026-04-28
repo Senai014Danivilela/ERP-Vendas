@@ -34,11 +34,13 @@ inherited frmProVenda: TfrmProVenda
           item
             Expanded = False
             FieldName = 'dataVenda'
+            Width = 97
             Visible = True
           end
           item
             Expanded = False
             FieldName = 'totalVenda'
+            Width = 79
             Visible = True
           end>
       end
@@ -386,28 +388,33 @@ inherited frmProVenda: TfrmProVenda
     Left = 308
     Top = 16
     object FDQListagemvendaId: TFDAutoIncField
+      DisplayLabel = 'Codigo da Venda'
       FieldName = 'vendaId'
-      Origin = 'VENDAS'
+      Origin = 'vendaId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object FDQListagemclienteID: TIntegerField
+      DisplayLabel = 'Codigo do Cliente'
       FieldName = 'clienteID'
-      Origin = 'VENDAS'
+      Origin = 'clienteID'
       Required = True
     end
     object FDQListagemnome: TStringField
+      DisplayLabel = 'Nome'
       FieldName = 'nome'
-      Origin = 'CLIENTES'
+      Origin = 'nome'
       Size = 60
     end
     object FDQListagemdataVenda: TSQLTimeStampField
+      DisplayLabel = 'Data Venda'
       FieldName = 'dataVenda'
-      Origin = 'VENDAS'
+      Origin = 'dataVenda'
     end
     object FDQListagemtotalVenda: TFMTBCDField
+      DisplayLabel = 'Total Venda'
       FieldName = 'totalVenda'
-      Origin = 'VENDAS'
+      Origin = 'totalVenda'
       Precision = 18
       Size = 5
     end

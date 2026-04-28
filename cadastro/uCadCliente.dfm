@@ -3,7 +3,6 @@ inherited frmCadCliente: TfrmCadCliente
   ClientHeight = 446
   ClientWidth = 763
   OnDestroy = FormDestroy
-  ExplicitTop = -44
   ExplicitWidth = 769
   ExplicitHeight = 475
   PixelsPerInch = 96
@@ -32,12 +31,9 @@ inherited frmCadCliente: TfrmCadCliente
   inherited pgcPrincipal: TPageControl
     Width = 763
     Height = 405
-    ActivePage = tabManutencao
     ExplicitWidth = 763
     ExplicitHeight = 405
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 755
       ExplicitHeight = 377
       inherited pnlListagemTopo: TPanel
@@ -333,8 +329,6 @@ inherited frmCadCliente: TfrmCadCliente
     end
     inherited tabManutencao: TTabSheet
       ParentDoubleBuffered = False
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 755
       ExplicitHeight = 377
       object CEP: TLabel

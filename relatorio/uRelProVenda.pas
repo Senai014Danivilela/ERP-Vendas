@@ -59,6 +59,7 @@ type
     rldbtxtquantidade: TRLDBText;
     rldbtxtvalorUnitario: TRLDBText;
     procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -76,6 +77,11 @@ implementation
 
 
 
+
+procedure TfrmrRelProVenda.FormCreate(Sender: TObject);
+begin
+
+end;
 
 procedure TfrmrRelProVenda.FormDestroy(Sender: TObject);
 begin

@@ -1,0 +1,106 @@
+unit uRelProVenda2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,
+  FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, RLReport, RLFilters, RLPDFFilter,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+
+type
+  TfrmRelProVenda2 = class(TForm)
+    dtsVenda: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    RLBand2: TRLBand;
+    RLDraw1: TRLDraw;
+    RLLabel1: TRLLabel;
+    RLBand3: TRLBand;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLDraw2: TRLDraw;
+    BandaDoGrupo: TRLGroup;
+    RLBand5: TRLBand;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLDBText4: TRLDBText;
+    RLLabel8: TRLLabel;
+    RLDBText5: TRLDBText;
+    FDQVenda: TFDQuery;
+    RLBand7: TRLBand;
+    RLDBResult2: TRLDBResult;
+    RLLabel6: TRLLabel;
+    FDQVendasItens: TFDQuery;
+    FDQCredito: TFDQuery;
+    dtsVendaItens: TDataSource;
+    dtsCredito: TDataSource;
+    FDQCreditocreditoId: TFDAutoIncField;
+    FDQCreditoclienteId: TIntegerField;
+    FDQCreditocredito: TFMTBCDField;
+    FDQVendasItensvendaId: TIntegerField;
+    FDQVendasItensprodutoId: TIntegerField;
+    FDQVendasItensNome: TStringField;
+    FDQVendasItensquantidade: TFMTBCDField;
+    FDQVendasItensvalorUnitario: TFMTBCDField;
+    FDQVendasItenstotalProduto: TFMTBCDField;
+    RLLabel5: TRLLabel;
+    RLLabel9: TRLLabel;
+    RLLabel7: TRLLabel;
+    FDQVendavendaId: TFDAutoIncField;
+    FDQVendaclienteId: TIntegerField;
+    FDQVendanome: TStringField;
+    FDQVendadataVenda: TSQLTimeStampField;
+    FDQVendaTotalVenda: TBCDField;
+    FDQVendacreditoCliente: TFMTBCDField;
+    RLSubDetail1: TRLSubDetail;
+    RLBand4: TRLBand;
+    RLBand6: TRLBand;
+    RLDBText3: TRLDBText;
+    RLDBText6: TRLDBText;
+    RLLabel4: TRLLabel;
+    RLLabel10: TRLLabel;
+    RLDBText7: TRLDBText;
+    RLDBText8: TRLDBText;
+    RLDBText9: TRLDBText;
+    procedure FormDestroy(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRelProVenda2: TfrmRelProVenda2;
+
+implementation
+
+{$R *.dfm}
+
+
+
+
+procedure TfrmRelProVenda2.FormDestroy(Sender: TObject);
+begin
+   FDQVenda.Close;
+   FDQVendasItens.Close;
+   FDQCredito.Close;
+end;
+
+
+
+
+
+
+
+
+
+
+
+
+
+end.
