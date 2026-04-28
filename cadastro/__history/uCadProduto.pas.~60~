@@ -1,0 +1,247 @@
+unit uCadProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit, RxCurrEdit,cCadProduto,uEnum,uDTMConexao,uCadCategoria,cFuncao,uConCategoria,
+  Vcl.Menus,
+         Vcl.Imaging.jpeg;
+
+type
+  TfrmCadProduto = class(TForm1)
+    FDQListagemprodutoId: TFDAutoIncField;
+    FDQListagemnome: TStringField;
+    FDQListagemdescricao: TStringField;
+    FDQListagemvalor: TFMTBCDField;
+    FDQListagemquantidade: TFMTBCDField;
+    FDQListagemcategoriaId: TIntegerField;
+    FDQListagemDescricaoCategoria: TStringField;
+    edtProdutoId: TLabeledEdit;
+    edtNome: TLabeledEdit;
+    edtDescricao: TMemo;
+    DESCRICAO: TLabel;
+    edtValor: TCurrencyEdit;
+    edtQuantidade: TCurrencyEdit;
+    Label1: TLabel;
+    QUANTIDADE: TLabel;
+    lkpCategoria: TDBLookupComboBox;
+    FDQCategoria: TFDQuery;
+    dtsCategoria: TDataSource;
+    Codigo: TFDAutoIncField;
+    FDQCategoriadescricao: TStringField;
+    CATEGORIA: TLabel;
+    btnIncluirCategoria: TSpeedButton;
+    btnPesquisarCategoria: TSpeedButton;
+    pnlImage: TPanel;
+    imgImagem: TImage;
+    ppmImagem: TPopupMenu;
+    CarregarImagem1: TMenuItem;
+    LimparImagem1: TMenuItem;
+    PnlImg: TPanel;
+    imgProduto: TImage;
+    procedure btnAlterarClick(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnIncluirCategoriaClick(Sender: TObject);
+    procedure btnPesquisarCategoriaClick(Sender: TObject);
+    procedure LimparImagem1Click(Sender: TObject);
+    procedure CarregarImagem1Click(Sender: TObject);
+    procedure grdListagemCellClick(Column: TColumn);
+   // procedure tabManutencaoContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
+   // procedure edtClienteIdChange(Sender: TObject);
+   // procedure dtslistagemDataChange(Sender: TObject; Field: TField);
+  private
+    { Private declarations }
+     oProduto : TProduto;
+
+  public
+    { Public declarations }
+    function Apagar:Boolean; override;
+     function Gravar(EstadoDoCadastro:TEstadoCadastro):Boolean;override;
+  end;
+
+var
+  frmCadProduto: TfrmCadProduto;
+
+implementation
+
+uses Upricipal;
+
+{$R *.dfm}
+
+   function TfrmCadProduto.Apagar: Boolean;
+begin
+if oProduto.Selecionar(FDQListagem.FieldByName('produtoId').AsInteger) then
+ begin
+  Result:=oProduto.Apagar;
+ end;
+end;
+
+  function TfrmCadProduto.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
+begin
+     if edtProdutoId.Text<>EmptyStr then
+    oProduto.codigo:=StrToInt(edtProdutoId.Text)
+else
+  oProduto.codigo:=0;
+
+  oProduto.nome          :=edtNome.Text;
+  oProduto.descricao     :=edtDescricao.Text;
+  oProduto.categoriaId   :=lkpCategoria.KeyValue;
+  oProduto.valor         :=edtValor.Value;
+  oProduto.quantidade    :=edtQuantidade.Value;
+
+ 
+ // Libera foto anterior antes de atribuir nova
+  if Assigned(oProduto.foto) then
+  begin
+    oProduto.foto.Free;
+    oProduto.foto := nil;
+  end;
+
+  // Salva imagem se tiver, senão salva NULL
+  if Assigned(imgImagem.Picture.Graphic) then
+  begin
+    oProduto.foto := TBitmap.Create;
+    oProduto.foto.Assign(imgImagem.Picture.Graphic); // ? copia correta
+  end
+  else
+  begin
+    if Assigned(oProduto.foto) then
+    begin
+      oProduto.foto.Free;  // ? libera se tinha
+      oProduto.foto := nil;
+    end;
+    oProduto.foto := nil; // ? salva sem imagem
+  en-d;
+
+ if (EstadoDoCadastro=ecInserir) then
+  Result:=oProduto.Inserir
+  else if (EstadoDoCadastro=ecAlterar) then
+   result:=oProduto.Atualizar;
+end;
+
+
+
+procedure TfrmCadProduto.grdListagemCellClick(Column: TColumn);
+var
+  oProdutoTemp: TProduto;
+begin
+  oProdutoTemp := TProduto.Create(dtmPrincipal.dtmPrincipalDB);
+  try
+    if oProdutoTemp.Selecionar(FDQListagem.FieldByName('produtoId').AsInteger) then
+    begin
+      if Assigned(oProdutoTemp.foto) then
+        imgProduto.Picture.Assign(oProdutoTemp.foto)
+      else
+        imgProduto.Picture := nil;
+    end;
+  finally
+    FreeAndNil(oProdutoTemp);
+  end;
+end;
+
+
+procedure TfrmCadProduto.LimparImagem1Click(Sender: TObject);
+begin
+  inherited;
+  TFuncao.LimparImagem(imgImagem);
+end;
+
+procedure TfrmCadProduto.btnIncluirCategoriaClick(Sender: TObject);
+begin
+  inherited;
+  TFuncao.CriarForm(TfrmCadCategorias, oUsuarioLogado, dtmPrincipal.dtmPrincipalDB);
+  FDQCategoria.Refresh;
+end;
+
+procedure TfrmCadProduto.btnAlterarClick(Sender: TObject);
+begin
+      inherited;
+       if oProduto.Selecionar(FDQListagem.FieldByName('produtoId').AsInteger) then begin
+     edtProdutoId.Text      :=IntToStr(oProduto.codigo);
+     edtNome.Text           :=oProduto.nome;
+     edtDescricao.Text      :=oProduto.descricao;
+     lkpCategoria.KeyValue  :=oProduto.categoriaId;
+     edtValor.Value         :=oProduto.valor;
+     edtQuantidade.Value    :=oProduto.quantidade;
+     // Carrega imagem se existir, senão limpa o TImage
+    if Assigned(oProduto.foto) then
+      imgImagem.Picture.Assign(oProduto.foto)
+    else
+      imgImagem.Picture := nil;
+      edtNome.SetFocus;
+  end
+   else begin
+     btnCancelar.Click;
+     Abort;
+   end;
+
+end;
+
+
+
+procedure TfrmCadProduto.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  imgImagem.Picture := nil;
+  edtNome.SetFocus;
+end;
+
+procedure TfrmCadProduto.btnPesquisarCategoriaClick(Sender: TObject);
+begin
+  inherited;
+  try
+
+
+  frmConCategoria:=TfrmConCategoria.Create(Self);
+
+  if lkpCategoria.KeyValue<>Null then
+     frmConCategoria.aIniciarPesquisaId:=lkpCategoria.KeyValue;
+
+  frmConCategoria.ShowModal;
+
+  if frmConCategoria.aRetornarIdSelecionado<>Unassigned then
+     lkpCategoria.KeyValue:=frmConCategoria.aRetornarIdSelecionado;
+  finally
+  frmConCategoria.Release;
+  end;
+end;
+
+procedure TfrmCadProduto.CarregarImagem1Click(Sender: TObject);
+begin
+  inherited;
+  TFuncao.CarregarImagem(imgImagem);
+end;
+
+procedure TfrmCadProduto.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  FDQCategoria.Close;
+  if Assigned(oProduto)then
+  FreeAndNil(oProduto);
+end;
+
+procedure TfrmCadProduto.FormCreate(Sender: TObject);
+begin
+oProduto:=TProduto.Create(dtmPrincipal.dtmPrincipalDB);
+  IndiceAtual:='nome';
+  inherited;
+
+end;
+
+procedure TfrmCadProduto.FormShow(Sender: TObject);
+begin
+  inherited;
+   FDQCategoria.Open;
+ CentralizarDadosGrid(grdListagem);
+  CentralizarTitulosGrid(grdListagem);
+end;
+
+
+end.

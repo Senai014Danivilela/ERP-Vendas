@@ -1,0 +1,195 @@
+unit cCadCategoria;
+interface
+   {$REGION 'EXPLICAÇAO DE COMO O CODIGO FUNCIONA'}
+   {uses System.Classes,
+     Vcl.Controls,
+     Vcl.ExtCtrls,
+     Vcl.Dialogs; //lista de Units
+type
+  TCategoria = class //declaraçãof do tipo de calasse
+  private
+      //Variaveis Privada somente dentro da classe
+public
+  constructor Create; //Construtorda Classe
+  destructor Destroy; override; //Destroi a Classe usar o Override por causa
+                                  //de Sobrescrver
+      //Variaveis Publicas que pode ser trabalhada fora da Classe
+  published
+      //Variaveis Publicas utilizadas para propiedades da classe
+      //para fornecer informações em runtime
+  end;
+}
+   {$ENDREGION}
+uses System.Classes, Vcl.Controls, Vcl.ExtCtrls,
+     Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,
+     FireDAC.Stan.Error,FireDAC.UI.Intf,
+     FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,
+     FireDAC.Stan.Async,FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,
+     FireDAC.Comp.Client,FireDAC.Phys.MSSQL,System.SysUtils;
+type
+  TCategoria = class
+  private
+     dtmPrincipalDB:TFDConnection;
+     F_categoriaId:Integer; // int
+     F_descricao:string;
+    function getCodigo: Integer;
+    function getDescricao: string;
+    procedure setCodigo(const Value: Integer);
+    procedure setDescricao(const Value: string);
+public
+  constructor Create(aConexao: TFDConnection);
+  destructor Destroy; override;
+  function Atualizar:Boolean;
+  function Apagar:Boolean;
+  function Inserir:Boolean;
+  function Selecionar(id:Integer):Boolean;
+published
+   property codigo:Integer    read getCodigo    write setCodigo;
+   property descricao:string  read getDescricao write setDescricao;
+  end;
+implementation
+{ TCategoria }
+
+{$REGION 'Create e Destroy'}
+constructor TCategoria.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+end;
+destructor TCategoria.Destroy;
+begin
+  inherited;
+end;
+{$ENDREGION}
+
+{$REGION 'Codigo'}
+function TCategoria.getCodigo: Integer;
+begin
+      Result := Self.F_categoriaId;
+end;
+procedure TCategoria.setCodigo(const Value: Integer);
+begin
+    Self.F_categoriaId := Value;
+end;
+{$ENDREGION}
+
+{$REGION 'Descricao'}
+function TCategoria.getDescricao: string;
+begin
+      result := Self.F_descricao;
+end;
+procedure TCategoria.setDescricao(const Value: string);
+begin
+       Self.F_descricao := Value;
+end;
+{$ENDREGION}
+
+{$REGION 'Apagar'}
+function TCategoria.Apagar: Boolean;
+var FDQ: TFDQuery;
+begin
+
+if MessageDlg('Apagar o registro: '+#13+#13+#13+
+              'Código: '+IntToStr(F_categoriaId)+#13+#13+
+              'Descrição: '+F_descricao,mtConfirmation,[mbYes, mbNo],0)=mrNo then begin
+      Result:=False;
+      Abort;
+   end;
+
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('DELETE FROM CATEGORIAS '+
+                ' WHERE categoriaId=:categoriaId');
+    FDQ.ParamByName('categoriaId').AsInteger := F_categoriaId;
+    try
+      FDQ.ExecSQL;
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'Atualizar'}
+function TCategoria.Atualizar: Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('UPDATE CATEGORIAS '+
+                '   SET descricao=:descricao '+
+                ' WHERE categoriaId=:categoriaId');
+    FDQ.ParamByName('categoriaId').AsInteger := Self.F_categoriaId;
+    FDQ.ParamByName('descricao').AsString := Self.F_descricao;
+    try
+      FDQ.ExecSQL;
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+   {$ENDREGION}
+
+{$REGION 'Inserir'}
+function TCategoria.Inserir: Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+      Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection:= dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('INSERT INTO CATEGORIAS (descricao) values (:descricao)');
+    FDQ.ParamByName('descricao').AsString:= Self.F_descricao;
+    try
+      FDQ.ExecSQL;
+
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+  {$ENDREGION}
+
+{$REGION 'Selecionar'}
+function TCategoria.Selecionar(id: Integer): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('SELECT categoriaId, '+
+                '       descricao '+
+                '  FROM CATEGORIAS '+
+                ' WHERE categoriaId=:categoriaId');
+    FDQ.ParamByName('categoriaId').AsInteger := id;
+    try
+      FDQ.Open;
+      Self.F_categoriaId := FDQ.FieldByName('categoriaId').AsInteger;
+      Self.F_descricao   := FDQ.FieldByName('descricao').AsString;
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+  {$ENDREGION}
+end.

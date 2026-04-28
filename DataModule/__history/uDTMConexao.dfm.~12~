@@ -1,0 +1,112 @@
+object dtmPrincipal: TdtmPrincipal
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 261
+  Width = 604
+  object dtmPrincipalDB: TFDConnection
+    Params.Strings = (
+      'Server=DC-TR-01-VM\SERVERCURSO'
+      'Database=VENDAS'
+      'OSAuthent=Yes'
+      'DriverID=MSSQL')
+    Connected = True
+    LoginPrompt = False
+    Left = 24
+    Top = 24
+  end
+  object FDQScriptCategoria: TFDQuery
+    Connection = dtmPrincipalDB
+    SQL.Strings = (
+      ''
+      'IF OBJECT_ID ('#39'CATEGORIAS'#39') IS NULL'
+      'BEGIN'
+      '  CREATE TABLE CATEGORIAS('
+      '    categoriaId int IDENTITY(1,1) NOT NULL,'
+      '    descricao   varchar(30) NULL,'
+      '    PRIMARY KEY (categoriaId)'
+      '  )'
+      'END')
+    Left = 232
+    Top = 32
+  end
+  object FDQScriptClientes: TFDQuery
+    Connection = dtmPrincipalDB
+    SQL.Strings = (
+      '      IF OBJECT_ID ('#39'CLIENTES'#39') IS NULL'
+      'BEGIN'
+      '  CREATE TABLE CLIENTES('
+      '    clienteID int IDENTITY(1,1) NOT NULL,'
+      '    nome           varchar(60) NULL,'
+      '    endereco       varchar(60) NULL,'
+      '    cidade         varchar(50) NULL,'
+      '    bairro         varchar(40) NULL,'
+      '    estado         varchar(2) NULL,'
+      '    cep            varchar(10) NULL,'
+      '    telefone       varchar(14) NULL,'
+      '    email          varchar(100) NULL,'
+      '    dataNascimento datetime NULL'
+      '    PRIMARY KEY (clienteID),'
+      '  )'
+      'END')
+    Left = 344
+    Top = 32
+  end
+  object FDQScriptProdutos: TFDQuery
+    Connection = dtmPrincipalDB
+    SQL.Strings = (
+      'IF OBJECT_ID ('#39'PRODUTOS'#39') IS NULL'
+      'BEGIN'
+      '  CREATE TABLE PRODUTOS('
+      '    produtoId   int IDENTITY(1,1) NOT NULL,'
+      '    nome        varchar(60)  NULL,'
+      '    descricao   varchar(255) NULL,'
+      '    valor       decimal(18,5) default 0.00000 NULL,'
+      '    quantidade  decimal(18,5) default 0.00000 NULL,'
+      '    categoriaId int NULL,'
+      '    PRIMARY KEY (produtoId),'
+      '    CONSTRAINT Fk_ProdutosCategorias'
+      '    FOREIGN KEY (categoriaId) references CATEGORIAS(categoriaId)'
+      '    )'
+      'END')
+    Left = 440
+    Top = 32
+  end
+  object FDQScriptVendas: TFDQuery
+    Connection = dtmPrincipalDB
+    SQL.Strings = (
+      'IF OBJECT_ID ('#39'VENDAS'#39') IS NULL'
+      'BEGIN'
+      '  CREATE TABLE VENDAS('
+      '    vendaId     int IDENTITY(1,1) NOT NULL,'
+      '    clienteID   int not NULL,'
+      '    dataVenda   datetime  default getdate(),'
+      '    totalVenda  decimal(18,5) default 0.00000 ,'
+      ''
+      '    PRIMARY KEY (vendaId),'
+      '    CONSTRAINT Fk_VendasClientes FOREIGN KEY (clienteID)'
+      '    REFERENCES CLIENTES(clienteID)'
+      '    )'
+      'END;')
+    Left = 280
+    Top = 85
+  end
+  object FDQScriptItensVendas: TFDQuery
+    Connection = dtmPrincipalDB
+    SQL.Strings = (
+      'IF OBJECT_ID ('#39'VENDASITENS'#39') IS NULL'
+      'BEGIN'
+      '  CREATE TABLE VENDASITENS('
+      '    vendaId int  NOT NULL,'
+      '    produtoId int not NULL,'
+      '    valorUnitario  decimal(18,5) default 0.00000 ,'
+      '    quantidade     decimal(18,5) default 0.00000 ,'
+      '    totalProduto   decimal(18,5) default 0.00000 ,'
+      '    PRIMARY KEY (vendaId,produtoId),'
+      '    CONSTRAINT Fk_VendasItensProdutos FOREIGN KEY (produtoId)'
+      '    REFERENCES PRODUTOS(produtoId)'
+      '    )'
+      'END')
+    Left = 392
+    Top = 93
+  end
+end

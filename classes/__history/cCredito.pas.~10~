@@ -1,0 +1,103 @@
+unit cCredito;
+
+interface
+
+uses FireDAC.Comp.Client, System.SysUtils;
+
+type
+  TCredito = class
+  private
+    FConexao: TFDConnection; // conexão com banco
+  public
+    constructor Create(AConexao: TFDConnection);
+
+    function AdicionarCredito(clienteId: Integer; valor: Double): Boolean;
+    function DescontarCredito(clienteId: Integer; valor: Double ; vendaId: Integer = 0): Boolean;
+    function ObterSaldo(clienteId: Integer): Double;
+  end;
+
+implementation
+
+constructor TCredito.Create(AConexao: TFDConnection);
+begin
+  FConexao := AConexao; // recebe a conexão do sistema
+end;
+
+function TCredito.AdicionarCredito(clienteId: Integer; valor: Double): Boolean;
+var FDQ: TFDQuery;
+begin
+  Result := False;
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := FConexao;
+
+    FDQ.SQL.Text :=
+      'INSERT INTO CREDITO (clienteId, credito, tipo, data) '+
+      'VALUES (:id, :valor, ''ENTRADA'', GETDATE())';
+
+    FDQ.ParamByName('id').AsInteger := clienteId;
+
+    //  grava exatamente o valor digitado (positivo ou negativo)
+    FDQ.ParamByName('valor').AsFloat := valor;
+
+    FDQ.ExecSQL;
+    Result := True;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+ function TCredito.DescontarCredito(clienteId: Integer; valor: Double; vendaId: Integer = 0): Boolean;
+var FDQ: TFDQuery;
+begin
+  Result := False;
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := FConexao;
+
+    FDQ.SQL.Text :=
+  'INSERT INTO CREDITO (clienteId, credito, tipo, vendaId) ' +
+        'VALUES (:id, :valor, ''SAIDA'', :vendaId)';
+
+    FDQ.ParamByName('id').AsInteger := clienteId;
+
+    //  SEMPRE NEGATIVO (segurança)
+    FDQ.ParamByName('valor').AsFloat := valor;
+
+    FDQ.ParamByName('vendaId').AsInteger := vendaId;
+
+    FDQ.ExecSQL;
+    Result := True;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+function TCredito.ObterSaldo(clienteId: Integer): Double;
+var FDQ: TFDQuery;
+begin
+  if not Assigned(FConexao) then
+    raise Exception.Create('Conexão não definida!');
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := FConexao;
+
+    FDQ.SQL.Text :=
+      'SELECT ISNULL(SUM(credito),0) FROM CREDITO WHERE clienteId = :id';
+
+    FDQ.ParamByName('id').AsInteger := clienteId;
+    FDQ.Open;
+
+    Result := FDQ.Fields[0].AsFloat;
+  finally
+    FDQ.Free;
+  end;
+end;
+
+
+end.

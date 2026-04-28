@@ -1,0 +1,52 @@
+program Vendas;
+
+uses
+  Vcl.Forms,
+  Upricipal in 'Upricipal.pas' {MenuPrincipal},
+  uDTMConexao in 'DataModule\uDTMConexao.pas' {dtmPrincipal: TDataModule},
+  uTelaHeranca in 'heranca\uTelaHeranca.pas' {Form1},
+  uCadCategoria in 'cadastro\uCadCategoria.pas' {frmCadCategorias},
+  uEnum in 'heranca\uEnum.pas',
+  cCadCategoria in 'classes\cCadCategoria.pas',
+  uCadCliente in 'cadastro\uCadCliente.pas' {frmCadCliente},
+  cCadCliente in 'classes\cCadCliente.pas',
+  uCadProduto in 'cadastro\uCadProduto.pas' {frmCadProduto},
+  cCadProduto in 'classes\cCadProduto.pas',
+  uFrmAtualizaDB in 'DataModule\uFrmAtualizaDB.pas' {frmAtualizaDB},
+  uDTMVenda in 'DataModule\uDTMVenda.pas' {dtmVenda: TDataModule},
+  uProVendas in 'processo\uProVendas.pas' {frmProVenda},
+  cProVendas in 'classes\cProVendas.pas',
+  cControleEstoque in 'classes\cControleEstoque.pas',
+  uRelProVenda in 'relatorio\uRelProVenda.pas' {frmrRelProVenda},
+  uRelClienteFicha in 'relatorio\uRelClienteFicha.pas' {frmRelClienteFicha},
+  uRelClientes in 'relatorio\uRelClientes.pas' {frmRelClientes},
+  uRelCadProduto in 'relatorio\uRelCadProduto.pas' {frmRelCadPRoduto},
+  uSelecionarData in 'relatorio\uSelecionarData.pas' {frmSelecionarData},
+  uRelCategorias in 'relatorio\uRelCategorias.pas' {frmRelCategoria},
+  uRelCadProdutoComGrupoCategoria in 'relatorio\uRelCadProdutoComGrupoCategoria.pas' {frmRelCadPRodutoComGrupoCategoria},
+  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData},
+  uFuncaoCriptografia in 'heranca\uFuncaoCriptografia.pas',
+  UCadUsuario in 'cadastro\UCadUsuario.pas' {frmCadUsuario},
+  cCadUsuario in 'classes\cCadUsuario.pas',
+  uLogin in 'login\uLogin.pas' {frmLogin},
+  Enter in 'terceiros\Enter.pas',
+  uAlterarSenha in 'login\uAlterarSenha.pas' {frmAlterarSenha},
+  cUsuarioLogado in 'cUsuarioLogado.pas',
+  cAtulizacaoBancoDeDados in 'classes\cAtulizacaoBancoDeDados.pas',
+  cAtualizacaoTabelaMSSQL in 'classes\cAtualizacaoTabelaMSSQL.pas',
+  cArquivoIni in 'classes\cArquivoIni.pas',
+  cAcaoAcesso in 'classes\cAcaoAcesso.pas',
+  uCadAcaoAcesso in 'cadastro\uCadAcaoAcesso.pas' {frmCadAcaoAcesso},
+  uUsuarioVsAcoes in 'login\uUsuarioVsAcoes.pas' {frmUsuarioVsAcoes},
+  uDTMGrafico in 'DataModule\uDTMGrafico.pas' {DTMGrafico: TDataModule},
+  cFuncao in 'classes\cFuncao.pas',
+  uTelaHerancaConsulta in 'heranca\uTelaHerancaConsulta.pas' {frmTelaHerancaConsulta};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TMenuPrincipal, MenuPrincipal);
+  Application.Run;
+end.

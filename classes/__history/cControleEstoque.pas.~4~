@@ -1,0 +1,103 @@
+unit cControleEstoque;
+
+interface
+ uses System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils, Datasnap.DBClient;
+
+type
+  TControleEstoque = class
+   private
+      dtmPrincipalDB:TFDConnection;
+      F_ProdutoId:Integer;
+      F_Quantidade:Double;
+
+   public
+   constructor Create(aConexao: TFDConnection);
+   destructor Destroy; override;
+   function BaixarEstoque:Boolean;
+   function RetornaEstoque: Boolean;
+   function RetornarEstoque:Boolean;
+published
+   property ProdutoId:Integer     read F_ProdutoId      write F_ProdutoId;
+   property Quantidade:Integer   read F_Quantidade    write F_Quantidade;
+  end;
+implementation
+
+{$REGION 'Create e Destroy'}
+constructor TControleEstoque.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+end;
+destructor TControleEstoque.Destroy;
+begin
+  inherited;
+end;
+{$ENDREGION}
+
+{$REGION 'BaixarEstoque'}
+function TControleEstoque.BaixarEstoque: Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+
+    FDQ.SQL.Clear;
+    //Apaga os Itens Primeiro Tabela Master
+   FDQ.SQL.Add('UPDATE PRODUTOS '+
+                ' SET quantidade = quantidade - :qtdeBaixa'+
+                ' WHERE produtoId=:produtoId');
+    FDQ.ParamByName('produtoId').AsInteger:=ProdutoId;
+     FDQ.ParamByName('qtdeBaixa').AsFloat:=Quantidade;
+     try
+      FDQ.ExecSQL
+    except
+      Result := False;
+    end;
+
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'BaixarEstoque'}
+function TControleEstoque.RetornaEstoque: Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('UPDATE PRODUTOS '+
+                ' SET quantidade = quantidade + :qtdeRetorno'+
+                ' WHERE produtoId=:produtoId');
+    FDQ.ParamByName('produtoId').AsInteger:=ProdutoId;
+     FDQ.ParamByName('qtdeRetorno').AsFloat:=Quantidade;
+     try
+      FDQ.ExecSQL
+    except
+      Result := False;
+    end;
+
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+
+
+
+
+{$ENDREGION}
+end.

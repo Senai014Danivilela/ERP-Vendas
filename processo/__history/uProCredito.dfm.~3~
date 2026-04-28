@@ -1,0 +1,98 @@
+inherited frmProCredito: TfrmProCredito
+  Caption = 'frmProCredito'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    ExplicitLeft = -8
+    ExplicitTop = 72
+    inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 791
+      ExplicitHeight = 308
+    end
+  end
+  inherited pnlRodape: TPanel
+    inherited btnNovo: TBitBtn
+      Top = 6
+      ExplicitTop = 6
+    end
+    inherited btnAlterar: TBitBtn
+      Top = 6
+      ExplicitTop = 6
+    end
+    inherited btnCancelar: TBitBtn
+      Top = 6
+      ExplicitTop = 6
+    end
+    inherited btnGravar: TBitBtn
+      Top = 6
+      ExplicitTop = 6
+    end
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited FDQListagem: TFDQuery
+    Active = True
+    SQL.Strings = (
+      'SELECT '
+      '    C.clienteId,'
+      '    C.nome,'
+      '    ISNULL(SUM(CR.credito), 0) AS saldo,'
+      ''
+      '    -- '#250'ltimo tipo'
+      '    ('
+      '        SELECT TOP 1 tipo'
+      '        FROM CREDITO'
+      '        WHERE clienteId = C.clienteId'
+      '        ORDER BY data DESC'
+      '    ) AS tipo,'
+      ''
+      '    -- '#250'ltima data'
+      '    ('
+      '        SELECT TOP 1 data'
+      '        FROM CREDITO'
+      '        WHERE clienteId = C.clienteId'
+      '        ORDER BY data DESC'
+      '    ) AS dataUltimaMovimentacao'
+      ''
+      'FROM CLIENTES C'
+      'LEFT JOIN CREDITO CR'
+      '    ON C.clienteId = CR.clienteId'
+      ''
+      'GROUP BY '
+      '    C.clienteId,'
+      '    C.nome')
+    object FDQListagemclienteId: TFDAutoIncField
+      FieldName = 'clienteId'
+      Origin = 'clienteId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQListagemnome: TStringField
+      FieldName = 'nome'
+      Origin = 'nome'
+      Size = 60
+    end
+    object FDQListagemsaldo: TFMTBCDField
+      FieldName = 'saldo'
+      Origin = 'saldo'
+      ReadOnly = True
+      Required = True
+      Precision = 38
+      Size = 5
+    end
+    object FDQListagemtipo: TStringField
+      FieldName = 'tipo'
+      Origin = 'tipo'
+      ReadOnly = True
+      Size = 10
+    end
+    object FDQListagemdataUltimaMovimentacao: TSQLTimeStampField
+      FieldName = 'dataUltimaMovimentacao'
+      Origin = 'dataUltimaMovimentacao'
+      ReadOnly = True
+    end
+  end
+end

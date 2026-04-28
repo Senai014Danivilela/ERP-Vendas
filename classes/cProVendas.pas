@@ -1,0 +1,464 @@
+unit cProVendas;
+
+interface
+
+uses System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils, Datasnap.DBClient,uEnum,cControleEstoque;
+
+type
+  TVenda = class
+   private
+      dtmPrincipalDB:TFDConnection;
+      F_vendaId:Integer;
+      F_clienteID:Integer;
+      F_dataVenda:TDateTime;
+      F_totalVenda:Double;
+    function InserirItens(cds: TClientDataSet; IdVenda: Integer): Boolean;
+    function ApagaItens(cds: TClientDataSet): Boolean;
+    function InNot(cds: TClientDataSet): string;
+    function EsteItemExiste(vendaId, produtoId: Integer): Boolean;
+    function AtualizarItem(cds: TClientDataSet): Boolean;
+    procedure RetornarEstoque(sCodigo: String; Acao: TAcaoExcluirEstoque);
+    procedure BaixarEstoque(produtoId: Integer; Quantidade: Double);
+
+   public
+   constructor Create(aConexao: TFDConnection);
+   destructor Destroy; override;
+   function Atualizar(cds:TClientDataSet):Boolean;
+   function Apagar:Boolean;
+   function Inserir(cds:TClientDataSet):Integer;
+   function Selecionar(id:Integer;var cds:TClientDataSet):Boolean;
+published
+   property VendaId:Integer     read F_vendaId      write F_vendaId;
+   property ClienteID:Integer   read F_clienteID    write F_clienteID;
+   property DataVenda:TDateTime read F_dataVenda    write F_dataVenda;
+   property TotalVenda:Double   read F_totalVenda   write F_totalVenda;
+  end;
+implementation
+
+   {$REGION 'Create e Destroy'}
+constructor TVenda.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+end;
+destructor TVenda.Destroy;
+begin
+  inherited;
+end;
+{$ENDREGION}
+
+   {$REGION 'APAGAR'}
+function TVenda.Apagar: Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  Result := False;
+
+  // ?? confirmação
+  if MessageDlg('Apagar o registro:'#13#13+
+                'Venda Nro: '+IntToStr(VendaId),
+                mtConfirmation,[mbYes, mbNo],0) = mrNo then Exit;
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := dtmPrincipalDB;
+
+    dtmPrincipalDB.StartTransaction;
+    try
+
+      //APAGA CREDITO RELACIONADO À VENDA
+      FDQ.SQL.Text := 'DELETE FROM CREDITO WHERE vendaId = :vendaId';
+      FDQ.ParamByName('vendaId').AsInteger := VendaId;
+      FDQ.ExecSQL;
+
+      //APAGA ITENS DA VENDA
+      FDQ.SQL.Text := 'DELETE FROM VENDASITENS WHERE vendaId = :vendaId';
+      FDQ.ExecSQL;
+
+      //APAGA A VENDA
+      FDQ.SQL.Text := 'DELETE FROM VENDAS WHERE vendaId = :vendaId';
+      FDQ.ExecSQL;
+
+      //COMMIT
+      dtmPrincipalDB.Commit;
+      Result := True;
+
+    except
+      dtmPrincipalDB.Rollback;
+      raise;
+    end;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+{$ENDREGION}
+
+  {$REGION 'Atualizar'}
+ function TVenda.Atualizar(cds:TClientDataSet): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    dtmPrincipalDB.StartTransaction;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('UPDATE VENDAS '+
+                '   SET clienteID=:clienteID '+
+                '   ,dataVenda=:dataVenda '+
+                '   ,totalVenda=:totalVenda '+
+                ' WHERE vendaId=:vendaId');
+    FDQ.ParamByName('vendaId').AsInteger     := Self.F_vendaId;
+    FDQ.ParamByName('clienteID').AsInteger   := Self.F_clienteID;
+    FDQ.ParamByName('dataVenda').AsDateTime  := Self.F_dataVenda;
+    FDQ.ParamByName('totalVenda').AsFloat    := Self.F_totalVenda;
+
+    try
+
+
+      FDQ.ExecSQL;
+    //Apagar itens no Banco de dados qua foram apagados na tela
+      ApagaItens(cds);
+
+      cds.First;
+      while not cds.Eof do begin
+        if EsteItemExiste(Self.F_vendaId, cds.FieldByName('produtoId').AsInteger)then  begin
+          AtualizarItem(cds);
+        end
+
+
+        else begin
+         InserirItens(cds, Self.F_vendaId);
+        end;
+        cds.Next;
+      end;
+      dtmPrincipalDB.Commit;
+    except
+      dtmPrincipalDB.Rollback;
+       Result := False;
+    end;
+
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+ function TVenda.AtualizarItem(cds: TClientDataSet): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    RetornarEstoque(cds.FieldByName('produtoId').AsString, aeeAlterar);
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('UPDATE VENDASITENS '+
+                '   SET ValorUnitario =:ValorUnitario '+
+                '      ,Quantidade    =:Quantidade '+
+                '      ,TotalProduto  =:TotalProduto '+
+                ' WHERE vendaId=:vendaId AND produtoId=:produtoId');
+    FDQ.ParamByName('vendaId').AsInteger     := Self.F_vendaId;
+    FDQ.ParamByName('produtoId').AsInteger   := cds.FieldByName('produtoId').AsInteger;
+    FDQ.ParamByName('ValorUnitario').AsFloat := cds.FieldByName('valorUnitario').AsFloat;
+    FDQ.ParamByName('Quantidade').AsFloat    := cds.FieldByName('quantidade').AsFloat;
+    FDQ.ParamByName('TotalProduto').AsFloat  := cds.FieldByName('valorTotalProduto').AsFloat;
+    try
+      dtmPrincipalDB.StartTransaction;
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+      BaixarEstoque(cds.FieldByName('produtoId').AsInteger, cds.FieldByName('quantidade').AsFloat);
+    except
+      dtmPrincipalDB.Rollback;
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+ function TVenda.InNot(cds:TClientDataSet):string;
+var sInNot: string;
+begin
+  sInNot:=EmptyStr;
+  cds.First;
+  while not cds.Eof do begin
+    if sInNot=EmptyStr then
+       sInNot := cds.FieldByName('produtoId').AsString
+    else
+    sInNot := sInNot + ','+cds.FieldByName('produtoId').AsString;
+
+    cds.Next;
+
+  end;
+   Result:=sInNot;
+end;
+
+function TVenda.EsteItemExiste(vendaId:Integer; produtoId:Integer): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('SELECT Count (vendaId) AS Qtde '+
+                '   FROM VENDASITENS '+
+                ' WHERE vendaId=:vendaId AND produtoId=:produtoId');
+    FDQ.ParamByName('vendaId').AsInteger     :=vendaId;
+    FDQ.ParamByName('produtoId').AsInteger   :=produtoId;
+
+    try
+      FDQ.Open;
+
+     if FDQ.FieldByName('Qtde').AsInteger>0 then
+        Result:=True
+     else
+        result:=False;
+    except
+      Result := False;
+    end;
+
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+ function TVenda.ApagaItens(cds:TClientDataSet): Boolean;
+var FDQ: TFDQuery;
+     sCodNoCds:string;
+begin
+  try
+    Result := True;
+     //Pega os codigos que estao no Cliente para selecionar o Int Not no Banco de Dados
+    sCodNoCds:= InNot(cds);
+
+    //Retorna ao Estoque
+    RetornarEstoque(sCodNoCds,aeeApagar);
+
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('DELETE '+
+                '  FROM VENDASITENS '+
+                '  WHERE vendaId=:vendaId '+
+                '  AND produtoId NOT IN ('+sCodNoCds+') ');
+    FDQ.ParamByName('vendaId').AsInteger     := Self.F_vendaId;
+Try
+      dtmPrincipalDB.StartTransaction;
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+    Except
+      dtmPrincipalDB.Rollback;
+      Result:=false;
+    End;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+{$ENDREGION}
+
+ {$REGION 'Inserir'}
+ function TVenda.Inserir(cds: TClientDataSet): Integer;
+var Qry: TFDQuery;
+    IdVendaGerado: Integer;
+begin
+  try
+    dtmPrincipalDB.StartTransaction;
+    Qry := TFDQuery.Create(nil);
+    Qry.Connection := dtmPrincipalDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add('INSERT INTO VENDAS (clienteID, dataVenda, totalVenda) '+
+                'OUTPUT INSERTED.vendaId '+
+                'VALUES (:clienteID, :dataVenda, :totalVenda)');
+    Qry.ParamByName('clienteID').AsInteger  := Self.F_clienteID;
+    Qry.ParamByName('dataVenda').AsDateTime := Self.F_dataVenda;
+    Qry.ParamByName('totalVenda').AsFloat   := Self.F_totalVenda;
+    try
+      Qry.Open;  // ? DENTRO do try
+      IdVendaGerado := Qry.FieldByName('vendaId').AsInteger;
+      Qry.Close;
+
+      // grava itens DENTRO do try
+      cds.First;
+      while not cds.Eof do begin
+        InserirItens(cds, IdVendaGerado); // ? DENTRO do try
+        cds.Next;
+      end;
+
+      dtmPrincipalDB.Commit; // ? Commit DENTRO do try, APÓS itens
+      Result := IdVendaGerado;
+    except
+      dtmPrincipalDB.Rollback;
+      Result := -1;
+    end;
+  finally
+    if Assigned(Qry) then
+      FreeAndNil(Qry);
+  end;
+end;
+ function TVenda.InserirItens(cds:TClientDataSet;IdVenda:Integer):Boolean;
+ var FDQ: TFDQuery;
+begin
+  try
+  Result := True;
+  FDQ := TFDQuery.Create(nil);
+  FDQ.Connection:= dtmPrincipalDB;
+  FDQ.SQL.Clear;
+  FDQ.SQL.Add('INSERT INTO VENDASITENS (VendaID,ProdutoID,ValorUnitario,Quantidade,TotalProduto)  '+
+                '             VALUES   (:VendaID,:ProdutoID,:ValorUnitario,:Quantidade,:TotalProduto ) ');
+    FDQ.ParamByName('VendaID').AsInteger   := IdVenda;
+    FDQ.ParamByName('ProdutoID').AsInteger   := cds.FieldByName('produtoId').AsInteger;
+    FDQ.ParamByName('ValorUnitario').AsFloat := cds.FieldByName('valorUnitario').AsFloat;
+    FDQ.ParamByName('Quantidade').AsFloat    := cds.FieldByName('quantidade').AsFloat;
+    FDQ.ParamByName('TotalProduto').AsFloat  := cds.FieldByName('valorTotalProduto').AsFloat;
+
+    try
+
+
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+
+      BaixarEstoque(cds.FieldByName('produtoId').AsInteger,cds.FieldByName('quantidade').AsFloat);
+    except
+      Result := False;
+    end;
+
+
+  finally
+     if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+  end;
+{$ENDREGION}
+
+  {$REGION 'Selecionar'}
+function TVenda.Selecionar(id: Integer; var cds:TClientDataSet): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('SELECT vendaId '+
+                '       ,clienteID '+
+                '       ,dataVenda '+
+                '       ,totalVenda '+
+                '  FROM VENDAS '+
+                ' WHERE vendaId=:vendaId');
+    FDQ.ParamByName('vendaId').AsInteger := id;
+    try
+      FDQ.Open;
+      Self.F_vendaId      := FDQ.FieldByName('vendaId').AsInteger;
+      Self.F_clienteID    := FDQ.FieldByName('clienteID').AsInteger;
+      Self.F_dataVenda    := FDQ.FieldByName('dataVenda').AsDateTime;
+      Self.F_totalVenda   := FDQ.FieldByName('totalVenda').AsFloat;
+
+    {$REGION 'SELECINAR na tabela VendasItens'}
+      cds.First;
+      while not cds.Eof do begin
+        cds.Delete;
+      end;
+
+      FDQ.Close;
+      FDQ.SQL.Clear;
+      FDQ.SQL.Add('SELECT VENDASITENS.ProdutoID, '+
+                '         PRODUTOS.Nome, '+
+                '         VENDASITENS.ValorUnitario, '+
+                '         VENDASITENS.Quantidade, '+
+                '         VENDASITENS.TotalProduto '+
+                '  FROM VENDASITENS '+
+                '    INNER JOIN produtos ON PRODUTOS.produtoId = VENDASITENS.produtoId  '+
+                ' WHERE VENDASITENS.VendaID=:VendaID');
+
+      FDQ.ParamByName('VendaID').AsInteger := Self.F_vendaId;
+      FDQ.Open;
+
+
+      //Le da Query e Coloca no ClientdataSet
+      FDQ.First;
+      while not FDQ.Eof do begin
+       cds.Append;
+       cds.FieldByName('produtoId').AsInteger       :=FDQ.FieldByName('ProdutoId').AsInteger;
+       cds.FieldByName('nomeProduto').AsString      :=FDQ.FieldByName('Nome').AsString;
+       cds.FieldByName('valorUnitario').AsFloat     :=FDQ.FieldByName('ValorUnitario').AsFloat;
+       cds.FieldByName('quantidade').AsFloat        :=FDQ.FieldByName('Quantidade').AsFloat;
+       cds.FieldByName('valorTotalProduto').AsFloat :=FDQ.FieldByName('TotalProduto').AsFloat;
+       cds.Post;
+       FDQ.Next;
+      end;
+      cds.First;
+    {$ENDREGION}
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+{$ENDREGION}
+
+ {$REGION 'COntrole de Estoque'}
+ //Utilizar Update e Delete
+procedure TVenda.RetornarEstoque(sCodigo:String; Acao:TAcaoExcluirEstoque);
+var FDQ: TFDQuery;
+    oControleEstoque:TControleEstoque;
+begin
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('SELECT produtoId,quantidade '+
+                '  FROM VENDASITENS '+
+                ' WHERE VendaId=:vendaId');
+    if Acao=aeeApagar then
+       FDQ.SQL.Add(' AND produtoId NOT IN('+sCodigo+')')
+     else
+       FDQ.SQL.Add(' AND produtoId =('+sCodigo+')');
+
+    FDQ.ParamByName('vendaId').AsInteger :=Self.F_vendaId;
+    try
+      oControleEstoque:=TControleEstoque.Create(dtmPrincipalDB);
+      FDQ.Open;
+      FDQ.First;
+     while not FDQ.Eof do begin
+
+     oControleEstoque.ProdutoId      := FDQ.FieldByName('produtoId').AsInteger;
+     oControleEstoque.Quantidade     := FDQ.FieldByName('quantidade').AsFloat;
+     oControleEstoque.RetornarEstoque;
+     FDQ.Next;
+    end;
+  finally
+    if Assigned(oControleEstoque) then
+      FreeAndNil(oControleEstoque);
+  end;
+end;
+
+procedure TVenda.BaixarEstoque(produtoId:Integer; Quantidade:Double);
+var oControleEstoque:TControleEstoque;
+begin
+    try
+    oControleEstoque:=TControleEstoque.Create(dtmPrincipalDB);
+     oControleEstoque.ProdutoId      := produtoId;
+     oControleEstoque.Quantidade     := Quantidade;
+     oControleEstoque.BaixarEstoque;
+  finally
+    if Assigned(oControleEstoque) then
+      FreeAndNil(oControleEstoque);
+  end;
+end;
+
+{$ENDREGION}
+
+end.

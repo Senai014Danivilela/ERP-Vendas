@@ -1,0 +1,88 @@
+unit uRelCadProdutoComGrupoCategoria;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,
+  FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, RLReport, RLFilters, RLPDFFilter,
+  Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+
+type
+  TfrmRelCadPRodutoComGrupoCategoria = class(TForm)
+    FDQCadProdutos: TFDQuery;
+    dtsCadProdutos: TDataSource;
+    RLPDFFilter1: TRLPDFFilter;
+    Relatorio: TRLReport;
+    RLBand2: TRLBand;
+    RLDraw1: TRLDraw;
+    RLLabel1: TRLLabel;
+    RLBand3: TRLBand;
+    RLSystemInfo1: TRLSystemInfo;
+    RLSystemInfo2: TRLSystemInfo;
+    RLSystemInfo3: TRLSystemInfo;
+    RLLabel2: TRLLabel;
+    RLLabel3: TRLLabel;
+    RLDraw2: TRLDraw;
+    BandaDoGrupo: TRLGroup;
+    RLBand5: TRLBand;
+    RLBand4: TRLBand;
+    RLLabel4: TRLLabel;
+    RLLabel5: TRLLabel;
+    RLLabel6: TRLLabel;
+    RLLabel7: TRLLabel;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+    RLDBText2: TRLDBText;
+    RLDBText3: TRLDBText;
+    RLDBText4: TRLDBText;
+    RLLabel8: TRLLabel;
+    RLDBText5: TRLDBText;
+    RLDBText6: TRLDBText;
+    RLLabel9: TRLLabel;
+    RLBand6: TRLBand;
+    RLDraw3: TRLDraw;
+    RLDBResult1: TRLDBResult;
+    FDQCadProdutosprodutoId: TFDAutoIncField;
+    FDQCadProdutosnome: TStringField;
+    FDQCadProdutosdescricao: TStringField;
+    FDQCadProdutosvalor: TFMTBCDField;
+    FDQCadProdutosquantidade: TFMTBCDField;
+    FDQCadProdutoscategoriaId: TIntegerField;
+    FDQCadProdutosDescricaoCategoria: TStringField;
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure dtsCadProdutosDataChange(Sender: TObject; Field: TField);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  frmRelCadPRodutoComGrupoCategoria: TfrmRelCadPRodutoComGrupoCategoria;
+
+implementation
+
+{$R *.dfm}
+
+
+procedure TfrmRelCadPRodutoComGrupoCategoria.FormCreate(Sender: TObject);
+begin
+    FDQCadProdutos.Open;
+end;
+
+procedure TfrmRelCadPRodutoComGrupoCategoria.FormDestroy(Sender: TObject);
+begin
+   FDQCadProdutos.Close;
+end;
+
+
+
+
+
+
+
+
+
+end.

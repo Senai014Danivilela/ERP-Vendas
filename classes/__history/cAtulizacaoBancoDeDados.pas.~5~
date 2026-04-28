@@ -1,0 +1,91 @@
+unit cAtulizacaoBancoDeDados;
+
+interface
+
+ uses
+ System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils, Datasnap.DBClient,uEnum,cControleEstoque;
+
+ type
+  TAtualizaBancoDados = class
+   private
+   public
+    dtmPrincipalDB:TFDConnection;
+   constructor Create(aConexao: TFDConnection);
+   procedure ExecutaDiretoBancoDeDados(aScript:string);
+  end;
+
+  type
+  TAtualizaBancoDadosMSSQL = class
+   private
+    dtmPrincipalDB:TFDConnection;
+   public
+   function AtualizarBancoDeDadosMSSQL: Boolean;
+   procedure Create(aConexao: TFDConnection);
+  end;
+
+implementation
+
+constructor TAtualizaBancoDados.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+end;
+procedure TAtualizaBancoDados.ExecutaDiretoBancoDeDados(aScript: string);
+var FDQ:TFDQuery;
+begin
+   try
+
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    //Apaga os Itens Primeiro Tabela Master
+   FDQ.SQL.Add(aScript);
+
+    try
+     dtmPrincipalDB.StartTransaction;
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+    except
+      dtmPrincipalDB.Rollback;
+
+    end;
+
+  finally
+    FDQ.Close;
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+
+function TAtualizaBancoDadosMSSQL.AtualizarBancoDeDadosMSSQL: Boolean;
+var oAtualizarDB:TAtualizaBancoDados;
+    oTAbela:TAtualizaBancoDadosMSSQL;
+begin
+    try
+      ///Clase Principal de atualizaçao
+    oAtualizarDB := TAtualizaBancoDados.Create(dtmPrincipalDB);
+
+    //filha -Class de Atualização
+    oTAbela := TAtualizaBancoDadosMSSQL.Create(dtmPrincipalDB);
+    finally
+    if Assigned(oAtualizarDB)then
+      FreeAndNil(oAtualizarDB);
+
+      if Assigned(oTAbela)then
+      FreeAndNil(oTAbela);
+    end;
+end;
+
+constructor TAtualizaBancoDadosMSSQL.Create(aConexao: TFDConnection);
+begin
+     dtmPrincipalDB:= aConexao;
+end;
+
+
+
+end.

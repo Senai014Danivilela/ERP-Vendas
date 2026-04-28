@@ -1,0 +1,250 @@
+unit cCadProduto;
+
+interface
+uses System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils,
+         System.StrUtils,
+         Vcl.Imaging.jpeg,
+         Vcl.Graphics;
+
+type
+  TProduto = class
+   private
+      dtmPrincipalDB:TFDConnection;
+      F_produtoId:Integer; // int
+      F_nome:string; //varchar
+      F_descricao:string;
+      F_valor:Double;
+      F_quantidade:Double;
+      F_categoriaId:Integer;
+      F_Foto:TBitmap;
+
+   public
+   constructor Create(aConexao: TFDConnection);
+   destructor Destroy; override;
+   function Atualizar:Boolean;
+   function Apagar:Boolean;
+   function Inserir:Boolean;
+   function Selecionar(id:Integer):Boolean;
+published
+   property codigo            :Integer read F_produtoId      write F_produtoId;
+   property nome              :string  read F_nome           write F_nome;
+   property descricao         :string  read F_descricao      write F_descricao;
+   property valor             :Double  read F_valor          write F_valor;
+   property quantidade        :Double  read F_quantidade     write F_quantidade;
+   property categoriaId       :Integer read F_categoriaId    write F_categoriaId ;
+   property foto              :TBitmap read F_Foto           write F_Foto ;
+  end;
+implementation
+
+ {$REGION 'Create e Destroy'}
+constructor TProduto.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+   F_Foto := TBitmap.Create;
+   F_Foto.Assign(nil);
+end;
+
+destructor TProduto.Destroy;
+begin
+if Assigned(F_Foto) then begin
+   F_Foto.Assign(nil);
+   F_Foto.Free;
+end;
+
+  inherited;
+end;
+{$ENDREGION}
+
+ {$REGION 'APAGAR'}
+ function TProduto.Apagar: Boolean;
+var FDQ: TFDQuery;
+begin
+
+if MessageDlg('Apagar o registro: '+#13+#13+#13+
+              'Código: '+IntToStr(F_produtoId)+#13+#13+
+              'Descrição: '+F_nome,mtConfirmation,[mbYes, mbNo],0)=mrNo then begin
+      Result:=False;
+      Abort;
+   end;
+
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('DELETE FROM PRODUTOS '+
+                ' WHERE produtoId=:produtoId');
+    FDQ.ParamByName('produtoId').AsInteger := F_produtoId;
+    try
+    dtmPrincipalDB.StartTransaction;
+    FDQ.ExecSQL;
+    dtmPrincipalDB.Commit;
+    except
+      dtmPrincipalDB.Rollback;
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+ {$REGION 'Atualizar'}
+ function TProduto.Atualizar: Boolean;
+var FDQ: TFDQuery;
+     Stream: TMemoryStream;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('UPDATE PRODUTOS '+
+                '   SET nome        =:nome '+
+                '      ,descricao   =:descricao '+
+                '      ,valor       =:valor '+
+                '      ,quantidade  =:quantidade '+
+                '      ,categoriaId =:categoriaId '+
+                 '     ,foto        =:foto '+
+                ' WHERE produtoId=:produtoId');
+    FDQ.ParamByName('produtoId')   .AsInteger  := Self.F_produtoId;
+    FDQ.ParamByName('nome')        .AsString   := Self.F_nome;
+    FDQ.ParamByName('descricao')   .AsString   := Self.F_descricao;
+    FDQ.ParamByName('valor')       .AsFloat    := Self.F_valor;
+    FDQ.ParamByName('quantidade')  .AsFloat    := Self.F_quantidade;
+    FDQ.ParamByName('categoriaId') .AsInteger  := Self.F_categoriaId;
+
+    // ? correto - verifica nil ANTES de chamar .Empty
+    if not Assigned(Self.F_Foto) or Self.F_Foto.Empty then
+      FDQ.ParamByName('foto').Clear
+    else
+    begin
+      Stream := TMemoryStream.Create;
+      try
+        Self.F_Foto.SaveToStream(Stream);
+        Stream.Position := 0;
+        FDQ.ParamByName('foto').LoadFromStream(Stream, ftBlob);
+      finally
+        FreeAndNil(Stream);
+      end;
+    end;
+
+    try
+    dtmPrincipalDB.StartTransaction;
+    FDQ.ExecSQL;
+    dtmPrincipalDB.Commit;
+    except
+    dtmPrincipalDB.Rollback;
+    Result := False;
+    end;
+  finally
+  if Assigned(FDQ) then
+    FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'Inserir'}
+   function TProduto.Inserir: Boolean;
+var FDQ: TFDQuery;
+     Stream: TMemoryStream;
+begin
+  try
+      Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection:= dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('INSERT INTO PRODUTOS (nome, '+
+                                      'descricao, '+
+                                      'valor, '+
+                                      'quantidade,  '+
+                                      'categoriaId, '+
+                                      'foto '+
+                                      '        ) '+
+                  'VALUES             (:nome,'+
+                                      ':descricao,'+
+                                      ':valor,'+
+                                      ':quantidade,'+
+                                      ':categoriaId, '+
+                                      ':foto '+
+                                      '        ) ');
+    FDQ.ParamByName('nome').AsString          := Self.F_nome;
+    FDQ.ParamByName('descricao').AsString     := Self.F_descricao;
+    FDQ.ParamByName('valor').AsFloat          := Self.F_valor;
+    FDQ.ParamByName('quantidade').AsFloat     := Self.F_quantidade;
+    FDQ.ParamByName('categoriaId').AsInteger  := Self.F_categoriaId;
+
+    if not Assigned(Self.F_Foto) or Self.F_Foto.Empty then
+  FDQ.ParamByName('foto').Clear
+  else
+  begin
+    Stream := TMemoryStream.Create;
+    try
+      Self.F_Foto.SaveToStream(Stream);
+      Stream.Position := 0;
+      FDQ.ParamByName('foto').LoadFromStream(Stream, ftBlob);
+    finally
+      FreeAndNil(Stream);
+    end;
+  end;
+
+  try
+    dtmPrincipalDB.StartTransaction;
+    FDQ.ExecSQL;
+    dtmPrincipalDB.Commit;
+  except
+    dtmPrincipalDB.Rollback;
+  Result := False;
+  end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'Selecionar'}
+function TProduto.Selecionar(id: Integer): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('SELECT produtoId, '+
+                '       nome, '+
+                '       descricao, '+
+                '       valor, '+
+                '       quantidade, '+
+                '       categoriaId, '+
+                '       foto '+
+                '  FROM PRODUTOS '+
+                ' WHERE produtoId=:produtoId');
+    FDQ.ParamByName('produtoId').AsInteger := id;
+    try
+      FDQ.Open;
+      Self.F_produtoId     := FDQ.FieldByName('produtoId').AsInteger;
+      Self.F_nome          := FDQ.FieldByName('nome').AsString;
+      Self.F_descricao     := FDQ.FieldByName('descricao').AsString;
+      Self.F_valor         := FDQ.FieldByName('valor').AsFloat;
+      Self.F_quantidade    := FDQ.FieldByName('quantidade').AsFloat;
+      Self.F_categoriaId   := FDQ.FieldByName('categoriaId').AsInteger;
+      Self.F_Foto.Assign(FDQ.FieldByName('foto'));
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+end.

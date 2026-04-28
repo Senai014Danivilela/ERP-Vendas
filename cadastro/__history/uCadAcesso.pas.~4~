@@ -1,0 +1,52 @@
+unit uCadAcesso;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Vcl.ExtCtrls,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ComCtrls,cAcaoAcesso,uEnum,uDTMConexao;
+
+type
+  TfrmCadAcaoAcesso = class(TForm1)
+    FDQListagemacaoacessoId: TFDAutoIncField;
+    FDQListagemdescricao: TStringField;
+    FDQListagemchave: TStringField;
+    edtAcaoAcessoId: TLabeledEdit;
+    edtDescricao: TLabeledEdit;
+    edtChave: TLabeledEdit;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    oAcaoAcesso:TAcaoAcesso;
+    function Gravar(EstadoDoCadastro:TEstadoCadastro):Boolean; override;
+    function Apagar:Boolean; override;
+  end;
+
+var
+  frmCadAcaoAcesso: TfrmCadAcaoAcesso;
+
+implementation
+
+{$R *.dfm}
+
+function TfrmCadAcaoAcesso.Apagar: Boolean;
+begin
+ if oAcaoAcesso.Selecionar(FDQListagem.FieldByName('acaoacessoId').AsInteger) then begin
+   Result:=oAcaoAcesso.Apagar;
+  end;
+ end;
+
+
+function TfrmCadAcaoAcesso.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
+begin
+ if EstadoDoCadastro=ecInserir then
+    Result:= oAcaoAcesso.Inserir
+ else if EstadoDoCadastro=ecAlterar then
+    Result:= oAcaoAcesso.Atualizar;
+end;
+
+end.

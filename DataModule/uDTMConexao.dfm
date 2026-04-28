@@ -1,0 +1,17 @@
+object dtmPrincipal: TdtmPrincipal
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  Height = 261
+  Width = 604
+  object dtmPrincipalDB: TFDConnection
+    Params.Strings = (
+      'Server=DC-TR-01-VM\SERVERCURSO'
+      'Database=VENDAS'
+      'OSAuthent=Yes'
+      'DriverID=MSSQL')
+    TxOptions.EnableNested = False
+    LoginPrompt = False
+    Left = 16
+    Top = 24
+  end
+end

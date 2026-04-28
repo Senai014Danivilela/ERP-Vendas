@@ -1,0 +1,34 @@
+object DTMGrafico: TDTMGrafico
+  OldCreateOrder = False
+  Height = 165
+  Width = 266
+  object FDQProdutoEstaoque: TFDQuery
+    Active = True
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR, produtoId) +'#39' _ '#39'+nome AS Label, Quantid' +
+        'ade AS Value FROM PRODUTOS'
+      ''
+      '')
+    Left = 47
+    Top = 38
+    object FDQProdutoEstaoqueLabel: TStringField
+      FieldName = 'Label'
+      Origin = 'Label'
+      ReadOnly = True
+      Size = 93
+    end
+    object FDQProdutoEstaoqueValue: TFMTBCDField
+      FieldName = 'Value'
+      Origin = 'Value'
+      Precision = 18
+      Size = 5
+    end
+  end
+  object dtsProdutoEstoque: TDataSource
+    DataSet = FDQProdutoEstaoque
+    Left = 135
+    Top = 54
+  end
+end

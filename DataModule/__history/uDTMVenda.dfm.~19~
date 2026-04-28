@@ -1,0 +1,109 @@
+object dtmVenda: TdtmVenda
+  OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  Height = 167
+  Width = 285
+  object FDQCliente: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      'SELECT clienteID,'
+      '        nome'
+      'FROM CLIENTES')
+    Left = 40
+    Top = 24
+    object FDQClienteclienteID: TFDAutoIncField
+      DisplayLabel = 'Codigo'
+      FieldName = 'clienteID'
+      Origin = 'clienteID'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQClientenome: TStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Origin = 'nome'
+      Size = 60
+    end
+  end
+  object FDQProdutos: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      ' SELECT produtoId,'
+      '        nome,'
+      '        valor,'
+      '        quantidade'
+      ' FROM PRODUTOS')
+    Left = 120
+    Top = 40
+    object FDQProdutosprodutoId: TFDAutoIncField
+      DisplayLabel = 'Codigo'
+      FieldName = 'produtoId'
+      ReadOnly = True
+    end
+    object FDQProdutosnome: TStringField
+      DisplayLabel = 'Nome'
+      FieldName = 'nome'
+      Size = 60
+    end
+    object FDQProdutosvalor: TFMTBCDField
+      DisplayLabel = 'Valor'
+      FieldName = 'valor'
+      Precision = 18
+      Size = 5
+    end
+    object FDQProdutosquantidade: TFMTBCDField
+      DisplayLabel = 'Quantidade'
+      FieldName = 'quantidade'
+      Precision = 18
+      Size = 5
+    end
+  end
+  object cdsItensVenda: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 200
+    Top = 40
+    object cdsItensVendaprodutoId: TIntegerField
+      DisplayLabel = 'C'#243'digo'
+      FieldName = 'produtoId'
+    end
+    object cdsItensVendaNomeProduto: TStringField
+      DisplayLabel = 'Nome do Produto'
+      FieldName = 'NomeProduto'
+      Size = 60
+    end
+    object cdsItensVendaquantidade: TFloatField
+      DisplayLabel = 'Quantidade'
+      FieldName = 'quantidade'
+    end
+    object cdsItensVendavalorUnitario: TFloatField
+      DisplayLabel = 'Valor Unitario'
+      FieldName = 'valorUnitario'
+    end
+    object cdsItensVendavalorTotalProduto: TFloatField
+      DisplayLabel = 'Total do Produto'
+      FieldName = 'valorTotalProduto'
+    end
+    object cdsItensVendavalorTotalVenda: TAggregateField
+      FieldName = 'valorTotalVenda'
+      DisplayName = ''
+      Expression = 'SUM(ValorTotalProduto)'
+    end
+  end
+  object dtsProdutos: TDataSource
+    DataSet = FDQProdutos
+    Left = 120
+    Top = 88
+  end
+  object dtsCliente: TDataSource
+    DataSet = FDQCliente
+    Left = 40
+    Top = 80
+  end
+  object dtsItensVenda: TDataSource
+    DataSet = cdsItensVenda
+    Left = 200
+    Top = 96
+  end
+end

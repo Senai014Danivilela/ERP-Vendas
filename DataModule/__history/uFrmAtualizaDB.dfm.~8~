@@ -1,0 +1,60 @@
+object frmAtualizaDB: TfrmAtualizaDB
+  Left = 0
+  Top = 0
+  BorderStyle = bsNone
+  Caption = 'frmAtualizaDB'
+  ClientHeight = 146
+  ClientWidth = 670
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poScreenCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 670
+    Height = 146
+    Align = alClient
+    BevelOuter = bvLowered
+    BevelWidth = 3
+    BorderWidth = 3
+    Color = clBackground
+    DockSite = True
+    ParentBackground = False
+    TabOrder = 0
+    ExplicitHeight = 292
+    object Panel2: TPanel
+      Left = 6
+      Top = 6
+      Width = 658
+      Height = 134
+      Align = alClient
+      Color = clSilver
+      Enabled = False
+      FullRepaint = False
+      ParentBackground = False
+      TabOrder = 0
+      ExplicitHeight = 243
+      object Label1: TLabel
+        Left = 112
+        Top = 47
+        Width = 473
+        Height = 29
+        Caption = 'Atualiza'#231#227'o do Banco de Dados. AGUARDE...'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -24
+        Font.Name = 'Tahoma'
+        Font.Style = []
+        ParentFont = False
+        OnClick = Label1Click
+      end
+    end
+  end
+end

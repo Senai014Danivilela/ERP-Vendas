@@ -1,0 +1,116 @@
+object DTMGrafico: TDTMGrafico
+  OldCreateOrder = False
+  Height = 288
+  Width = 372
+  object FDQProdutoEstaoque: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR, produtoId) +'#39' _ '#39'+nome AS Label, Quantid' +
+        'ade AS Value FROM PRODUTOS'
+      ''
+      '')
+    Left = 63
+    Top = 38
+    object FDQProdutoEstaoqueLabel: TStringField
+      FieldName = 'Label'
+      Origin = 'Label'
+      ReadOnly = True
+      Size = 93
+    end
+    object FDQProdutoEstaoqueValue: TFMTBCDField
+      FieldName = 'Value'
+      Origin = 'Value'
+      Precision = 18
+      Size = 5
+    end
+  end
+  object dtsProdutoEstoque: TDataSource
+    DataSet = FDQProdutoEstaoque
+    Left = 175
+    Top = 38
+  end
+  object FDQValorVendaPorCliente: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      
+        'SELECT CONVERT(VARCHAR,VENDAS.clienteID) +'#39' _ '#39'+CLIENTES.nome AS' +
+        ' Label,'
+      'SUM(VENDAS.totalVenda) AS Value'
+      'FROM VENDAS'
+      
+        '     INNER JOIN CLIENTES ON CLIENTES.clienteID = VENDAS.clienteI' +
+        'D'
+      
+        'WHERE VENDAS.dataVenda BETWEEN CONVERT(DATE,GETDATE()-7)AND CONV' +
+        'ERT(DATE,GETDATE())'
+      'GROUP BY VENDAS.clienteID,CLIENTES.nome'
+      '')
+    Left = 63
+    Top = 94
+    object FDQValorVendaPorClienteLabel: TStringField
+      FieldName = 'Label'
+      Origin = 'Label'
+      ReadOnly = True
+      Size = 93
+    end
+    object FDQValorVendaPorClienteValue: TFMTBCDField
+      FieldName = 'Value'
+      Origin = 'Value'
+      ReadOnly = True
+      Precision = 38
+      Size = 5
+    end
+  end
+  object FDQ10ProdutosMaisVendidos: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      
+        'SELECT TOP 10 CONVERT(VARCHAR,vi.produtoId) +'#39' _ '#39'+p.nome AS Lab' +
+        'el,'
+      'SUM(vi.totalProduto) AS Value'
+      'FROM VENDASITENS as vi'
+      '     INNER JOIN PRODUTOS AS p ON p.produtoId = vi.produtoId'
+      'GROUP BY vi.produtoId,p.nome'
+      'ORDER BY Label DESC')
+    Left = 63
+    Top = 150
+    object FDQ10ProdutosMaisVendidosLabel: TStringField
+      FieldName = 'Label'
+      Origin = 'Label'
+      ReadOnly = True
+      Size = 93
+    end
+    object FDQ10ProdutosMaisVendidosValue: TFMTBCDField
+      FieldName = 'Value'
+      Origin = 'Value'
+      ReadOnly = True
+      Precision = 38
+      Size = 5
+    end
+  end
+  object FDQVendasUltimaSemana: TFDQuery
+    Connection = dtmPrincipal.dtmPrincipalDB
+    SQL.Strings = (
+      'SELECT VENDAS.dataVenda AS Label,'
+      ' SUM(VENDAS.totalVenda) AS Value'
+      'FROM VENDAS'
+      
+        'WHERE VENDAS.dataVenda BETWEEN CONVERT(DATE, GETDATE()-7) and CO' +
+        'NVERT(DATE, GETDATE())'
+      'GROUP BY VENDAS.datavenda')
+    Left = 63
+    Top = 206
+    object FDQVendasUltimaSemanaLabel: TSQLTimeStampField
+      FieldName = 'Label'
+      Origin = 'Label'
+    end
+    object FDQVendasUltimaSemanaValue: TFMTBCDField
+      FieldName = 'Value'
+      Origin = 'Value'
+      ReadOnly = True
+      Precision = 38
+      Size = 5
+    end
+  end
+end

@@ -1,0 +1,307 @@
+unit cAcaoAcesso;
+
+interface
+
+uses
+  System.Classes,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Dialogs,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
+  FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys,
+  FireDAC.VCLUI.Wait, Data.DB, FireDAC.Comp.Client,
+  FireDAC.Phys.MSSQL, System.SysUtils, Vcl.Forms, Vcl.Buttons;
+
+type
+  TAcaoAcesso = class
+  private
+    dtmPrincipalDB: TFDConnection;
+    F_acaoAcessoId: Integer;
+    F_descricao: String;
+    F_chave: string;
+
+    class function UsuarioTemPermissao(
+      aUsuarioId: Integer; aChave: String; aConexao: TFDConnection): Boolean;
+
+  public
+    constructor Create(aConexao: TFDConnection);
+    destructor Destroy; override;
+
+    class procedure PreencherAcoes(aForm: TForm; aConexao: TFDConnection); static;
+    function Inserir: Boolean;
+    function Atualizar: Boolean;
+    function Apagar: Boolean;
+    function Selecionar(id: Integer): Boolean;
+    function ChaveExiste(aChave: String; aId: Integer = 0): Boolean;
+
+    class procedure CriarAcoes(aNomeForm: TFormClass; aConexao: TFDConnection); static;
+
+  published
+    property codigo: Integer read F_acaoAcessoId write F_acaoAcessoId;
+    property descricao: string read F_descricao write F_descricao;
+    property chave: string read F_chave write F_chave;
+  end;
+
+implementation
+
+{ CREATE / DESTROY }
+constructor TAcaoAcesso.Create(aConexao: TFDConnection);
+begin
+  dtmPrincipalDB := aConexao;
+end;
+
+destructor TAcaoAcesso.Destroy;
+begin
+  inherited;
+end;
+
+{ APAGAR }
+function TAcaoAcesso.Apagar: Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  if MessageDlg('Apagar o registro:'#13#13 +
+    'Codigo: ' + IntToStr(F_acaoAcessoId) + #13 +
+    'Nome: ' + F_descricao,
+    mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Text := 'DELETE FROM ACAOACESSO WHERE AcaoAcessoId = :id';
+    FDQ.ParamByName('id').AsInteger := F_acaoAcessoId;
+
+    dtmPrincipalDB.StartTransaction;
+    try
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+      Result := True;
+    except
+      dtmPrincipalDB.Rollback;
+      Result := False;
+    end;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+{ ATUALIZAR }
+function TAcaoAcesso.Atualizar: Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Text :=
+      'UPDATE ACAOACESSO SET descricao = :descricao, chave = :chave ' +
+      'WHERE AcaoAcessoId = :id';
+
+    FDQ.ParamByName('id').AsInteger := F_acaoAcessoId;
+    FDQ.ParamByName('descricao').AsString := F_descricao;
+    FDQ.ParamByName('chave').AsString := F_chave;
+
+    dtmPrincipalDB.StartTransaction;
+    try
+      FDQ.ExecSQL;
+      dtmPrincipalDB.Commit;
+      Result := True;
+    except
+      dtmPrincipalDB.Rollback;
+      Result := False;
+    end;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+{ INSERIR }
+function TAcaoAcesso.Inserir: Boolean;
+var
+  Qry: TFDQuery;
+begin
+  Qry := TFDQuery.Create(nil);
+  try
+    Qry.Connection := dtmPrincipalDB;
+    Qry.SQL.Text :=
+      'INSERT INTO ACAOACESSO (descricao, chave) VALUES (:descricao, :chave)';
+
+    Qry.ParamByName('descricao').AsString := F_descricao;
+    Qry.ParamByName('chave').AsString := F_chave;
+
+    dtmPrincipalDB.StartTransaction;
+    try
+      Qry.ExecSQL;
+      dtmPrincipalDB.Commit;
+      Result := True;
+    except
+      dtmPrincipalDB.Rollback;
+      Result := False;
+    end;
+
+  finally
+    Qry.Free;
+  end;
+end;
+
+{ SELECIONAR }
+function TAcaoAcesso.Selecionar(id: Integer): Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Text :=
+      'SELECT AcaoAcessoId, descricao, chave FROM ACAOACESSO WHERE AcaoAcessoId = :id';
+
+    FDQ.ParamByName('id').AsInteger := id;
+    FDQ.Open;
+
+    if not FDQ.IsEmpty then
+    begin
+      F_acaoAcessoId := FDQ.FieldByName('AcaoAcessoId').AsInteger;
+      F_descricao := FDQ.FieldByName('descricao').AsString;
+      F_chave := FDQ.FieldByName('chave').AsString;
+      Result := True;
+    end
+    else
+      Result := False;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+{ ?? CORRIGIDO }
+function TAcaoAcesso.ChaveExiste(aChave: String; aId: Integer): Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := dtmPrincipalDB;
+    FDQ.SQL.Text :=
+      'SELECT COUNT(*) Qtde FROM ACAOACESSO WHERE chave = :chave';
+
+    FDQ.ParamByName('chave').AsString := aChave;
+
+    if aId > 0 then
+    begin
+      FDQ.SQL.Add('AND AcaoAcessoId <> :id');
+      FDQ.ParamByName('id').AsInteger := aId;
+    end;
+
+    FDQ.Open;
+    Result := FDQ.FieldByName('Qtde').AsInteger > 0;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+
+{ ?? PERMISSÃO }
+class function TAcaoAcesso.UsuarioTemPermissao(
+  aUsuarioId: Integer; aChave: String; aConexao: TFDConnection): Boolean;
+var
+  Qry: TFDQuery;
+  perfil: String;
+begin
+  Result := False;
+
+  Qry := TFDQuery.Create(nil);
+  try
+    Qry.Connection := aConexao;
+
+    Qry.SQL.Text :=
+      'SELECT P.nome FROM USUARIOS U ' +
+      'JOIN PERFIL P ON P.perfilId = U.perfilId ' +
+      'WHERE U.usuarioId = :usuarioId';
+
+    Qry.ParamByName('usuarioId').AsInteger := aUsuarioId;
+    Qry.Open;
+
+    if Qry.IsEmpty then Exit;
+
+    perfil := UpperCase(Trim(Qry.FieldByName('nome').AsString));
+
+    if perfil = 'ADMIN' then
+      Exit(True);
+
+    Qry.Close;
+    Qry.SQL.Text :=
+      'SELECT 1 FROM PERFILACAO PA ' +
+      'JOIN ACAOACESSO A ON A.AcaoAcessoId = PA.AcaoAcessoId ' +
+      'JOIN USUARIOS U ON U.perfilId = PA.perfilId ' +
+      'WHERE U.usuarioId = :usuarioId ' +
+      'AND A.chave = :chave ' +
+      'AND PA.ativo = 1';
+
+    Qry.ParamByName('usuarioId').AsInteger := aUsuarioId;
+    Qry.ParamByName('chave').AsString := Trim(aChave);
+    Qry.Open;
+
+    Result := not Qry.IsEmpty;
+
+  finally
+    Qry.Free;
+  end;
+end;
+
+{ ?? PREENCHER AÇÕES }
+class procedure TAcaoAcesso.PreencherAcoes(aForm: TForm; aConexao: TFDConnection);
+var
+  i: Integer;
+  oAcao: TAcaoAcesso;
+begin
+  oAcao := TAcaoAcesso.Create(aConexao);
+  try
+    oAcao.descricao := aForm.Caption;
+    oAcao.chave := aForm.ClassName;
+
+    if not oAcao.ChaveExiste(oAcao.chave) then
+      oAcao.Inserir;
+
+    for i := 0 to aForm.ComponentCount - 1 do
+    begin
+      if (aForm.Components[i] is TBitBtn) and
+         (TBitBtn(aForm.Components[i]).Tag = 99) then
+      begin
+        oAcao.descricao :=
+          'BOTÃO ' + StringReplace(TBitBtn(aForm.Components[i]).Caption, '&', '', [rfReplaceAll]);
+
+        oAcao.chave :=
+          aForm.ClassName + '_' + TBitBtn(aForm.Components[i]).Name;
+
+        if not oAcao.ChaveExiste(oAcao.chave) then
+          oAcao.Inserir;
+      end;
+    end;
+
+  finally
+    oAcao.Free;
+  end;
+end;
+
+{ ?? CRIAR AÇÕES }
+class procedure TAcaoAcesso.CriarAcoes(aNomeForm: TFormClass; aConexao: TFDConnection);
+var
+  form: TForm;
+begin
+  form := nil;
+  try
+    form := aNomeForm.Create(nil);
+    PreencherAcoes(form, aConexao);
+  finally
+    FreeAndNil(form);
+  end;
+end;
+
+end.

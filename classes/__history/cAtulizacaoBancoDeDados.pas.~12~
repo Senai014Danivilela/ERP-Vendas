@@ -1,0 +1,86 @@
+unit cAtulizacaoBancoDeDados;
+
+interface
+
+ uses
+ System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils, Datasnap.DBClient,uEnum,cControleEstoque;
+
+ type
+  TAtualizaBancoDados = class
+   private
+    dtmPrincipalDB:TFDConnection;
+   public
+   constructor Create(aConexao: TFDConnection);
+   procedure ExecutaDiretoBancoDeDados(aScript:string);
+  end;
+
+  type
+  TAtualizaBancoDadosMSSQL = class
+   private
+    dtmPrincipalDB:TFDConnection;
+   public
+    function AtualizarBancoDeDadosMSSQL: Boolean;
+constructor Create(aConexao: TFDConnection);
+
+
+  end;
+
+implementation
+
+constructor TAtualizaBancoDados.Create(aConexao: TFDConnection);
+begin
+   dtmPrincipalDB:= aConexao;
+end;
+procedure TAtualizaBancoDados.ExecutaDiretoBancoDeDados(aScript: String);
+Var Qry:TFDQuery;
+Begin
+  Try
+    Qry:=TFDQuery.Create(nil);
+    Qry.Connection:=dtmPrincipalDB;
+    Qry.SQL.Clear;
+    Qry.SQL.Add(aScript);
+    Try
+      dtmPrincipalDB.StartTransaction;
+      Qry.ExecSQL;
+      dtmPrincipalDB.Commit;
+    Except
+      dtmPrincipalDB.Rollback;
+    End;
+  Finally
+    Qry.Close;
+    if Assigned(Qry) then
+       FreeAndNil(Qry);
+  End;
+end;
+
+function TAtualizaBancoDadosMSSQL.AtualizarBancoDeDadosMSSQL: Boolean;
+var oAtualizarDB:TAtualizaBancoDados;
+    oTabela: TAtualizaBancoDadosMSSQL;
+begin
+  Try
+    //Classe Principal de Atualiza  o
+    oAtualizarDB := TAtualizaBancoDados.Create(dtmPrincipalDB);
+
+    //Sub-Class de Atualiza  o
+    oTabela := TAtualizaBancoDadosMSSQL.Create(dtmPrincipalDB);
+  Finally
+    FreeAndNil(oTabela);
+    FreeAndNil(oAtualizarDB);
+  End;
+end;
+
+
+constructor TAtualizaBancoDadosMSSQL.Create(aConexao: TFDConnection);
+begin
+    dtmPrincipalDB:= aConexao;
+end;
+
+
+
+end.

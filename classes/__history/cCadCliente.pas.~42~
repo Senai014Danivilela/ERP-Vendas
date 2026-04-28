@@ -1,0 +1,326 @@
+﻿unit cCadCliente;
+
+interface
+uses System.Classes,
+         Vcl.Controls,
+         Vcl.ExtCtrls,
+         Vcl.Dialogs,FireDAC.Stan.Intf,FireDAC.Stan.Option,FireDAC.Stan.Error,FireDAC.UI.Intf,
+         FireDAC.Phys.Intf,FireDAC.Stan.Def,FireDAC.Stan.Pool,FireDAC.Stan.Async,
+         FireDAC.Phys,FireDAC.VCLUI.Wait,Data.DB,FireDAC.Comp.Client,FireDAC.Phys.MSSQL,
+         System.SysUtils,uDTMConexao,cCredito, DateUtils;
+
+
+
+ type
+  TCliente = class
+   private
+      FConexao:TFDConnection;
+      F_clienteId:Integer; // int
+      F_nome:string; //varchar
+      F_endereco:string;
+      F_cidade:string;
+      F_bairro:string;
+      F_estado:string;
+      F_cep:string;
+      F_telefone:string;
+      F_email:string;
+      F_dataNascimento:TDateTime;
+      F_statusId:Integer;
+      F_documentoId:Integer;
+      F_documento:string;
+      F_credito:Double;
+
+   public
+   constructor Create(aConexao: TFDConnection);
+   destructor Destroy; override;
+   function Atualizar:Boolean;
+   function Apagar:Boolean;
+   function Inserir:Boolean;
+   function Selecionar(id:Integer):Boolean;
+    function PodeVender: Boolean;
+    procedure AtualizarStatus;
+
+published
+   property codigo           :Integer    read F_clienteId      write F_clienteId;
+   property nome             :string     read F_nome           write F_nome;
+   property endereco         :string     read F_endereco       write F_endereco;
+   property cidade           :string     read F_cidade         write F_cidade;
+   property bairro           :string     read F_bairro         write F_bairro;
+   property estado           :string     read F_estado         write F_estado;
+   property cep              :string     read F_cep            write F_cep;
+   property telefone         :string     read F_telefone       write F_telefone;
+   property email            :string     read F_email          write F_email;
+   property dataNascimento   :TDateTime  read F_dataNascimento write F_dataNascimento;
+   property statusId         :Integer    read F_statusId       write F_statusId ;
+   property documentoId      :Integer    read F_documentoId    write F_documentoId ;
+   property documento        :string     read F_documento      write F_documento ;
+   property credito          :Double     read F_credito        write F_credito ;
+  end;
+  implementation
+
+ {$REGION 'Create e Destroy'}
+constructor TCliente.Create(aConexao: TFDConnection);
+begin
+   inherited Create;
+   FConexao:= aConexao;
+end;
+destructor TCliente.Destroy;
+begin
+  inherited;
+end;
+{$ENDREGION}
+
+{$REGION 'APAGAR'}
+ function TCliente.Apagar: Boolean;
+var FDQ: TFDQuery;
+begin
+  Result := False;
+
+  if MessageDlg('Apagar cliente?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+    Exit;
+
+  FDQ := TFDQuery.Create(nil);
+  try
+    FDQ.Connection := FConexao;
+
+    FConexao.StartTransaction;
+
+    try
+      // 🔥 apaga crédito primeiro
+      FDQ.SQL.Text := 'DELETE FROM CREDITO WHERE clienteId = :id';
+      FDQ.ParamByName('id').AsInteger := Self.codigo;
+      FDQ.ExecSQL;
+
+      // 🔥 depois cliente
+      FDQ.SQL.Text := 'DELETE FROM CLIENTES WHERE clienteId = :id';
+      FDQ.ParamByName('id').AsInteger := Self.codigo;
+      FDQ.ExecSQL;
+
+      FConexao.Commit;
+      Result := True;
+    except
+      FConexao.Rollback;
+      Result := False;
+    end;
+
+  finally
+    FDQ.Free;
+  end;
+end;
+{$REGION 'Atualizar'}
+ function TCliente.Atualizar: Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection := FConexao;
+    FDQ.SQL.Clear;
+   FDQ.SQL.Add('UPDATE CLIENTES '+
+            '   SET nome           = :nome, '+
+            '       endereco       = :endereco, '+
+            '       cidade         = :cidade, '+
+            '       bairro         = :bairro, '+
+            '       estado         = :estado, '+
+            '       cep            = :cep, '+
+            '       telefone       = :telefone, '+
+            '       email          = :email, '+
+            '       dataNascimento = :dataNascimento, '+
+            '       statusId       = :statusId, '+
+             '      documentoId    = :documentoId, '+
+            '       documento      = :documento '+
+             ' WHERE clienteID = :clienteID');
+    FDQ.ParamByName('clienteID')     .AsInteger  := Self.F_clienteId;
+    FDQ.ParamByName('nome')          .AsString   := Self.F_nome;
+    FDQ.ParamByName('endereco')      .AsString   := Self.F_endereco;
+    FDQ.ParamByName('cidade')        .AsString   := Self.F_cidade;
+    FDQ.ParamByName('bairro')        .AsString   := Self.F_bairro;
+    FDQ.ParamByName('estado')        .AsString   := Self.F_estado;
+    FDQ.ParamByName('cep')           .AsString   := Self.F_cep;
+    FDQ.ParamByName('telefone')      .AsString   := Self.F_telefone;
+    FDQ.ParamByName('email')         .AsString   := Self.F_email;
+    FDQ.ParamByName('dataNascimento').AsDateTime := Self.F_dataNascimento;
+    FDQ.ParamByName('statusId')      .AsInteger  := Self.F_statusId;
+    FDQ.ParamByName('documentoId')   .AsInteger  := Self.F_documentoId;
+    FDQ.ParamByName('documento')     .AsString   := Self.F_documento;
+
+    Try
+      FConexao.StartTransaction;
+      FDQ.ExecSQL;
+      FConexao.Commit;
+    Except
+      FConexao.Rollback;
+      Result:=false;
+    End;
+
+
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'Inserir'}
+function TCliente.Inserir: Boolean;
+var
+  FDQ: TFDQuery;
+begin
+  Result := False;
+  FDQ := TFDQuery.Create(nil);
+
+  try
+    FDQ.Connection := FConexao;
+
+    FConexao.StartTransaction;
+
+    // 🔹 1. INSERT CLIENTE + PEGAR ID (FORMA SEGURA)
+    FDQ.SQL.Text :=
+      'INSERT INTO CLIENTES ('+
+      'nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, statusId, documentoId, documento) '+
+      'OUTPUT INSERTED.clienteId '+
+      'VALUES ('+
+      ':nome, :endereco, :cidade, :bairro, :estado, :cep, :telefone, :email, :dataNascimento, :statusId, :documentoId, :documento)';
+
+    FDQ.ParamByName('nome').AsString             := Self.nome;
+    FDQ.ParamByName('endereco').AsString         := Self.endereco;
+    FDQ.ParamByName('cidade').AsString           := Self.cidade;
+    FDQ.ParamByName('bairro').AsString           := Self.bairro;
+    FDQ.ParamByName('estado').AsString           := Self.estado;
+    FDQ.ParamByName('cep').AsString              := Self.cep;
+    FDQ.ParamByName('telefone').AsString         := Self.telefone;
+    FDQ.ParamByName('email').AsString            := Self.email;
+    FDQ.ParamByName('dataNascimento').AsDateTime := Self.dataNascimento;
+    FDQ.ParamByName('statusId').AsInteger        := Self.statusId;
+    FDQ.ParamByName('documentoId').AsInteger     := Self.documentoId;
+    FDQ.ParamByName('documento').AsString        := Self.documento;
+
+    // 🔥 Executa e já pega o ID
+    FDQ.Open;
+    Self.codigo := FDQ.Fields[0].AsInteger;
+
+    // 🔍 Segurança
+    if Self.codigo = 0 then
+      raise Exception.Create('Erro ao gerar ID do cliente');
+
+    // 🔹 2. INSERT CREDITO (SE INFORMADO)
+    if Self.credito > 0 then
+    begin
+      FDQ.Close;
+      FDQ.SQL.Clear;
+
+      FDQ.SQL.Text :=
+        'INSERT INTO CREDITO (clienteId, credito) VALUES (:clienteId, :credito)';
+
+      FDQ.ParamByName('clienteId').AsInteger := Self.codigo;
+      FDQ.ParamByName('credito').AsFloat := Self.credito;
+
+      FDQ.ExecSQL;
+    end;
+
+    FConexao.Commit;
+    Result := True;
+
+  except
+    on E: Exception do
+    begin
+      FConexao.Rollback;
+      ShowMessage('Erro ao inserir: ' + E.Message);
+      Result := False;
+    end;
+  end;
+
+  FDQ.Free;
+end; {$ENDREGION}
+
+{$REGION 'Selecionar'}
+function TCliente.Selecionar(id: Integer): Boolean;
+var FDQ: TFDQuery;
+begin
+  try
+    Result := True;
+    FDQ := TFDQuery.Create(nil);
+    FDQ.Connection :=FConexao;
+    FDQ.SQL.Clear;
+    FDQ.SQL.Add('SELECT clienteID, '+
+                '       nome, '+
+                '       endereco, '+
+                '       cidade, '+
+                '       bairro, '+
+                '       estado, '+
+                '       cep, '+
+                '       telefone, '+
+                '       email, '+
+                '       dataNascimento, '+
+                '       statusId, '+
+                '       documentoId, '+
+                '       documento '+
+                '  FROM CLIENTES '+
+                ' WHERE clienteID=:clienteID');
+    FDQ.ParamByName('clienteID').AsInteger := id;
+    try
+      FDQ.close;
+      FDQ.Open;
+
+      Self.F_clienteId     := FDQ.FieldByName('clienteID').AsInteger;
+      Self.F_nome          := FDQ.FieldByName('nome').AsString;
+      Self.F_endereco      := FDQ.FieldByName('endereco').AsString;
+      Self.F_cidade        := FDQ.FieldByName('cidade').AsString;
+      Self.F_bairro        := FDQ.FieldByName('bairro').AsString;
+      Self.F_estado        := FDQ.FieldByName('estado').AsString;
+      Self.F_cep           := FDQ.FieldByName('cep').AsString;
+      Self.F_telefone      := FDQ.FieldByName('telefone').AsString;
+      Self.F_email         := FDQ.FieldByName('email').AsString;
+      Self.F_dataNascimento:= FDQ.FieldByName('dataNascimento').AsDateTime;
+      Self.F_statusId      := FDQ.FieldByName('statusId').AsInteger;
+      Self.F_documentoId   := FDQ.FieldByName('documentoId').AsInteger;
+      Self.F_documento     := FDQ.FieldByName('documento').AsString;
+
+    except
+      Result := False;
+    end;
+  finally
+    if Assigned(FDQ) then
+      FreeAndNil(FDQ);
+  end;
+end;
+{$ENDREGION}
+
+{$REGION 'AtualizarStatus'}
+procedure TCliente.AtualizarStatus;
+var saldo: Double;
+ oCredito: TCredito
+begin
+  saldo := oCredito.ObterSaldo(Self.codigo);
+
+  // 🔴 BLOQUEADO
+  if saldo <= -5000 then
+    Self.statusId := 2
+
+  // 🟡 ATENÇÃO
+  else if saldo < 0 then
+    Self.statusId := 3
+
+  // ⚠️ NÃO ALTERA PARA ATIVO AQUI
+  else
+  begin
+    // mantém o status atual
+    // só muda se já for ativo
+    if Self.statusId = 1 then
+      Self.statusId := 1;
+  end;
+
+  Self.Atualizar;
+end;
+{$REGION 'Pode Vender'}
+function TCliente.PodeVender: Boolean;
+begin
+  // 🚫 BLOQUEADO
+  if Self.statusId = 2 then
+    raise Exception.Create('Cliente BLOQUEADO!');
+
+  Result := True;
+end;
+{$ENDREGION}
+
+end.

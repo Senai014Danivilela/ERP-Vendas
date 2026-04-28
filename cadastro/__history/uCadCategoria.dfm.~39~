@@ -1,0 +1,72 @@
+inherited frmCadCategorias: TfrmCadCategorias
+  Caption = 'CADASTRO CATEGORIA'
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited pgcPrincipal: TPageControl
+    TabOrder = 0
+    inherited tabListagem: TTabSheet
+      inherited grdListagem: TDBGrid
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'categoriaId'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'descricao'
+            Visible = True
+          end>
+      end
+    end
+    inherited tabManutencao: TTabSheet
+      object edtCategoriaId: TLabeledEdit
+        Tag = 1
+        Left = 32
+        Top = 32
+        Width = 121
+        Height = 21
+        EditLabel.Width = 33
+        EditLabel.Height = 13
+        EditLabel.Caption = 'C'#243'digo'
+        MaxLength = 10
+        NumbersOnly = True
+        TabOrder = 0
+      end
+      object edtDescricao: TLabeledEdit
+        Tag = 2
+        Left = 32
+        Top = 72
+        Width = 202
+        Height = 21
+        EditLabel.Width = 46
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Descri'#231#227'o'
+        MaxLength = 30
+        TabOrder = 1
+      end
+    end
+  end
+  inherited pnlRodape: TPanel
+    TabOrder = 1
+    inherited btnNavigator: TDBNavigator
+      Hints.Strings = ()
+    end
+  end
+  inherited FDQListagem: TFDQuery
+    Active = True
+    SQL.Strings = (
+      'SELECT categoriaId,'
+      #9#9'descricao'
+      'from CATEGORIAS')
+    object FDQListagemcategoriaId: TFDAutoIncField
+      FieldName = 'categoriaId'
+      ProviderFlags = [pfInWhere, pfInKey]
+      ReadOnly = True
+    end
+    object FDQListagemdescricao: TStringField
+      FieldName = 'descricao'
+      Size = 30
+    end
+  end
+end
