@@ -543,7 +543,6 @@ inherited frmCadCliente: TfrmCadCliente
     end
   end
   inherited FDQListagem: TFDQuery
-    Active = True
     SQL.Strings = (
       'SELECT '
       '    C.clienteId,'
@@ -589,8 +588,8 @@ inherited frmCadCliente: TfrmCadCliente
       '    S.descricao,'
       '    D.descricao,'
       '    C.documento')
-    Left = 36
-    Top = 344
+    Left = 28
+    Top = 264
     object FDQListagemclienteId: TFDAutoIncField
       FieldName = 'clienteId'
       Origin = 'C.clienteId'
@@ -667,8 +666,8 @@ inherited frmCadCliente: TfrmCadCliente
     end
   end
   inherited dtslistagem: TDataSource
-    Left = 108
-    Top = 344
+    Left = 60
+    Top = 264
   end
   object FDQStatus: TFDQuery
     Active = True
@@ -678,8 +677,8 @@ inherited frmCadCliente: TfrmCadCliente
       'descricao'
       'FROM STATUSCLIENTES'
       'ORDER BY descricao')
-    Left = 252
-    Top = 344
+    Left = 308
+    Top = 296
     object FDQStatusstatusId: TIntegerField
       FieldName = 'statusId'
       Origin = 'statusId'
@@ -694,8 +693,8 @@ inherited frmCadCliente: TfrmCadCliente
   end
   object dtsStatus: TDataSource
     DataSet = FDQStatus
-    Left = 308
-    Top = 344
+    Left = 364
+    Top = 296
   end
   object FDQDocumento: TFDQuery
     Active = True
@@ -704,8 +703,8 @@ inherited frmCadCliente: TfrmCadCliente
       'SELECT documentoId , descricao'
       'FROM DOCUMENTOS '
       'ORDER BY descricao')
-    Left = 476
-    Top = 344
+    Left = 500
+    Top = 304
     object FDQDocumentodocumentoId: TIntegerField
       FieldName = 'documentoId'
       Required = True
@@ -717,8 +716,8 @@ inherited frmCadCliente: TfrmCadCliente
   end
   object dtsDocumento: TDataSource
     DataSet = FDQDocumento
-    Left = 556
-    Top = 344
+    Left = 564
+    Top = 304
   end
   object ImageListStatus: TImageList
     Left = 180

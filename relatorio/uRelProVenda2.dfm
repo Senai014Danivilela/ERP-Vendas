@@ -173,10 +173,10 @@ object frmRelProVenda2: TfrmRelProVenda2
         Left = 0
         Top = 33
         Width = 718
-        Height = 20
+        Height = 32
         object RLDBText1: TRLDBText
           Left = 83
-          Top = 3
+          Top = 7
           Width = 30
           Height = 16
           DataField = 'clienteID'
@@ -185,7 +185,7 @@ object frmRelProVenda2: TfrmRelProVenda2
         end
         object RLDBText2: TRLDBText
           Left = 135
-          Top = 0
+          Top = 7
           Width = 36
           Height = 19
           DataField = 'nome'
@@ -194,7 +194,7 @@ object frmRelProVenda2: TfrmRelProVenda2
         end
         object RLDBText4: TRLDBText
           Left = 649
-          Top = 3
+          Top = 7
           Width = 66
           Height = 16
           DataField = 'dataVenda'
@@ -203,7 +203,7 @@ object frmRelProVenda2: TfrmRelProVenda2
         end
         object RLLabel5: TRLLabel
           Left = 0
-          Top = 3
+          Top = 7
           Width = 66
           Height = 16
           Caption = 'CLIENTE :'
@@ -217,7 +217,7 @@ object frmRelProVenda2: TfrmRelProVenda2
         end
         object RLLabel9: TRLLabel
           Left = 116
-          Top = 1
+          Top = 7
           Width = 9
           Height = 16
           Caption = '-'
@@ -230,8 +230,8 @@ object frmRelProVenda2: TfrmRelProVenda2
           Transparent = False
         end
         object RLLabel7: TRLLabel
-          Left = 600
-          Top = 3
+          Left = 601
+          Top = 7
           Width = 43
           Height = 16
           Caption = 'DATA:'
@@ -243,10 +243,29 @@ object frmRelProVenda2: TfrmRelProVenda2
           ParentFont = False
           Transparent = False
         end
+        object RLDraw3: TRLDraw
+          Left = 0
+          Top = 0
+          Width = 718
+          Height = 3
+          Align = faTop
+          Borders.Sides = sdCustom
+          Borders.DrawLeft = False
+          Borders.DrawTop = False
+          Borders.DrawRight = False
+          Borders.DrawBottom = False
+          DrawKind = dkLine
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlack
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          Pen.Width = 2
+        end
       end
       object RLSubDetail1: TRLSubDetail
         Left = 0
-        Top = 53
+        Top = 65
         Width = 718
         Height = 68
         DataSource = dtsVendaItens
@@ -256,21 +275,83 @@ object frmRelProVenda2: TfrmRelProVenda2
           Width = 718
           Height = 33
           BandType = btHeader
-          Color = 15510584
+          Color = 8280101
           ParentColor = False
           Transparent = False
           object RLLabel10: TRLLabel
             Left = 3
-            Top = 6
+            Top = 8
             Width = 85
             Height = 16
             Caption = 'PRODUTOS :'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWhite
+            Font.Height = -13
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Transparent = False
+          end
+          object RLLabel11: TRLLabel
+            Left = 293
+            Top = 8
+            Width = 92
+            Height = 16
+            Caption = 'QUANTIDADE:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWhite
+            Font.Height = -13
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Transparent = False
+          end
+          object RLLabel12: TRLLabel
+            Left = 464
+            Top = 8
+            Width = 57
+            Height = 16
+            Caption = 'VALOR :'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWhite
+            Font.Height = -13
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Transparent = False
+          end
+          object RLLabel13: TRLLabel
+            Left = 570
+            Top = 8
+            Width = 142
+            Height = 16
+            Caption = 'TOTAL DO PRODUTO:'
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWhite
+            Font.Height = -13
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            Transparent = False
+          end
+          object RLDraw4: TRLDraw
+            Left = 0
+            Top = 0
+            Width = 718
+            Height = 3
+            Align = faTop
+            Borders.Sides = sdCustom
+            Borders.DrawLeft = False
+            Borders.DrawTop = False
+            Borders.DrawRight = False
+            Borders.DrawBottom = False
+            DrawKind = dkLine
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clBlack
             Font.Height = -13
             Font.Name = 'Arial'
             Font.Style = [fsBold]
-            ParentFont = False
+            Pen.Width = 2
             Transparent = False
           end
         end
@@ -281,7 +362,7 @@ object frmRelProVenda2: TfrmRelProVenda2
           Height = 24
           object RLDBText3: TRLDBText
             Left = 83
-            Top = 5
+            Top = 6
             Width = 57
             Height = 16
             DataField = 'produtoId'
@@ -290,7 +371,7 @@ object frmRelProVenda2: TfrmRelProVenda2
           end
           object RLDBText6: TRLDBText
             Left = 135
-            Top = 5
+            Top = 6
             Width = 38
             Height = 16
             DataField = 'Nome'
@@ -312,8 +393,8 @@ object frmRelProVenda2: TfrmRelProVenda2
             Transparent = False
           end
           object RLDBText7: TRLDBText
-            Left = 322
-            Top = 5
+            Left = 345
+            Top = 6
             Width = 67
             Height = 16
             Alignment = taRightJustify
@@ -322,8 +403,8 @@ object frmRelProVenda2: TfrmRelProVenda2
             Text = ''
           end
           object RLDBText8: TRLDBText
-            Left = 499
-            Top = 5
+            Left = 480
+            Top = 6
             Width = 74
             Height = 16
             Alignment = taRightJustify
@@ -332,8 +413,8 @@ object frmRelProVenda2: TfrmRelProVenda2
             Text = ''
           end
           object RLDBText9: TRLDBText
-            Left = 629
-            Top = 5
+            Left = 613
+            Top = 6
             Width = 74
             Height = 16
             Alignment = taRightJustify
@@ -374,6 +455,25 @@ object frmRelProVenda2: TfrmRelProVenda2
         Font.Style = [fsBold]
         ParentFont = False
         Transparent = False
+      end
+      object RLDraw5: TRLDraw
+        Left = 0
+        Top = 0
+        Width = 718
+        Height = 3
+        Align = faTop
+        Borders.Sides = sdCustom
+        Borders.DrawLeft = False
+        Borders.DrawTop = False
+        Borders.DrawRight = False
+        Borders.DrawBottom = False
+        DrawKind = dkLine
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        Pen.Width = 2
       end
     end
   end

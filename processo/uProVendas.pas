@@ -382,6 +382,14 @@ begin
    IndiceAtual :='nome';
   end;
 
+procedure TfrmProVenda.FormShow(Sender: TObject);
+begin
+  inherited;
+  CentralizarDadosGrid(grdListagem);
+  CentralizarTitulosGrid(grdListagem);
+  CarregarColunas(grdListagem);
+end;
+
 procedure TfrmProVenda.CarregarRegistroSelecionado;
 begin
   lkpProduto.KeyValue   := dtmVenda.cdsItensVenda.FieldByName('produtoId').AsString;

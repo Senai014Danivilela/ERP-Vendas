@@ -67,6 +67,12 @@ type
     RLDBText7: TRLDBText;
     RLDBText8: TRLDBText;
     RLDBText9: TRLDBText;
+    RLLabel11: TRLLabel;
+    RLLabel12: TRLLabel;
+    RLLabel13: TRLLabel;
+    RLDraw3: TRLDraw;
+    RLDraw4: TRLDraw;
+    RLDraw5: TRLDraw;
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }

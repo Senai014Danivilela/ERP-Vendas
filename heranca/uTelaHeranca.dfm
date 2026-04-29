@@ -29,10 +29,6 @@ object Form1: TForm1
     TabOrder = 1
     object tabListagem: TTabSheet
       Caption = 'listagem'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object pnlListagemTopo: TPanel
         Left = 0
         Top = 0
@@ -104,7 +100,7 @@ object Form1: TForm1
         Color = clWhite
         DataSource = dtslistagem
         DrawingStyle = gdsClassic
-        FixedColor = 8285540
+        FixedColor = 8273429
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -11
@@ -127,10 +123,6 @@ object Form1: TForm1
     object tabManutencao: TTabSheet
       Caption = 'Manutencao'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
   end
   object pnlRodape: TPanel

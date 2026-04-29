@@ -19,6 +19,7 @@ type
     FDQListagemdata: TSQLTimeStampField;
     FDQListagemvendaId: TIntegerField;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
   public
@@ -35,6 +36,14 @@ implementation
 procedure TfrmProCredito.FormCreate(Sender: TObject);
 begin
  IndiceAtual :='nome';
+end;
+
+procedure TfrmProCredito.FormShow(Sender: TObject);
+begin
+  inherited;
+  CentralizarDadosGrid(grdListagem);
+  CentralizarTitulosGrid(grdListagem);
+  CarregarColunas(grdListagem);
 end;
 
 end.

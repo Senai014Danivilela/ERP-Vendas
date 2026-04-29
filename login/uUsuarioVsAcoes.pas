@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Vcl.StdCtrls,
-  Vcl.Buttons, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids,uDTMConexao;
+  Vcl.Buttons, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids,uDTMConexao,uTelaHeranca;
 
 type
   TfrmUsuarioVsAcoes = class(TForm)
@@ -31,10 +31,6 @@ type
     procedure FDQUsuarioAfterScroll(DataSet: TDataSet);
     procedure FormShow(Sender: TObject);
     procedure grdAcoesDblClick(Sender: TObject);
-    procedure grdAcoesDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
-      State: TGridDrawState);
-    procedure grdUsuarioDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
-      State: TGridDrawState);
     private
     { Private declarations }
    // procedure SelecionarAcoesAcessoPorUsuario;
@@ -124,45 +120,7 @@ begin
   end;
 end;
 
-procedure TfrmUsuarioVsAcoes.grdAcoesDrawColumnCell(Sender: TObject;
-  const Rect: TRect; DataCol: Integer; Column: TColumn; State: TGridDrawState);
-var
-  Grid: TDBGrid;
-begin
 
-  Grid := Sender as TDBGrid;
-
-  //ZEBRAAAARRRRR
-  if not (gdSelected in State) then
-  begin
-    if Odd(Grid.DataSource.DataSet.RecNo) then
-      Grid.Canvas.Brush.Color := clWhite
-    else
-      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
-  end;
-
-  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
-end;
-
-procedure TfrmUsuarioVsAcoes.grdUsuarioDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
-  State: TGridDrawState);
-var
-  Grid: TDBGrid;
-begin
-
-  Grid := Sender as TDBGrid;
-
-  //ZEBRAAAARRRRR
-  if not (gdSelected in State) then
-  begin
-    if Odd(Grid.DataSource.DataSet.RecNo) then
-      Grid.Canvas.Brush.Color := clWhite
-    else
-      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
-  end;
-
-  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
-end;
 
 
 end.

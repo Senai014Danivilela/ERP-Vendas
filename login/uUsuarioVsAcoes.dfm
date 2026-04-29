@@ -36,16 +36,24 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Width = 263
       Height = 297
       Align = alClient
+      Color = clWhite
       DataSource = dtsUsuario
+      DrawingStyle = gdsGradient
       FixedColor = 8285540
+      GradientStartColor = 13602864
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlack
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
-      OnDrawColumnCell = grdUsuarioDrawColumnCell
     end
   end
   object Panel3: TPanel
@@ -62,7 +70,9 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Height = 297
       Align = alClient
       DataSource = dtsAcoes
+      DrawingStyle = gdsGradient
       FixedColor = 8285540
+      GradientStartColor = 13602864
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -70,7 +80,6 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
       TitleFont.Style = []
-      OnDrawColumnCell = grdAcoesDrawColumnCell
       OnDblClick = grdAcoesDblClick
       Columns = <
         item

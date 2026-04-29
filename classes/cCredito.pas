@@ -2,7 +2,8 @@ unit cCredito;
 
 interface
 
-uses FireDAC.Comp.Client, System.SysUtils;
+uses FireDAC.Comp.Client, System.SysUtils,System.Variants,
+  Data.DB;
 
 type
   TCredito = class
@@ -50,7 +51,8 @@ begin
 end;
 
  function TCredito.DescontarCredito(clienteId: Integer; valor: Double; vendaId: Integer = 0): Boolean;
-var FDQ: TFDQuery;
+var
+  FDQ: TFDQuery;
 begin
   Result := False;
 
@@ -59,15 +61,18 @@ begin
     FDQ.Connection := FConexao;
 
     FDQ.SQL.Text :=
-  'INSERT INTO CREDITO (clienteId, credito, tipo, vendaId) ' +
-        'VALUES (:id, :valor, ''SAIDA'', :vendaId)';
+      'INSERT INTO CREDITO (clienteId, credito, tipo, vendaId) ' +
+      'VALUES (:id, :valor, ''SAIDA'', :vendaId)';
 
     FDQ.ParamByName('id').AsInteger := clienteId;
-
-    //  SEMPRE NEGATIVO (segurança)
     FDQ.ParamByName('valor').AsFloat := -Abs(valor);
 
-    FDQ.ParamByName('vendaId').AsInteger := vendaId;
+    FDQ.ParamByName('vendaId').DataType := ftInteger;
+
+    if vendaId > 0 then
+      FDQ.ParamByName('vendaId').AsInteger := vendaId
+    else
+      FDQ.ParamByName('vendaId').Clear;
 
     FDQ.ExecSQL;
     Result := True;
@@ -76,6 +81,7 @@ begin
     FDQ.Free;
   end;
 end;
+
 
 function TCredito.ObterSaldo(clienteId: Integer): Double;
 var FDQ: TFDQuery;
