@@ -327,7 +327,7 @@ begin
   end;
 end;
         {$ENDREGION}
-
+        
 {$REGION ' btn Pesquisar'}
 procedure TForm1.btnPesquisarClick(Sender: TObject);
 var
@@ -343,6 +343,8 @@ var
   PosOrder: Integer;
   PosGroup: Integer;
   Texto: string;
+  UsarHaving: Boolean;
+  ValorFloat: Double;
 begin
   Texto := Trim(mskPesquisar.Text);
 
@@ -354,8 +356,12 @@ begin
     Self.Name + '_' + TBitBtn(Sender).Name,
     dtmPrincipal.dtmPrincipalDB) then
   begin
-    MessageDlg('Usuário: ' + oUsuarioLogado.nome + ' não tem permissão',
-      mtWarning, [mbOK], 0);
+    MessageDlg(
+      'Usuário: ' + oUsuarioLogado.nome + ' não tem permissão',
+      mtWarning,
+      [mbOK],
+      0
+    );
     Exit;
   end;
 
@@ -367,10 +373,11 @@ begin
     Exit;
   end;
 
-  NomeCampo  := '';
+  NomeCampo   := '';
   CondicaoSQL := '';
+  UsarHaving  := False;
 
-  // remove ORDER BY
+  { remove ORDER BY }
   PosOrder := Pos('ORDER BY', UpperCase(SelectOriginal));
   if PosOrder > 0 then
   begin
@@ -383,7 +390,7 @@ begin
     OrderByClause := '';
   end;
 
-  // remove GROUP BY do que sobrou
+  { remove GROUP BY do que sobrou }
   PosGroup := Pos('GROUP BY', UpperCase(SQLSemOrder));
   if PosGroup > 0 then
   begin
@@ -396,28 +403,32 @@ begin
     GroupByClause       := '';
   end;
 
-  // WHERE ou AND baseado no SQL limpo
-  if Pos('where', LowerCase(SQLSemGroupAndOrder)) > 0 then
+  { WHERE ou AND }
+  if Pos('WHERE', UpperCase(SQLSemGroupAndOrder)) > 0 then
     WhereOrAnd := ' AND '
   else
     WhereOrAnd := ' WHERE ';
 
-  // pesquisa por status
+  { pesquisa por status }
   if SameText(Texto, 'Ativo') or
      SameText(Texto, 'Inativo') or
      SameText(Texto, 'Bloqueado') or
      SameText(Texto, 'Atenção') or
      SameText(Texto, 'Prospecto') then
   begin
-    CondicaoSQL := WhereOrAnd +
-                   'UPPER(S.descricao) = ' +
-                   QuotedStr(UpperCase(Texto));
+    CondicaoSQL :=
+      WhereOrAnd +
+      'UPPER(S.descricao) = ' +
+      QuotedStr(UpperCase(Texto));
 
     FDQListagem.Close;
     FDQListagem.SQL.Clear;
-    FDQListagem.SQL.Add(
-      SQLSemGroupAndOrder + CondicaoSQL + ' ' + GroupByClause + ' ' + OrderByClause
-    );
+    FDQListagem.SQL.Text :=
+      Trim(SQLSemGroupAndOrder) + ' ' +
+      Trim(CondicaoSQL) + ' ' +
+      Trim(GroupByClause) + ' ' +
+      Trim(OrderByClause);
+
     FDQListagem.Open;
 
     mskPesquisar.Clear;
@@ -425,7 +436,7 @@ begin
     Exit;
   end;
 
-  // identifica o campo e tipo
+  { identifica o campo }
   for I := 0 to FDQListagem.FieldCount - 1 do
   begin
     if FDQListagem.Fields[I].FieldName = IndiceAtual then
@@ -470,10 +481,12 @@ begin
         NomeCampo := 'D.descricao';
         TipoCampo := ftString;
       end
-      else if IndiceAtual = 'creditoCliente' then
+      else if (IndiceAtual = 'creditoCliente') or
+              (IndiceAtual = 'credito') then
       begin
-        NomeCampo := 'ISNULL(SUM(CR.credito), 0)';
+        NomeCampo := 'CR.credito';
         TipoCampo := ftFloat;
+        UsarHaving := False;
       end
       else
         NomeCampo := FDQListagem.Fields[I].FieldName;
@@ -488,7 +501,7 @@ begin
     Exit;
   end;
 
-  // monta condição conforme tipo do campo
+  { monta condição conforme tipo }
   if TipoCampo in [ftInteger, ftSmallint, ftAutoInc] then
   begin
     if not TryStrToInt(Texto, I) then
@@ -496,38 +509,95 @@ begin
       ShowMessage('Digite um número válido!');
       Exit;
     end;
-    CondicaoSQL := WhereOrAnd + NomeCampo + ' = ' + IntToStr(I);
+
+    CondicaoSQL :=
+      WhereOrAnd +
+      NomeCampo + ' = ' + IntToStr(I);
   end
   else if TipoCampo in [ftString, ftWideString] then
   begin
-    CondicaoSQL := WhereOrAnd +
-                   'UPPER(' + NomeCampo + ') LIKE ' +
-                   QuotedStr('%' + UpperCase(Texto) + '%');
+    CondicaoSQL :=
+      WhereOrAnd +
+      'UPPER(' + NomeCampo + ') LIKE ' +
+      QuotedStr('%' + UpperCase(Texto) + '%');
   end
   else if TipoCampo in [ftDate, ftDateTime, ftTimeStamp] then
   begin
-    CondicaoSQL := WhereOrAnd +
-                   'CAST(' + NomeCampo + ' AS DATE) = ' +
-                   QuotedStr(Texto);
+    CondicaoSQL :=
+      WhereOrAnd +
+      'CAST(' + NomeCampo + ' AS DATE) = ' +
+      QuotedStr(Texto);
   end
   else if TipoCampo in [ftFloat, ftCurrency, ftFMTBcd] then
   begin
-    CondicaoSQL := WhereOrAnd +
-                   NomeCampo + ' = ' +
-                   StringReplace(Texto, ',', '.', [rfReplaceAll]);
+    if not TryStrToFloat(
+      StringReplace(Texto, ',', '.', [rfReplaceAll]),
+      ValorFloat
+    ) then
+    begin
+      ShowMessage('Digite um valor numérico válido!');
+      Exit;
+    end;
+
+    { corrigido para evitar falha com float/currency }
+    CondicaoSQL :=
+      WhereOrAnd +
+      NomeCampo + ' >= ' +
+      StringReplace(FloatToStr(ValorFloat), ',', '.', [rfReplaceAll]) +
+      ' AND ' +
+      NomeCampo + ' < ' +
+      StringReplace(FloatToStr(ValorFloat + 1), ',', '.', [rfReplaceAll]);
   end;
 
-  // executa
+  { executa }
   FDQListagem.Close;
   FDQListagem.SQL.Clear;
-  FDQListagem.SQL.Add(
-    SQLSemGroupAndOrder + CondicaoSQL + ' ' + GroupByClause + ' ' + OrderByClause
-  );
+
+  FDQListagem.SQL.Text :=
+    Trim(SQLSemGroupAndOrder) + ' ' +
+    Trim(CondicaoSQL) + ' ' +
+    Trim(GroupByClause) + ' ' +
+    Trim(OrderByClause);
+
   FDQListagem.Open;
 
   mskPesquisar.Clear;
   mskPesquisar.SetFocus;
-end;{$ENDREGION}
+end;
+
+procedure TForm1.mskPesquisarChange(Sender: TObject);
+var Date:TDateTime;
+begin
+
+  if(trim(TMaskEdit(Sender).Text) = '')then
+    Exit;
+
+  if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
+  begin
+    FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
+  end
+
+  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
+  begin
+   try
+     FDQListagem.Locate(IndiceAtual, (TMaskEdit(Sender).Text), [])
+   except
+
+   end;
+  end
+
+  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
+  begin
+   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
+   begin
+     FDQListagem.Locate(IndiceAtual, Date, []);
+   end
+  end
+  else
+     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
+end;
+
+{$ENDREGION}
 
 {$REGION ' O BANCO DE DADOS'}{ }{}
 procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -588,39 +658,39 @@ end;
          {$ENDREGION}
 
 {$REGION ' AREA DE PESQUISA'}
-procedure TForm1.mskPesquisarChange(Sender: TObject);
-var Date:TDateTime;
-begin
-  if(trim(TMaskEdit(Sender).Text) = '')then
-    Exit;
-
-  if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
-  begin
-    FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
-  end
-
-   else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
-  begin
-   try
-     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
-   except
-
-   end;
-  end
-
-  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
-  begin
-   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
-   begin
-     FDQListagem.Locate(IndiceAtual, Date, []);
-   end
-  end
-
-  else
-     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])  ;
-
- Exit;
-end;
+//procedure TForm1.mskPesquisarChange(Sender: TObject);
+//var Date:TDateTime;
+//begin
+//  if(trim(TMaskEdit(Sender).Text) = '')then
+//    Exit;
+//
+//  if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
+//  begin
+//    FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
+//  end
+//
+//   else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
+//  begin
+//   try
+//     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
+//   except
+//
+//   end;
+//  end
+//
+//  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
+//  begin
+//   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
+//   begin
+//     FDQListagem.Locate(IndiceAtual, Date, []);
+//   end
+//  end
+//
+//  else
+//     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])  ;
+//
+// Exit;
+//end;
 
 {$endregion}
 

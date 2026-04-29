@@ -1,18 +1,14 @@
 inherited frmCadProduto: TfrmCadProduto
-  Caption = 'cadastro de Produto'
+  Caption = ' Produto'
   ClientHeight = 435
   ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Height = 394
-    ActivePage = tabManutencao
     TabOrder = 0
     ExplicitHeight = 394
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 366
       inherited pnlListagemTopo: TPanel
         Height = 105
@@ -67,9 +63,6 @@ inherited frmCadProduto: TfrmCadProduto
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 366
       object DESCRICAO: TLabel
         Left = 19
@@ -272,8 +265,8 @@ inherited frmCadProduto: TfrmCadProduto
       '             C.descricao As DescricaoCategoria'
       'FROM PRODUTOS as P'
       'LEFT JOIN CATEGORIAS AS C ON C.categoriaId = P.categoriaId')
-    Left = 292
-    Top = 8
+    Left = 324
+    Top = 56
     object FDQListagemprodutoId: TFDAutoIncField
       DisplayLabel = 'CODIGO'
       FieldName = 'produtoId'
@@ -320,8 +313,8 @@ inherited frmCadProduto: TfrmCadProduto
     end
   end
   inherited dtslistagem: TDataSource
-    Left = 364
-    Top = 8
+    Left = 380
+    Top = 48
   end
   object FDQCategoria: TFDQuery
     Active = True

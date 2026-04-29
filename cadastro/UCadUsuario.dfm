@@ -1,13 +1,9 @@
 inherited frmCadUsuario: TfrmCadUsuario
-  Caption = 'Cadastro de Usuarios'
+  Caption = 'Usuarios'
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       inherited grdListagem: TDBGrid
         Columns = <
           item
@@ -23,10 +19,6 @@ inherited frmCadUsuario: TfrmCadUsuario
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       object edtUsuarioId: TLabeledEdit
         Tag = 1
         Left = 282
@@ -80,7 +72,7 @@ inherited frmCadUsuario: TfrmCadUsuario
     Left = 612
     Top = 184
     object FDQListagemusuarioId: TFDAutoIncField
-      DisplayLabel = 'Codigo'
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'usuarioId'
       Origin = 'usuarioId'
       ProviderFlags = [pfInWhere, pfInKey]

@@ -1,13 +1,9 @@
 inherited frmCadAcaoAcesso: TfrmCadAcaoAcesso
-  Caption = 'frmCadAcaoAcesso'
+  Caption = 'A'#231#227'o Acesso'
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       inherited grdListagem: TDBGrid
         Columns = <
           item
@@ -28,10 +24,6 @@ inherited frmCadAcaoAcesso: TfrmCadAcaoAcesso
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       object edtAcaoAcessoId: TLabeledEdit
         Tag = 1
         Left = 305
@@ -86,19 +78,21 @@ inherited frmCadAcaoAcesso: TfrmCadAcaoAcesso
       'SELECT acaoacessoId, descricao ,chave FROM acaoacesso'
       '')
     object FDQListagemacaoacessoId: TFDAutoIncField
-      DisplayLabel = 'Codigo'
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'acaoacessoId'
       Origin = 'acaoacessoId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object FDQListagemdescricao: TStringField
+      DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'descricao'
       Origin = 'descricao'
       Required = True
       Size = 100
     end
     object FDQListagemchave: TStringField
+      DisplayLabel = 'Chave'
       FieldName = 'chave'
       Origin = 'chave'
       Required = True

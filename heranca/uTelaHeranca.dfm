@@ -100,7 +100,7 @@ object Form1: TForm1
         Color = clWhite
         DataSource = dtslistagem
         DrawingStyle = gdsClassic
-        FixedColor = 8273429
+        FixedColor = clGray
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlack
         Font.Height = -11

@@ -3,7 +3,7 @@ object frmLogin: TfrmLogin
   Top = 0
   BorderIcons = []
   BorderStyle = bsDialog
-  Caption = 'frmLogin'
+  Caption = 'Login'
   ClientHeight = 370
   ClientWidth = 610
   Color = clBtnFace
@@ -1267,7 +1267,7 @@ object frmLogin: TfrmLogin
     ParentBackground = False
     TabOrder = 1
     object Label1: TLabel
-      Left = 27
+      Left = 18
       Top = 65
       Width = 98
       Height = 23
@@ -1282,7 +1282,7 @@ object frmLogin: TfrmLogin
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 7
+      Left = 18
       Top = 138
       Width = 74
       Height = 23

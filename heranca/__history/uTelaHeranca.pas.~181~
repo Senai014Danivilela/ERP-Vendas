@@ -1,0 +1,706 @@
+﻿unit uTelaHeranca;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ComCtrls, Vcl.ExtCtrls,uEnum,uDTMConexao,RxToolEdit,RxCurrEdit,cUsuarioLogado,cArquivoIni,System.Math,Inifiles,
+  System.JSON, System.Net.HttpClient, System.Net.URLClient;
+
+type
+  TForm1 = class(TForm)
+    pgcPrincipal: TPageControl;
+    pnlRodape: TPanel;
+    tabListagem: TTabSheet;
+    tabManutencao: TTabSheet;
+    pnlListagemTopo: TPanel;
+    mskPesquisar: TMaskEdit;
+    btnPesquisar: TBitBtn;
+    grdListagem: TDBGrid;
+    btnNovo: TBitBtn;
+    btnAlterar: TBitBtn;
+    btnCancelar: TBitBtn;
+    btnGravar: TBitBtn;
+    btnApagar: TBitBtn;
+    btnFechar: TBitBtn;
+    btnNavigator: TDBNavigator;
+    FDQListagem: TFDQuery;
+    dtslistagem: TDataSource;
+    lblIndice: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure btnFecharClick(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure btnApagarClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure grdListagemTitleClick(Column: TColumn);
+    procedure mskPesquisarChange(Sender: TObject);
+    procedure grdListagemDblClick(Sender: TObject);
+    procedure grdListagemKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnPesquisarClick(Sender: TObject);
+    procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+  private
+    { Private declarations }
+    SelectOriginal:string;
+    procedure ControlarBotoes(btnNovo, btnAlterar, btnCancelar , btnGravar, btnApagar:TBitBtn ;
+              Navegador:TDBNavigator; pgcPrincipal:TPageControl ; Flag:Boolean);
+
+    procedure ControlarIndiceTab(pgcPrincipal:TPageControl; Indice:Integer);
+    function RetornarCampoTraduzido(Campo: string): string;
+    procedure ExibirLabelIndice(Campo: string; aLabel: TLabel);
+    function ExisteCampoObrigatorio: Boolean;
+    procedure DesabilitarEditPK;
+    procedure LimparEdits;
+
+
+
+  public
+    { Public declarations }
+    IndiceAtual:string;
+    EstadoDoCadastro:TEstadoCadastro;
+    function Apagar:Boolean; virtual;
+    function Gravar(EstadoDoCadastro:TEstadoCadastro):Boolean; virtual;
+    function SomenteNumeros(const Texto: String): String;
+    procedure BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
+    procedure CentralizarTitulosGrid(aGrid: TDBGrid);
+    procedure CentralizarDadosGrid(aGrid: TDBGrid);
+    function DocumentoValido(const S: string): Boolean;
+    procedure CarregarColunas(aGrid: TDBGrid);
+    procedure SalvarColunas(aGrid: TDBGrid);
+    function BuscarCEP(const CEP: string): TJSONObject;
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+uses
+  Upricipal;
+
+{$R *.dfm}
+ {$REGION 'OBSERVAÇÕES'}
+ //TAG: 1 - Chave Primaria - PK
+ //TAG: 2 - Campos Obrigatorios
+  {$ENDREGION}
+
+
+{$REGION ' PROCEDIMENTO DE CONTROLE DE TELA'}
+procedure TForm1.ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+ btnGravar, btnApagar:TBitBtn ;
+ Navegador:TDBNavigator; pgcPrincipal: TPageControl ; Flag:Boolean);
+begin
+    btnNovo.Enabled  :=Flag;
+    btnApagar.Enabled   :=Flag;
+    btnAlterar.Enabled  :=Flag;
+    Navegador.Enabled   :=Flag;
+    pgcPrincipal.Pages[0].TabVisible:=Flag;
+    btnCancelar.Enabled := not(Flag);
+    btnGravar.Enabled := not(Flag);
+
+   
+end;
+{$ENDREGION}
+
+{$REGION ' FUNÇAO PARA RETORNAR CAMPO'}
+   function TForm1.RetornarCampoTraduzido(Campo:string):string;
+    var i :Integer;
+   begin
+    for I := 0 to FDQListagem.Fields.Count-1 do begin
+      if LowerCase(FDQListagem.Fields[i].FieldName)=LowerCase(Campo) then begin
+      Result :=FDQListagem.Fields[i].DisplayLabel;
+       Break
+      end;
+    end;
+   end;
+
+
+procedure TForm1.ExibirLabelIndice(Campo:string; aLabel:TLabel);
+   begin
+     aLabel.Caption:=RetornarCampoTraduzido(Campo);
+   end;
+        //FUNÇÃO CAMPO OBRIGATORIO
+  function TForm1.ExisteCampoObrigatorio:Boolean;
+  var i:Integer;
+   begin
+   Result:=False;
+   for I := 0 to ComponentCount -1 do begin
+    if(Components[i] is TLabeledEdit) then begin
+      if (TLabeledEdit(Components[i]).Tag =2)and
+         (TLabeledEdit(Components[i]).Text=EmptyStr) then begin
+         MessageDlg(TLabeledEdit(Components[i]).EditLabel.Caption +
+                      'é um campo obrigatorio',mtInformation,[mbOK],0);
+         TLabeledEdit(Components[i]).SetFocus;
+         Result:=true;
+         Break;
+         end;
+
+     end;
+   end;
+
+   end;
+
+procedure TForm1.DesabilitarEditPK;
+var i:Integer;
+begin
+  for I := 0 to ComponentCount -1 do begin
+    if(Components[i] is TLabeledEdit) then begin
+      if (TLabeledEdit(Components[i]).Tag =1) then begin
+        TLabeledEdit(Components[i]).Enabled:=False;
+        Break;
+      end;
+    end;
+  end;
+end;
+
+procedure TForm1.LimparEdits;
+var i:Integer;
+begin
+  for I := 0 to ComponentCount -1 do begin
+    if(Components[i] is TLabeledEdit) then
+        TLabeledEdit(Components[i]).Text:=EmptyStr
+    else if (Components[i] is TEdit) then
+    TEdit(Components[i]).Text:=''
+     else if (Components[i] is TMaskEdit) then
+    TMaskEdit(Components[i]).Text:=''
+     else if (Components[i] is TMemo) then
+      TMemo(Components[i]).Text:=''
+     else if (Components[i] is TDBLookupComboBox) then
+    TDBLookupComboBox(Components[i]).KeyValue:=Null
+     else if (Components[i] is TCurrencyEdit) then
+    TCurrencyEdit(Components[i]).Value:=0
+     else if (Components[i] is TDateEdit) then
+    TDateEdit(Components[i]).Date:=0 ;
+      end;
+    end;
+
+
+             {$ENDREGION}
+
+{$REGION ' METOODOS VIRTUAIS'}
+function TForm1.Apagar: Boolean;
+begin
+    ShowMessage('DELETADO');
+    Result := True;
+end;
+  function TForm1.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
+begin
+     if (EstadoDoCadastro=ecInserir)then
+     Showmessage('Inserir')
+     else if (EstadoDoCadastro=ecAlterar) then
+     ShowMessage('Alterado');
+     Result := True;
+
+end;
+        {$ENDREGION}
+
+{$REGION ' INDICETAB'}{  }
+procedure TForm1.ControlarIndiceTab( pgcPrincipal: TPageControl ; Indice:Integer);
+ begin
+   if (pgcPrincipal.Pages[Indice].TabVisible) then
+     pgcPrincipal.TabIndex:=Indice;
+
+ end;
+       {$ENDREGION}
+
+{$REGION ' BOTAO NOVO'    }
+procedure TForm1.btnNovoClick(Sender: TObject);
+begin
+  if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo,Self.Name+'_'+TBitBtn(Sender).Name,dtmPrincipal.dtmPrincipalDB) then
+  begin
+    MessageDlg('Usuário: '+oUsuarioLogado.nome+', não tem permissão de acesso',mtWarning,[mbOK],0);
+    Abort;
+ end;
+
+    ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+                    btnGravar, btnApagar, btnNavigator,pgcPrincipal,false);
+    EstadoDoCadastro:=ecInserir;
+    LimparEdits;
+end;
+{$ENDREGION}
+
+{$REGION ' BOTAO ALTERAR'}{ }
+procedure TForm1.grdListagemDblClick(Sender: TObject);
+begin
+btnAlterar.Click;
+end;
+
+procedure TForm1.grdListagemKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+   BloqueiaCTRL_DEL_DBGrid(Key,Shift);
+end;
+
+procedure TForm1.btnAlterarClick(Sender: TObject);
+begin
+    if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo,Self.Name+'_'+TBitBtn(Sender).Name,dtmPrincipal.dtmPrincipalDB) then
+  begin
+    MessageDlg('Usuário: '+oUsuarioLogado.nome+', não tem permissão de acesso',mtWarning,[mbOK],0);
+    Abort;
+  end;
+
+    ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+                    btnGravar, btnApagar, btnNavigator,pgcPrincipal,false);
+    EstadoDoCadastro:=ecAlterar;
+end;
+
+
+       {$ENDREGION}
+
+{$REGION ' BOTAO APAGAR'}{ }
+procedure TForm1.btnApagarClick(Sender: TObject);
+begin
+  if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo,Self.Name+'_'+TBitBtn(Sender).Name,dtmPrincipal.dtmPrincipalDB) then
+  begin
+    MessageDlg('Usuário: '+oUsuarioLogado.nome+', não tem permissão de acesso',mtWarning,[mbOK],0);
+    Abort;
+  end;
+
+ try
+  if (Apagar) then begin
+    ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+            btnGravar, btnApagar, btnNavigator,pgcPrincipal,True);
+    ControlarIndiceTab( pgcPrincipal,0);
+     LimparEdits;
+   FDQListagem.Refresh;
+    end
+    else    begin
+      MessageDlg('Erro ao Apagar',mtError,[mbOK],0);
+    end;
+  finally
+     EstadoDoCadastro:=ecNenhum;
+  end;
+end;
+          {$ENDREGION}
+
+{$REGION ' BOTAO CANCELAR'}{ }{ BOTAO CANCELAR}
+procedure TForm1.btnCancelarClick(Sender: TObject);
+begin
+
+
+ ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+                btnGravar, btnApagar, btnNavigator,pgcPrincipal,true);
+ ControlarIndiceTab( pgcPrincipal,0);
+  EstadoDoCadastro:=ecNenhum;
+  LimparEdits;
+end;
+
+{$ENDREGION}
+
+{$REGION ' BOTAO FECHAR'}{ } { BOTAO }
+procedure TForm1.btnFecharClick(Sender: TObject);
+begin
+     Close;
+end;
+       {$ENDREGION}
+
+{$REGION ' BOTAO GRAVAR'}{ }{ BOTAO }
+procedure TForm1.btnGravarClick(Sender: TObject);
+begin
+    if not TUsuarioLogado.TenhoAcesso(oUsuarioLogado.codigo,Self.Name+'_'+TBitBtn(Sender).Name,dtmPrincipal.dtmPrincipalDB) then
+  begin
+    MessageDlg('Usuário: '+oUsuarioLogado.nome+', não tem permissão de acesso',mtWarning,[mbOK],0);
+    Abort;
+  end;
+
+    if(ExisteCampoObrigatorio)then
+       Abort;
+  try
+  if  Gravar(EstadoDoCadastro) then begin
+         ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+                 btnGravar, btnApagar, btnNavigator,pgcPrincipal,true);
+  ControlarIndiceTab( pgcPrincipal,0);
+   EstadoDoCadastro:=ecNenhum;
+   LimparEdits;
+   FDQListagem.Refresh;
+  end
+  else begin
+    MessageDlg('Erro na Gravação',mtError,[mbOK],0);
+  end;
+  finally
+  end;
+end;
+        {$ENDREGION}
+
+{$REGION ' btn Pesquisar'}
+procedure TForm1.btnPesquisarClick(Sender: TObject);
+var I:Integer;
+    TipoCampo:TFieldType;
+    NomeCampo: string;
+    WhereOrAnd: string;
+    CondicaoSQL: string;
+begin
+
+  if mskPesquisar.Text='' then
+  begin
+    FDQListagem.Close;
+    FDQListagem.SQL.Clear;
+    FDQListagem.SQL.Add(SelectOriginal);
+    FDQListagem.Open;
+    Abort;
+  end;
+
+  for I := 0 to FDQListagem.FieldCount-1 do
+  begin
+    if FDQListagem.Fields[i].FieldName=IndiceAtual then
+    begin
+      TipoCampo := FDQListagem.Fields[i].DataType;
+      if FDQListagem.Fields[i].Origin<>'' then
+      begin
+        if Pos('.',FDQListagem.Fields[i].Origin) > 1 then
+        NomeCampo := FDQListagem.Fields[i].Origin
+        else
+        NomeCampo := FDQListagem.Fields[i].Origin+'.'+FDQListagem.Fields[i].FieldName
+      end
+      else
+      NomeCampo := FDQListagem.Fields[i].FieldName;
+      Break;
+    end;
+  end;
+
+  if Pos('where', LowerCase(SelectOriginal)) > 0 then
+  begin
+    WhereOrAnd := ' and '
+  end
+  else
+  begin
+    WhereOrAnd := ' where ';
+  end;
+
+  if (TipoCampo=ftString) or (TipoCampo=ftWideString) then
+  begin
+    CondicaoSQL := WhereOrAnd+' '+ NomeCampo + ' LIKE '+QuotedStr('%'+mskPesquisar.Text+'%');
+  end
+  else if (TipoCampo in [ftInteger, ftSmallint, ftAutoInc]) then
+  begin
+    CondicaoSQL := WhereOrAnd+''+NomeCampo + '='+mskPesquisar.Text
+  end
+
+
+  else if (TipoCampo in [ftDate, ftDateTime, ftdate, ftTimeStamp]) then
+  begin
+      CondicaoSQL := WhereOrAnd+' '+' CAST '+'('+NomeCampo +' as date)' + '='+QuotedStr(mskEdit.Text)
+  end
+
+
+ else if (TipoCampo in [ftFloat, ftCurrency, ftFMTBcd]) then
+ begin
+    CondicaoSQl := WhereOrAnd+''+NomeCampo + '='+StringReplace(mskPesquisar.Text,',','.',[rfReplaceAll]);
+ end;
+
+
+  FDQListagem.Close;
+  FDQListagem.SQL.Clear;
+  FDQListagem.SQL.Add(SelectOriginal);
+  FDQListagem.SQL.Add(CondicaoSQL);
+  FDQListagem.Open;
+
+  mskPesquisar.Text:='';
+  mskPesquisar.SetFocus;
+
+end;
+{$REGION ' O BANCO DE DADOS'}{ }{}
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  SalvarColunas(grdListagem);
+  FDQListagem.Close;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+var
+  i: Integer;
+begin
+for i := 0 to ComponentCount - 1 do
+  begin
+    if Components[i] is TDBGrid then
+      TDBGrid(Components[i]).OnDrawColumnCell := grdListagemDrawColumnCell;
+  end;
+      FDQListagem.Connection:=dtmPrincipal.dtmPrincipalDB;
+
+// ← sem ponto e vírgula, com espaço no final de cada linha!
+
+      dtslistagem.DataSet:=FDQListagem;
+      grdListagem.DataSource:=dtslistagem;
+      grdListagem.Options:=[dgTitles,dgIndicator,dgColumnResize,
+      dgColLines,dgRowLines,dgTabs,
+      dgRowSelect,dgAlwaysShowSelection,dgCancelOnExit,
+      dgTitleClick,dgTitleHotTrack]
+
+
+end;
+
+
+
+procedure TForm1.FormShow(Sender: TObject);
+begin
+     if (FDQListagem.SQL.Text<>EmptyStr) then begin
+     FDQListagem.IndexFieldNames:=IndiceAtual;
+     ExibirLabelIndice(IndiceAtual,lblIndice);
+     SelectOriginal:=FDQListagem.SQL.Text;
+     FDQListagem.Open;
+     end;
+     ControlarIndiceTab( pgcPrincipal,0);
+      DesabilitarEditPK;
+     ControlarBotoes(btnNovo, btnAlterar, btnCancelar ,
+                    btnGravar, btnApagar, btnNavigator,pgcPrincipal,True);
+end;
+
+
+{$ENDREGION}
+
+{$REGION ' AREA DO FILDNAME'}
+procedure TForm1.grdListagemTitleClick(Column: TColumn);
+begin
+    IndiceAtual:= Column.FieldName;
+    FDQListagem.IndexFieldNames:=IndiceAtual;
+    ExibirLabelIndice(IndiceAtual,lblIndice);
+end;
+         {$ENDREGION}
+
+{$REGION ' AREA DE PESQUISA'}
+procedure TForm1.mskPesquisarChange(Sender: TObject);
+var Date:TDateTime;
+begin
+  if(trim(TMaskEdit(Sender).Text) = '')then
+    Exit;
+
+  if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
+  begin
+    FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
+  end
+
+   else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
+  begin
+   try
+     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
+   except
+
+   end;
+  end
+
+  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
+  begin
+   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
+   begin
+     FDQListagem.Locate(IndiceAtual, Date, []);
+   end
+  end
+
+  else
+     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])  ;
+
+ Exit;
+end;
+
+{$endregion}
+
+{$REGION ' Bloqueia CTRL_DEL  '}
+procedure TForm1.BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
+begin
+  //BLQUEIA O CTRL DELETE
+  if (Shift = [ssCtrl]) and (Key = 46) then
+     key := 0;
+end;
+ {$endregion}
+
+{$REGION ' CENTRALIZA O TITULO  '}
+ procedure TForm1.CentralizarTitulosGrid(aGrid: TDBGrid);
+var i: Integer;
+begin
+  for i := 0 to aGrid.Columns.Count - 1 do
+    aGrid.Columns[i].Title.Alignment := taCenter; // ← centraliza o título
+end;
+{$endregion}
+{$REGION ' CENTRALIZA DADOS DA GRID'}
+procedure TForm1.CentralizarDadosGrid(aGrid: TDBGrid);
+var
+  i: Integer;
+begin
+  for i := 0 to aGrid.Columns.Count - 1 do
+    aGrid.Columns[i].Alignment := taCenter;
+end;
+{$ENDREGION}
+
+{$REGION ' Metodo Somente Numeros'}
+                               {$REGION 'Explicaçao '}
+                               { Lê o texto
+                              Analisa caractere por caractere
+                              Filtra apenas números
+                              Retorna só os dígitos para o Banco de dados}
+                               {$endregion}
+function TForm1.SomenteNumeros(const Texto: String): String;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 1 to Length(Texto) do
+  begin
+    if Texto[i] in ['0'..'9'] then
+      Result := Result + Texto[i];
+  end;
+end;
+    {$endregion}
+
+{$REGION ' SALVANDO E CARREGANDO POSIÇÂO NA GRID  '}
+
+ {$REGION 'SALVA POSIÇÂO NA GRID'}
+procedure TForm1.SalvarColunas(aGrid: TDBGrid);
+var INI: TIniFile; i: Integer;
+begin
+  INI := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  try
+    for i := 0 to aGrid.Columns.Count-1 do
+    begin
+      // Salva largura e posição de cada coluna usando seção "Form_Grid"
+      INI.WriteInteger(Self.Name+'_'+aGrid.Name, 'col_'+IntToStr(i)+'_larg', aGrid.Columns[i].Width);
+      INI.WriteInteger(Self.Name+'_'+aGrid.Name, 'col_'+IntToStr(i)+'_pos',  aGrid.Columns[i].Index);
+    end;
+  finally
+    FreeAndNil(INI); // sempre libera o arquivo INI
+  end;
+end;
+  {$endregion}
+
+{$REGION 'CARREGA  POSIÇÂO NA GRID  '}
+procedure TForm1.CarregarColunas(aGrid: TDBGrid);
+var INI: TIniFile; i: Integer;
+begin
+  INI := TIniFile.Create(ChangeFileExt(Application.ExeName, '.ini'));
+  try
+    for i := 0 to aGrid.Columns.Count-1 do
+    begin
+      // Carrega largura e posição — usa valor atual como padrão se não existir
+      aGrid.Columns[i].Width := INI.ReadInteger(Self.Name+'_'+aGrid.Name, 'col_'+IntToStr(i)+'_larg', aGrid.Columns[i].Width);
+      aGrid.Columns[i].Index := INI.ReadInteger(Self.Name+'_'+aGrid.Name, 'col_'+IntToStr(i)+'_pos',  aGrid.Columns[i].Index);
+    end;
+  finally
+    FreeAndNil(INI); // sempre libera o arquivo INI
+  end;
+end;
+ {$endregion}
+ {$endregion}
+
+{$REGION ' DrawColumnCell-ZEBRAR  '}
+procedure TForm1.grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  Grid: TDBGrid;
+begin
+
+  Grid := Sender as TDBGrid;
+
+  //ZEBRAAAARRRRR
+  if not (gdSelected in State) then
+  begin
+    if Odd(Grid.DataSource.DataSet.RecNo) then
+      Grid.Canvas.Brush.Color := clWhite
+    else
+      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+  {$endregion}
+
+{$REGION ' VALIDAÇAO DE CPF E CNPJ  '}
+// Valida CPF (11 dígitos) ou CNPJ (14 dígitos)
+function TForm1.DocumentoValido(const S: string): Boolean;
+var
+  Num: string;
+  i: Integer;
+
+  // Função interna que calcula um dígito verificador
+  function CalcularDigito(Base: string; Pesos: array of Integer): Integer;
+  var
+    i, Soma, Resto: Integer;
+{$REGION 'SOMA DOS NUMEROS'}
+  begin
+    // Multiplica cada número pelo seu peso e soma tudo
+    // Ex: 1x10 + 2x9 + 3x8... = Soma
+    Soma := 0;
+    for i := 1 to Length(Base) do
+      Soma := Soma + StrToInt(Base[i]) * Pesos[i-1];
+
+    // CPF usa (Soma * 10) mod 11
+    if Length(Base) <= 9 then
+    begin
+      Result := (Soma * 10) mod 11;
+      if Result = 10 then Result := 0;
+    end
+    // CNPJ usa 11 - (Soma mod 11)
+    else
+    begin
+      Resto := Soma mod 11;
+      if Resto < 2 then Result := 0
+      else Result := 11 - Resto;
+    end;
+  end;  {$ENDREGION}
+begin
+
+ {$REGION 'CALCULO'}
+  // PASSO 1: Remove tudo que não é número
+  // Ex: "123.456.789-09" vira "12345678909"
+  Num := '';
+  for i := 1 to Length(S) do
+    if S[i] in ['0'..'9'] then
+      Num := Num + S[i];
+
+  // PASSO 2: Verifica se tem 11 (CPF) ou 14 (CNPJ) dígitos
+  if not (Length(Num) in [11, 14]) then
+  begin
+    Result := False;
+    Exit;
+  end;
+
+  // PASSO 3: Rejeita sequências repetidas
+  // Ex: 111.111.111-11 ou 00.000.000/0000-00
+  if Num = StringOfChar(Num[1], Length(Num)) then
+  begin
+    Result := False;
+    Exit;
+  end;
+         {$ENDREGION}
+
+ {$REGION 'VALIDAÇAO'}
+  // PASSO 4: Valida CPF
+  // Verifica se os 2 últimos dígitos batem com o cálculo
+  if Length(Num) = 11 then
+    Result :=
+      (CalcularDigito(Copy(Num,1,9),  [10,9,8,7,6,5,4,3,2])   = StrToInt(Num[10])) and
+      (CalcularDigito(Copy(Num,1,10), [11,10,9,8,7,6,5,4,3,2]) = StrToInt(Num[11]))
+
+  // PASSO 5: Valida CNPJ
+  // Mesma lógica do CPF mas com pesos diferentes
+  else
+    Result :=
+      (CalcularDigito(Copy(Num,1,12), [5,4,3,2,9,8,7,6,5,4,3,2])   = StrToInt(Num[13])) and
+      (CalcularDigito(Copy(Num,1,13), [6,5,4,3,2,9,8,7,6,5,4,3,2]) = StrToInt(Num[14]));
+    {$ENDREGION}
+ end;
+
+  {$endregion}
+
+{$REGION ' Buscar CEP  '}
+function TForm1.BuscarCEP(const CEP: string): TJSONObject;
+var
+  Http: THTTPClient;
+  Resp: IHTTPResponse;
+begin
+  Http := THTTPClient.Create;
+  try
+    Resp := Http.Get('https://viacep.com.br/ws/' + CEP + '/json/');
+    Result := TJSONObject.ParseJSONValue(Resp.ContentAsString) as TJSONObject;
+  finally
+    Http.Free;
+  end;
+end;
+{$endregion}
+
+
+end.

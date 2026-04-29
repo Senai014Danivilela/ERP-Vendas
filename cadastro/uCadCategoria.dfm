@@ -1,14 +1,10 @@
 inherited frmCadCategorias: TfrmCadCategorias
-  Caption = 'CADASTRO CATEGORIA'
+  Caption = 'Categoria'
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     TabOrder = 0
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       inherited grdListagem: TDBGrid
         Columns = <
           item
@@ -24,10 +20,6 @@ inherited frmCadCategorias: TfrmCadCategorias
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
-      ExplicitHeight = 308
       object edtCategoriaId: TLabeledEdit
         Tag = 1
         Left = 304
@@ -68,11 +60,13 @@ inherited frmCadCategorias: TfrmCadCategorias
       #9#9'descricao'
       'from CATEGORIAS')
     object FDQListagemcategoriaId: TFDAutoIncField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'categoriaId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object FDQListagemdescricao: TStringField
+      DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'descricao'
       Size = 30
     end

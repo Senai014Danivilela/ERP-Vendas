@@ -38,8 +38,8 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Align = alClient
       Color = clWhite
       DataSource = dtsUsuario
-      DrawingStyle = gdsGradient
-      FixedColor = 8285540
+      DrawingStyle = gdsClassic
+      FixedColor = clGray
       GradientStartColor = 13602864
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -50,10 +50,10 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
+      TitleFont.Color = clWhite
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
+      TitleFont.Style = [fsBold]
     end
   end
   object Panel3: TPanel
@@ -70,16 +70,23 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Height = 297
       Align = alClient
       DataSource = dtsAcoes
-      DrawingStyle = gdsGradient
-      FixedColor = 8285540
+      DrawingStyle = gdsClassic
+      FixedColor = clGray
       GradientStartColor = 13602864
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = []
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      ParentFont = False
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
-      TitleFont.Color = clWindowText
+      TitleFont.Color = clWhite
       TitleFont.Height = -11
       TitleFont.Name = 'Tahoma'
-      TitleFont.Style = []
+      TitleFont.Style = [fsBold]
+      OnDrawColumnCell = grdAcoesDrawColumnCell
       OnDblClick = grdAcoesDblClick
       Columns = <
         item
@@ -177,18 +184,21 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
       Required = True
     end
     object FDQAcoesacaoAcessoId: TIntegerField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'acaoAcessoId'
       Origin = 'acaoAcessoId'
       ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
       Required = True
     end
     object FDQAcoesdescricao: TStringField
+      DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'descricao'
       Origin = 'descricao'
       Required = True
       Size = 100
     end
     object FDQAcoesativo: TBooleanField
+      DisplayLabel = 'Ativo'
       FieldName = 'ativo'
       Origin = 'ativo'
       Required = True
@@ -205,6 +215,7 @@ object frmUsuarioVsAcoes: TfrmUsuarioVsAcoes
     Left = 116
     Top = 200
     object FDQUsuariousuarioid: TFDAutoIncField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'usuarioid'
       Origin = 'usuarioid'
       ProviderFlags = [pfInWhere, pfInKey]

@@ -1,0 +1,429 @@
+unit uCadCliente;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
+  Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit,cCadCliente,uEnum, System.ImageList, Vcl.ImgList,System.JSON,
+  System.Net.HttpClient, System.Net.URLClient, RxCurrEdit, cCredito;
+
+type
+  TfrmCadCliente = class(TForm1)
+    edtClienteId: TLabeledEdit;
+    edtNome: TLabeledEdit;
+    edtCEP: TMaskEdit;
+    CEP: TLabel;
+    edtEndereco: TLabeledEdit;
+    edtBairro: TLabeledEdit;
+    edtCidade: TLabeledEdit;
+    edtTelefone: TMaskEdit;
+    TELEFONE: TLabel;
+    edtEmail: TLabeledEdit;
+    Label1: TLabel;
+    edtDataNascimento: TDateEdit;
+    lkpStatus: TDBLookupComboBox;
+    FDQStatus: TFDQuery;
+    dtsStatus: TDataSource;
+    FDQStatusstatusId: TIntegerField;
+    FDQStatusdescricao: TStringField;
+    Label2: TLabel;
+    lkpPessoa: TDBLookupComboBox;
+    Label3: TLabel;
+    Label4: TLabel;
+    edtCpfCnpj: TMaskEdit;
+    lblCpfCnpj: TLabel;
+    FDQDocumento: TFDQuery;
+    dtsDocumento: TDataSource;
+    FDQDocumentodocumentoId: TIntegerField;
+    FDQDocumentodescricao: TStringField;
+    ImageListStatus: TImageList;
+    edtUF: TLabeledEdit;
+    FDQCredito: TFDQuery;
+    dtsCredito: TDataSource;
+    FDQCreditocreditoId: TFDAutoIncField;
+    FDQCreditocredito: TFMTBCDField;
+    QUANTIDADE: TLabel;
+    edtCredito: TCurrencyEdit;
+    FDQCreditoclienteId: TIntegerField;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    FDQListagemclienteId: TFDAutoIncField;
+    FDQListagemnome: TStringField;
+    FDQListagemendereco: TStringField;
+    FDQListagemcidade: TStringField;
+    FDQListagembairro: TStringField;
+    FDQListagemestado: TStringField;
+    FDQListagemcep: TStringField;
+    FDQListagemtelefone: TStringField;
+    FDQListagememail: TStringField;
+    FDQListagemdataNascimento: TSQLTimeStampField;
+    FDQListagemstatusId: TIntegerField;
+    FDQListagemstatusDescricao: TStringField;
+    FDQListagemtipoPessoa: TStringField;
+    FDQListagemdocumento: TStringField;
+    FDQListagemcreditoCliente: TFMTBCDField;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnAlterarClick(Sender: TObject);
+    procedure lkpPessoaCloseUp(Sender: TObject);
+    procedure edtCpfCnpjChange(Sender: TObject);
+    procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+    State: TGridDrawState);
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure edtCEPExit(Sender: TObject);
+    procedure lblCpfCnpjClick(Sender: TObject);
+    procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormDestroy(Sender: TObject);
+    procedure btnPesquisarClick(Sender: TObject);
+    //procedure btnPesquisarClick(Sender: TObject);
+    //procedure btnPesquisarClick(Sender: TObject);
+
+
+  private
+     oCliente : TCliente;
+     function Apagar:Boolean; override;
+     function Gravar(EstadoDoCadastro:TEstadoCadastro):Boolean;override;
+
+  public
+    { Public declarations }
+  end;
+
+var
+  frmCadCliente: TfrmCadCliente; oCredito: TCredito;var
+  CreditoOriginal: Double; // guarda crédito antigo
+  SelectOriginal: string; //codigo para chamar string do banco
+
+implementation
+
+uses
+  uDTMConexao;
+
+
+
+{$R *.dfm}
+
+{ TfrmCadCliente }
+
+function TfrmCadCliente.Apagar: Boolean;
+begin
+if oCliente.Selecionar(FDQListagem.FieldByName('clienteID').AsInteger) then begin
+      Result:=oCliente.Apagar;
+     end;
+end;
+
+procedure TfrmCadCliente.btnAlterarClick(Sender: TObject);
+begin
+
+
+ if oCliente.Selecionar(FDQListagem.FieldByName('clienteID').AsInteger) then begin
+     edtClienteId.Text       :=IntToStr(oCliente.codigo);
+     edtNome.Text            :=oCliente.nome;
+     edtCEP.Text             :=oCliente.cep;
+     edtEndereco.Text        :=oCliente.endereco;
+     edtBairro.Text          :=oCliente.bairro;
+     edtCidade.Text          :=oCliente.cidade;
+     edtTelefone.Text        :=oCliente.telefone;
+     edtEmail.Text           :=oCliente.email;
+     edtDataNascimento.Date  :=oCliente.dataNascimento;
+     lkpStatus.KeyValue      :=oCliente.statusId;
+     lkpPessoa.KeyValue      := oCliente.documentoId;
+     edtCpfCnpj.Text         := oCliente.documento;
+     edtCredito.Value        :=oCliente.credito;
+     CreditoOriginal := oCliente.credito;
+  end
+   else begin
+     btnCancelar.Click;
+     Abort;
+   end;
+
+   inherited;
+
+end;
+
+procedure TfrmCadCliente.btnNovoClick(Sender: TObject);
+begin
+  inherited;
+  edtDataNascimento.Date:=Date;
+  edtNome.SetFocus;
+end;
+
+
+
+procedure TfrmCadCliente.btnPesquisarClick(Sender: TObject);
+begin
+  inherited;
+   if lblIndice.Caption = 'creditoCliente' then begin
+     FDQListagem.SQL.Text:=' SELECT credito From credito where credito = :qntcredito';
+     FDQListagem.ParamByName('qntcredito').AsFloat :=  StrToFloat(mskPesquisar.Text);
+   end;
+end;
+
+procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
+var
+  JSON: TJSONObject;
+  cep: string;
+begin
+  cep := SomenteNumeros  (edtCEP.Text);
+
+  JSON := BuscarCEP(cep);
+  try
+    if Assigned(JSON) then
+    begin
+      edtEndereco.Text := JSON.GetValue<string>('logradouro');
+      edtCidade.Text := JSON.GetValue<string>('localidade');
+       edtUF.Text := JSON.GetValue<string>('uf');
+        edtBairro.Text := JSON.GetValue<string>('bairro');
+    end;
+  finally
+    JSON.Free;
+  end;
+end;
+
+procedure TfrmCadCliente.edtCpfCnpjChange(Sender: TObject);
+var
+  s: string;
+begin
+  s := SomenteNumeros(edtCpfCnpj.Text);
+                        {$REGION 'Explicaçao '}
+                   {   CPF
+                   Digita: 36291154897
+     Vira automaticamente: 362.911.548-97
+
+                     CNPJ
+                   Digita: 11111111000111
+                     Vira: 11.111.111/0001-11
+                           }
+                               {$endregion}
+ {$REGION 'CPF '}
+  if lkpPessoa.KeyValue = 1 then
+  begin
+    if Length(s) > 11 then s := Copy(s, 1, 11);
+
+    if Length(s) > 9 then
+      edtCpfCnpj.Text := Copy(s,1,3)+'.'+Copy(s,4,3)+'.'+Copy(s,7,3)+'-'+Copy(s,10,2)
+    else if Length(s) > 6 then
+      edtCpfCnpj.Text := Copy(s,1,3)+'.'+Copy(s,4,3)+'.'+Copy(s,7,3)
+    else if Length(s) > 3 then
+      edtCpfCnpj.Text := Copy(s,1,3)+'.'+Copy(s,4,3)
+    else
+      edtCpfCnpj.Text := s;
+  end
+ {$endregion}
+
+ {$REGION 'CNPJ'}
+  else if lkpPessoa.KeyValue = 2 then
+  begin
+    if Length(s) > 14 then s := Copy(s, 1, 14);
+
+    if Length(s) > 12 then
+      edtCpfCnpj.Text := Copy(s,1,2)+'.'+Copy(s,3,3)+'.'+Copy(s,6,3)+'/'+Copy(s,9,4)+'-'+Copy(s,13,2)
+    else if Length(s) > 8 then
+      edtCpfCnpj.Text := Copy(s,1,2)+'.'+Copy(s,3,3)+'.'+Copy(s,6,3)+'/'+Copy(s,9,4)
+    else if Length(s) > 5 then
+      edtCpfCnpj.Text := Copy(s,1,2)+'.'+Copy(s,3,3)+'.'+Copy(s,6,3)
+    else if Length(s) > 2 then
+      edtCpfCnpj.Text := Copy(s,1,2)+'.'+Copy(s,3,3)
+    else
+      edtCpfCnpj.Text := s;
+  end;
+{$endregion}
+
+  edtCpfCnpj.SelStart := Length(edtCpfCnpj.Text); // cursor no final
+end;
+
+procedure TfrmCadCliente.edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+var
+num: string;
+begin
+ num := SomenteNumeros(edtTelefone.Text);
+
+ edtTelefone.EditMask := '';
+
+  if (Copy(num,1,1)='0')and (Length(num) >= 10)  then
+ edtTelefone.EditMask := '0000 000 0000;1;_'
+ else if Length(num) = 11 then
+ edtTelefone.EditMask := '(00)00000\-0000;1;_'
+ else if Length(num) = 10 then
+ edtTelefone.EditMask := '(00)0000\-0000;1;_';
+
+ edtTelefone.SelStart := Length(edtTelefone.Text);
+end;
+
+procedure TfrmCadCliente.lblCpfCnpjClick(Sender: TObject);
+begin
+case lkpPessoa.KeyValue of
+    1: lblCpfCnpj.Caption := 'CPF';
+    2: lblCpfCnpj.Caption := 'CNPJ';
+  end;
+
+  inherited;
+
+end;
+
+procedure TfrmCadCliente.lkpPessoaCloseUp(Sender: TObject);
+begin
+ if VarIsNull(lkpPessoa.KeyValue) then Exit;
+
+  case lkpPessoa.KeyValue of
+    1: lblCpfCnpj.Caption := 'CPF';
+    2: lblCpfCnpj.Caption := 'CNPJ';
+  end;
+
+  edtCpfCnpj.Clear; // limpa ao trocar tipo
+  inherited;
+
+end;
+
+procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+  if  Assigned(oCliente)  then
+      FreeAndNil(oCliente);
+
+  if  Assigned(oCredito) then
+      FreeAndNil(oCredito);
+  IndiceAtual:='nome';
+  SalvarColunas(grdListagem);
+end;
+
+procedure TfrmCadCliente.FormCreate(Sender: TObject);
+begin
+  inherited;
+  FDQListagem.Connection:=dtmPrincipal.dtmPrincipalDB;
+  oCliente := TCliente.Create(dtmPrincipal.dtmPrincipalDB);
+  grdListagem.OnDrawColumnCell := grdListagemDrawColumnCell;
+  oCredito := TCredito.Create(dtmPrincipal.dtmPrincipalDB);
+
+      FDQListagem.SQL.Add('SELECT C.clienteId, C.nome, C.cep, C.telefone, C.email ');
+      FDQListagem.SQL.Add('  FROM CLIENTES C ');
+      FDQListagem.SQL.Add('  LEFT JOIN CREDITO CR ON CR.clienteId = C.clienteID ');
+
+  IndiceAtual := 'nome'
+end;
+
+procedure TfrmCadCliente.FormDestroy(Sender: TObject);
+begin
+  oCredito.Free;
+
+end;
+
+procedure TfrmCadCliente.FormShow(Sender: TObject);
+begin
+  inherited;
+  CentralizarDadosGrid(grdListagem);
+  CentralizarTitulosGrid(grdListagem);
+  CarregarColunas(grdListagem);
+end;
+
+function TfrmCadCliente.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
+var
+  diferenca: Double;
+begin
+  // ?? ID
+  if edtClienteId.Text <> '' then
+    oCliente.codigo := StrToInt(edtClienteId.Text)
+  else
+    oCliente.codigo := 0;
+
+  // ?? DADOS
+  oCliente.nome           := edtNome.Text;
+  oCliente.endereco       := edtEndereco.Text;
+  oCliente.cidade         := edtCidade.Text;
+  oCliente.bairro         := edtBairro.Text;
+  oCliente.cep            := edtCEP.Text;
+  oCliente.telefone       := edtTelefone.Text;
+  oCliente.email          := edtEmail.Text;
+  oCliente.dataNascimento := edtDataNascimento.Date;
+  oCliente.statusId       := lkpStatus.KeyValue;
+  oCliente.documentoId    := lkpPessoa.KeyValue;
+  oCliente.documento      := edtCpfCnpj.Text;
+
+  // ? NÃO USAR MAIS
+  // oCliente.credito := edtCredito.Value;
+
+  // ?? INSERT OU UPDATE
+  if EstadoDoCadastro = ecInserir then
+    Result := oCliente.Inserir
+  else
+    Result := oCliente.Atualizar;
+
+  // ?? CONTROLE DE CRÉDITO (ÚNICO LUGAR)
+  if Result then
+  begin
+    // ?? NOVO CLIENTE
+    if EstadoDoCadastro = ecInserir then
+    begin
+      if edtCredito.Value > 0 then
+        oCredito.AdicionarCredito(oCliente.codigo, edtCredito.Value);
+    end
+
+    // ?? ALTERAÇÃO
+    else
+    begin
+      diferenca := edtCredito.Value - CreditoOriginal;
+
+      if diferenca > 0 then
+        oCredito.AdicionarCredito(oCliente.codigo, diferenca)
+
+      else if diferenca < 0 then
+        oCredito.DescontarCredito(oCliente.codigo, -Abs(diferenca));
+    end;
+
+    // ?? STATUS
+    oCliente.AtualizarStatus;
+  end;
+end;
+
+
+
+
+procedure TfrmCadCliente.grdListagemDrawColumnCell(Sender: TObject;
+  const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+var
+  imgIndex: Integer;
+  x, y: Integer;
+begin
+  // chama zebra + desenho padrão
+  inherited;
+
+  if Assigned(Column.Field) and (Column.Field.FieldName = 'statusId') then
+  begin
+    // ?? LIMPA o que o pai desenhou (isso resolve!)
+    grdListagem.Canvas.FillRect(Rect);
+
+    case Column.Field.AsInteger of
+      1: imgIndex := 0;
+      2: imgIndex := 1;
+      3: imgIndex := 2;
+      4: imgIndex := 3;
+      5: imgIndex := 4;
+    else
+      Exit;
+    end;
+
+    x := Rect.Left + (Rect.Width div 2) - (ImageListStatus.Width div 2);
+    y := Rect.Top + (Rect.Height div 2) - (ImageListStatus.Height div 2);
+
+    ImageListStatus.Draw(grdListagem.Canvas, x, y, imgIndex);
+  end;
+end;
+
+
+
+
+end.

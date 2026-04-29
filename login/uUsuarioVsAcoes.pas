@@ -31,6 +31,8 @@ type
     procedure FDQUsuarioAfterScroll(DataSet: TDataSet);
     procedure FormShow(Sender: TObject);
     procedure grdAcoesDblClick(Sender: TObject);
+    procedure grdAcoesDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
     private
     { Private declarations }
    // procedure SelecionarAcoesAcessoPorUsuario;
@@ -118,6 +120,22 @@ begin
     if Assigned(Qry) then
       FreeAndNil(Qry);
   end;
+end;
+
+
+
+
+procedure TfrmUsuarioVsAcoes.grdAcoesDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+begin
+  begin
+  If not FDQAcoes.FieldByName('ativo').AsBoolean  then
+  begin
+    TDBGrid(Sender).Canvas.Font.Color:= clWhite;
+    TDBGrid(Sender).Canvas.Brush.Color:=clRed
+  end;
+  TDBGrid(Sender).DefaultDrawDataCell(Rect, TDBGrid(Sender).columns[datacol].field, State);
+end;
 end;
 
 

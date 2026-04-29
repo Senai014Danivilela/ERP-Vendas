@@ -65,6 +65,8 @@ object frmTelaHerancaConsulta: TfrmTelaHerancaConsulta
       Align = alClient
       Anchors = [akTop, akRight]
       DataSource = dtslistagem
+      DrawingStyle = gdsClassic
+      FixedColor = clGray
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET

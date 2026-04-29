@@ -48,6 +48,18 @@ type
     QUANTIDADE: TLabel;
     edtCredito: TCurrencyEdit;
     FDQCreditoclienteId: TIntegerField;
+    Image1: TImage;
+    Image2: TImage;
+    Image3: TImage;
+    Image4: TImage;
+    Image5: TImage;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
     FDQListagemclienteId: TFDAutoIncField;
     FDQListagemnome: TStringField;
     FDQListagemendereco: TStringField;
@@ -63,18 +75,6 @@ type
     FDQListagemtipoPessoa: TStringField;
     FDQListagemdocumento: TStringField;
     FDQListagemcreditoCliente: TFMTBCDField;
-    Image1: TImage;
-    Image2: TImage;
-    Image3: TImage;
-    Image4: TImage;
-    Image5: TImage;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
-    Label10: TLabel;
-    Label11: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
@@ -88,8 +88,6 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
 
 
   private
@@ -159,6 +157,8 @@ begin
   edtDataNascimento.Date:=Date;
   edtNome.SetFocus;
 end;
+
+
 
 
 
@@ -277,6 +277,8 @@ begin
   inherited;
 
 end;
+
+
 
 procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

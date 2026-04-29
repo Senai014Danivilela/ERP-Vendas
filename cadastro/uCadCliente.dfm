@@ -1,5 +1,5 @@
 inherited frmCadCliente: TfrmCadCliente
-  Caption = 'Cadastro de Cliente'
+  Caption = 'Clientes'
   ClientHeight = 446
   ClientWidth = 763
   OnDestroy = FormDestroy
@@ -323,6 +323,7 @@ inherited frmCadCliente: TfrmCadCliente
           item
             Expanded = False
             FieldName = 'creditoCliente'
+            Width = 89
             Visible = True
           end>
       end
@@ -592,7 +593,7 @@ inherited frmCadCliente: TfrmCadCliente
     Top = 264
     object FDQListagemclienteId: TFDAutoIncField
       FieldName = 'clienteId'
-      Origin = 'C.clienteId'
+      Origin = 'clienteId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end

@@ -1,45 +1,53 @@
 ﻿[Closed Files]
-File_0=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\login\uLogin.pas',0,1,42,1,45,0,0,,
-File_1=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadProduto.pas',0,1,1,22,16,0,0,{{46,1},{63,11},{'Create e Destroy'}}{{65,1},{98,11},{'APAGAR'}}{{210,0},{246,11},{'Selecionar'}},
-File_2=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Controls.pas',0,1,10262,1,10279,0,0,,
-File_3=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\heranca\uTelaHeranca.pas',0,1,260,52,274,0,0,{{89,1},{92,13},{'OBSERVAÇÕES'}}{{95,0},{110,11},{' PROCEDIMENTO DE CONTROLE DE TELA'}}{{112,0},{185,24},{' FUNÇAO PARA RETORNAR CAMPO'}}{{187,0},{202,19},{' METOODOS VIRTUAIS'}}{{204,0},{211,18},{' INDICETAB'}}{{213,0},{227,11},{' BOTAO NOVO'}}{{229,0},{254,18},{' BOTAO ALTERAR'}}{{282,0},{294,11},{' BOTAO CANCELAR'}}{{296,0},{301,18},{' BOTAO FECHAR'}}{{303,0},{329,19},{' BOTAO GRAVAR'}}{{331,0},{530,15},{' btn Pesquisar'}}{{532,0},{579,11},{' O BANCO DE DADOS'}}{{581,0},{588,20},{' AREA DO FILDNAME'}}{{590,0},{625,11},{' AREA DE PESQUISA'}}{{627,0},{634,12},{' Bloqueia CTRL_DEL  '}}{{636,0},{643,11},{' CENTRALIZA O TITULO  '}}{{644,0},{652,11},{' CENTRALIZA DADOS DA GRID'}}{{654,0},{672,15},{' Metodo Somente Numeros'}}{{655,31},{660,42},{'Explicaçao '}}{{674,0},{711,12},{' SALVANDO E CARREGANDO POSIÇÂO NA GRID  '}}{{676,1},{692,13},{'SALVA POSIÇÂO NA GRID'}}{{694,0},{710,12},{'CARREGA  POSIÇÂO NA GRID  '}}{{713,0},{733,13},{' DrawColumnCell-ZEBRAR  '}}{{735,0},{811,13},{' VALIDAÇAO DE CPF E CNPJ  '}}{{746,0},{767,6},{'SOMA DOS NUMEROS'}}{{770,1},{792,20},{'CALCULO'}}{{794,1},{808,15},{'VALIDAÇAO'}}{{813,0},{827,11},{' Buscar CEP  '}},
-File_4=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,5276,1,5287,0,0,{{1656,4},{1674,15},{'TScrollWindow'}},
-File_5=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Buttons.pas',0,1,1972,1,1983,0,0,,
-File_6=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Forms.pas',0,1,7356,44,7362,0,0,{{1747,4}
-File_7=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\rtl\common\System.Classes.pas',0,1,17395,1,17408,0,0,,
-File_8=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConCategoria.pas',0,1,1,1,1,0,0,,
-File_9=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCredito.pas',0,1,34,87,15,0,0,,
-File_10=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda.pas',0,1,68,44,61,0,0,,
-File_11=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProCredito.pas',0,1,15,6,36,0,0,,
-File_12=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelCategorias.pas',0,1,52,60,18,0,0,,
+File_0=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cProVendas.pas',0,1,1,1,1,0,0,{{44,3},{53,11},{'Create e Destroy'}}{{55,3},{100,11},{'APAGAR'}}{{102,2},{268,11},{'Atualizar'}}{{270,1},{342,11},{'Inserir'}}{{344,2},{411,11},{'Selecionar'}}{{367,4},{401,15},{'SELECINAR na tabela VendasItens'}}{{413,1},{462,11},{'COntrole de Estoque'}},
+File_1=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\login\uUsuarioVsAcoes.pas',0,1,133,5,145,0,0,,
+File_2=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\UCadUsuario.pas',0,2,49,32,50,0,0,,
+File_3=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadUsuario.pas',0,1,193,37,69,0,0,{{44,0},{53,11},{'Create e Destroy'}}{{101,0},{138,11},{'Atualizar'}}{{140,0},{170,11},{'Inserir'}}{{231,0},{241,11},{'GET e SET'}}{{243,0},{275,11},{'LOGIN'}}{{277,0},{305,11},{'AlterarSenha'}},
+File_4=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelVendaPorData.pas',0,1,1,1,1,0,0,,
+File_5=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\heranca\uTelaHeranca.pas',0,1,653,26,724,0,0,{{89,1},{92,13},{'OBSERVAÇÕES'}}{{95,0},{110,11},{' PROCEDIMENTO DE CONTROLE DE TELA'}}{{112,0},{185,24},{' FUNÇAO PARA RETORNAR CAMPO'}}{{187,0},{202,19},{' METOODOS VIRTUAIS'}}{{204,0},{211,18},{' INDICETAB'}}{{213,0},{227,11},{' BOTAO NOVO'}}{{229,0},{254,18},{' BOTAO ALTERAR'}}{{256,0},{280,21},{' BOTAO APAGAR'}}{{282,0},{294,11},{' BOTAO CANCELAR'}}{{296,0},{301,18},{' BOTAO FECHAR'}}{{303,0},{329,19},{' BOTAO GRAVAR'}}{{331,0},{530,15},{' btn Pesquisar'}}{{532,0},{579,11},{' O BANCO DE DADOS'}}{{581,0},{588,20},{' AREA DO FILDNAME'}}{{590,0},{625,11},{' AREA DE PESQUISA'}}{{627,0},{634,12},{' Bloqueia CTRL_DEL  '}}{{636,0},{643,11},{' CENTRALIZA O TITULO  '}}{{644,0},{652,11},{' CENTRALIZA DADOS DA GRID'}}{{654,0},{672,15},{' Metodo Somente Numeros'}}{{655,31},{660,42},{'Explicaçao '}}{{674,0},{711,12},{' SALVANDO E CARREGANDO POSIÇÂO NA GRID  '}}{{676,1},{692,13},{'SALVA POSIÇÂO NA GRID'}}{{694,0},{710,12},{'CARREGA  POSIÇÂO NA GRID  '}}{{735,0},{811,13},{' VALIDAÇAO DE CPF E CNPJ  '}}{{746,0},{767,6},{'SOMA DOS NUMEROS'}}{{770,1},{792,20},{'CALCULO'}}{{794,1},{808,15},{'VALIDAÇAO'}}{{813,0},{827,11},{' Buscar CEP  '}},
+File_6=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\login\uLogin.pas',0,1,42,1,45,0,0,,
+File_7=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadProduto.pas',0,1,1,22,16,0,0,{{46,1}
+File_8=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Controls.pas',0,1,10262,1,10279,0,0,,
+File_9=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.StdCtrls.pas',0,1,5276,1,5287,0,0,{{1656,4}
+File_10=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Buttons.pas',0,1,1972,1,1983,0,0,,
+File_11=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\SOURCE\VCL\Vcl.Forms.pas',0,1,7356,44,7362,0,0,{{1747,4}
+File_12=TSourceModule,'c:\program files (x86)\embarcadero\studio\19.0\source\rtl\common\System.Classes.pas',0,1,17395,1,17408,0,0,,
+File_13=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\Consulta\uConCategoria.pas',0,1,1,1,1,0,0,,
+File_14=TSourceModule,'C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCredito.pas',0,1,34,87,15,0,0,,
 
 [Modules]
-Module0=C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProVendas.pas
-Module1=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cProVendas.pas
-Module2=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadProduto.pas
-Module3=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\UCadUsuario.pas
-Module4=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas
-Module5=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCategoria.pas
-Module6=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadAcaoAcesso.pas
-Module7=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadUsuario.pas
-Module8=C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.dproj
+Module0=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda2.pas
+Module1=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas
+Module2=C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProVendas.pas
+Module3=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda.pas
+Module4=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadProduto.pas
+Module5=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uSelecionarData.pas
+Module6=C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.dproj
+Module7=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCategoria.pas
+Module8=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadAcaoAcesso.pas
 Count=9
 EditWindowCount=1
+
+[C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda2.pas]
+ModuleType=TSourceModule
+
+[C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas]
+ModuleType=TSourceModule
 
 [C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProVendas.pas]
 ModuleType=TSourceModule
 
-[C:\Users\devmv\Desktop\ProjetoDelphi\classes\cProVendas.pas]
+[C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda.pas]
 ModuleType=TSourceModule
 
 [C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadProduto.pas]
 ModuleType=TSourceModule
 
-[C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\UCadUsuario.pas]
+[C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uSelecionarData.pas]
 ModuleType=TSourceModule
 
-[C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas]
-ModuleType=TSourceModule
+[C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.dproj]
+ModuleType=TBaseProject
 
 [C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCategoria.pas]
 ModuleType=TSourceModule
@@ -47,15 +55,9 @@ ModuleType=TSourceModule
 [C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadAcaoAcesso.pas]
 ModuleType=TSourceModule
 
-[C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadUsuario.pas]
-ModuleType=TSourceModule
-
-[C:\Users\devmv\Desktop\ProjetoDelphi\Vendas.dproj]
-ModuleType=TBaseProject
-
 [EditWindow0]
 ViewCount=9
-CurrentEditView=C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProVendas.pas
+CurrentEditView=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda2.pas
 View0=0
 View1=1
 View2=2
@@ -84,12 +86,12 @@ TopPanelSize=0
 LeftPanelSize=1911
 LeftPanelClients=PropertyInspector
 LeftPanelData=00000800010000000000B8180000000000000000000000000000000100000000B81800001100000050726F7065727479496E73706563746F72FFFFFFFF
-RightPanelSize=1823
+RightPanelSize=1449
 RightPanelClients=DockSite2
 RightPanelData=00000800010000000000830C000000000000000B1D0000000000000100000000830C000009000000446F636B5369746532FFFFFFFF
-BottomPanelSize=1003
+BottomPanelSize=195
 BottomPanelClients=MessageView,DockSite1
-BottomPanelData=0000080001020100000009000000446F636B5369746531AF4500000000000002EB030000000000000100000000AF4500000F0000004D65737361676556696577466F726DFFFFFFFF
+BottomPanelData=0000080001020100000009000000446F636B5369746531AF4500000000000002C3000000000000000100000000AF4500000F0000004D65737361676556696577466F726DFFFFFFFF
 BottomMiddlePanelSize=0
 BottomMiddlePanelClients=DockSite0,GraphDrawingModel
 BottomMiddelPanelData=0000080001020200000009000000446F636B536974653010000000477261706844726177696E67566965779A1D00000000000002F806000000000000FFFFFFFF
@@ -120,17 +122,6 @@ EditViewName=Borland.FormDesignerView
 
 [View2]
 CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cProVendas.pas
-CursorX=1
-CursorY=1
-TopLine=1
-LeftCol=1
-Elisions={{44,3},{53,11},{'Create e Destroy'}}{{55,3},{100,11},{'APAGAR'}}{{102,2},{268,11},{'Atualizar'}}{{270,1},{342,11},{'Inserir'}}{{344,2},{411,11},{'Selecionar'}}{{367,4},{401,15},{'SELECINAR na tabela VendasItens'}}{{413,1},{462,11},{'COntrole de Estoque'}}
-Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cProVendas.pas
-
-[View3]
-CustomEditViewType=TEditView
 Module=C:\Users\devmv\Desktop\ProjetoDelphi\processo\uProVendas.pas
 CursorX=1
 CursorY=103
@@ -140,29 +131,7 @@ Elisions=
 Bookmarks=
 EditViewName=Borland.FormDesignerView
 
-[View4]
-CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadUsuario.pas
-CursorX=37
-CursorY=69
-TopLine=193
-LeftCol=1
-Elisions={{44,0},{53,11},{'Create e Destroy'}}{{101,0},{138,11},{'Atualizar'}}{{140,0},{170,11},{'Inserir'}}{{231,0},{241,11},{'GET e SET'}}{{243,0},{275,11},{'LOGIN'}}{{277,0},{305,11},{'AlterarSenha'}}
-Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ProjetoDelphi\classes\cCadUsuario.pas
-
-[View5]
-CustomEditViewType=TEditView
-Module=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\UCadUsuario.pas
-CursorX=32
-CursorY=50
-TopLine=49
-LeftCol=2
-Elisions=
-Bookmarks=
-EditViewName=Borland.FormDesignerView
-
-[View6]
+[View3]
 CustomEditViewType=TEditView
 Module=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas
 CursorX=1
@@ -171,7 +140,40 @@ TopLine=1
 LeftCol=1
 Elisions={{191,24},{200,42},{'Explicaçao '}}{{201,1},{215,12},{'CPF '}}{{217,1},{233,11},{'CNPJ'}}
 Bookmarks=
-EditViewName=C:\Users\devmv\Desktop\ProjetoDelphi\cadastro\uCadCliente.pas
+EditViewName=Borland.FormDesignerView
+
+[View4]
+CustomEditViewType=TEditView
+Module=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda2.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
+[View5]
+CustomEditViewType=TEditView
+Module=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uRelProVenda.pas
+CursorX=1
+CursorY=83
+TopLine=81
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
+
+[View6]
+CustomEditViewType=TEditView
+Module=C:\Users\devmv\Desktop\ProjetoDelphi\relatorio\uSelecionarData.pas
+CursorX=1
+CursorY=1
+TopLine=1
+LeftCol=1
+Elisions=
+Bookmarks=
+EditViewName=Borland.FormDesignerView
 
 [View7]
 CustomEditViewType=TEditView
@@ -212,11 +214,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=208
 LRDockWidth=13602
 Dockable=1
@@ -251,17 +253,15 @@ PercentageSizes=1
 Create=1
 Visible=1
 Docked=0
-State=2
+State=1
 Left=146
 Top=278
 Width=8931
 Height=8528
 MaxLeft=-7
 MaxTop=-14
-MaxWidth=8931
-MaxHeight=8528
-ClientWidth=10029
-ClientHeight=9722
+ClientWidth=8814
+ClientHeight=7986
 BottomPanelSize=8333
 BottomPanelClients=EditWindow0
 BottomPanelData=0000080000000000000000000000000000000000000000000000000100000000000000000C0000004564697457696E646F775F30FFFFFFFF
@@ -274,12 +274,12 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1823
-Height=7139
+Width=1449
+Height=8000
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1823
-ClientHeight=7139
+ClientWidth=1449
+ClientHeight=8000
 TBDockHeight=5903
 LRDockWidth=2350
 Dockable=1
@@ -294,12 +294,12 @@ State=0
 Left=0
 Top=18
 Width=10029
-Height=819
+Height=0
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=10029
-ClientHeight=819
-TBDockHeight=819
+ClientHeight=0
+TBDockHeight=1806
 LRDockWidth=2767
 Dockable=1
 StayOnTop=0
@@ -370,21 +370,21 @@ State=0
 Left=0
 Top=18
 Width=1911
-Height=7486
+Height=8347
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=1911
-ClientHeight=7486
+ClientHeight=8347
 TBDockHeight=9014
 LRDockWidth=1911
 Dockable=1
 StayOnTop=0
-SplitPos=112
+SplitPos=133
 
 [PropInspDesignerSelection]
 ArrangeBy=Name
-SelectedItem=TabStop,
-ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0,BevelEdges=0,Font=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,Padding=0,StyleElements=0,Touch=0,Options=0,TitleFont=0
+SelectedItem=Name,CustomHint
+ExpandedItems=Anchors=0,BorderIcons=0,Constraints=0,Font=0,GlassFrame=0,HorzScrollBar=0,LiveBindings=0,"LiveBindings Designer=0",Margins=0,Padding=0,Menu=0,StyleElements=0,Touch=0,VertScrollBar=0,DataSource=0,Options=0,TitleFont=0,PageSetup=0,PreviewOptions=0,RealBounds=0,Behavior=0,Borders=0,Connection=0,FetchOptions=0,FieldOptions=0,FilterChanges=0,FilterOptions=0,FormatOptions=0,ResourceOptions=0,UpdateOptions=0,ActiveStoredUsage=0,DataSet=0,Degrade=0,InsideMargins=0
 
 [ClassBrowserTool]
 PercentageSizes=1
@@ -451,11 +451,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1823
+Width=1464
 Height=6153
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1823
+ClientWidth=1464
 ClientHeight=6153
 TBDockHeight=5958
 LRDockWidth=2511
@@ -468,7 +468,7 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=-1036
+Left=-1087
 Top=-39
 Width=2848
 Height=6208
@@ -512,11 +512,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=417
 LRDockWidth=4949
 Dockable=1
@@ -531,11 +531,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=208
 LRDockWidth=7408
 Dockable=1
@@ -554,11 +554,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=1542
 LRDockWidth=3485
 Dockable=1
@@ -573,11 +573,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=2069
 LRDockWidth=3485
 Dockable=1
@@ -675,11 +675,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1823
+Width=1435
 Height=6153
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1823
+ClientWidth=1435
 ClientHeight=6153
 TBDockHeight=4889
 LRDockWidth=7152
@@ -714,11 +714,11 @@ State=0
 Left=0
 Top=0
 Width=3821
-Height=472
+Height=1042
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=472
+ClientHeight=1042
 TBDockHeight=1542
 LRDockWidth=8741
 Dockable=1
@@ -758,11 +758,11 @@ Docked=1
 State=0
 Left=0
 Top=0
-Width=1823
+Width=1449
 Height=6153
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1823
+ClientWidth=1449
 ClientHeight=6153
 TBDockHeight=4889
 LRDockWidth=5307
@@ -823,15 +823,15 @@ Create=1
 Visible=0
 Docked=1
 State=0
-Left=685
+Left=0
 Top=18
 Width=3821
-Height=819
+Height=1389
 MaxLeft=-1
 MaxTop=-1
 ClientWidth=3821
-ClientHeight=819
-TBDockHeight=819
+ClientHeight=1389
+TBDockHeight=1389
 LRDockWidth=3821
 Dockable=1
 StayOnTop=0
@@ -849,14 +849,14 @@ Docked=1
 State=0
 Left=0
 Top=18
-Width=1823
-Height=7486
+Width=1449
+Height=8347
 MaxLeft=-1
 MaxTop=-1
-ClientWidth=1823
-ClientHeight=7486
+ClientWidth=1449
+ClientHeight=8347
 TBDockHeight=9014
-LRDockWidth=1823
+LRDockWidth=1449
 Dockable=1
 StayOnTop=0
 TabPosition=1
