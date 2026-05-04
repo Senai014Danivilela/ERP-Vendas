@@ -31,9 +31,12 @@ inherited frmCadCliente: TfrmCadCliente
   inherited pgcPrincipal: TPageControl
     Width = 763
     Height = 405
+    ActivePage = tabManutencao
     ExplicitWidth = 763
     ExplicitHeight = 405
     inherited tabListagem: TTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 755
       ExplicitHeight = 377
       inherited pnlListagemTopo: TPanel
@@ -323,7 +326,7 @@ inherited frmCadCliente: TfrmCadCliente
           item
             Expanded = False
             FieldName = 'creditoCliente'
-            Width = 89
+            Width = 104
             Visible = True
           end>
       end
@@ -407,14 +410,14 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'NOME'
         MaxLength = 60
-        TabOrder = 1
+        TabOrder = 3
       end
       object edtCEP: TMaskEdit
         Left = 306
         Top = 154
         Width = 266
         Height = 21
-        TabOrder = 2
+        TabOrder = 7
         Text = ''
         OnExit = edtCEPExit
       end
@@ -427,7 +430,7 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'Endere'#231'o'
         MaxLength = 60
-        TabOrder = 3
+        TabOrder = 6
       end
       object edtBairro: TLabeledEdit
         Left = 305
@@ -438,7 +441,7 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'Bairro'
         MaxLength = 40
-        TabOrder = 4
+        TabOrder = 9
       end
       object edtCidade: TLabeledEdit
         Left = 16
@@ -449,14 +452,14 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'Cidade'
         MaxLength = 50
-        TabOrder = 5
+        TabOrder = 8
       end
       object edtTelefone: TMaskEdit
         Left = 305
         Top = 232
         Width = 266
         Height = 21
-        TabOrder = 6
+        TabOrder = 12
         Text = ''
         OnKeyUp = edtTelefoneKeyUp
       end
@@ -469,7 +472,7 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'Email'
         MaxLength = 100
-        TabOrder = 7
+        TabOrder = 11
       end
       object edtDataNascimento: TDateEdit
         Left = 609
@@ -477,7 +480,7 @@ inherited frmCadCliente: TfrmCadCliente
         Width = 120
         Height = 21
         NumGlyphs = 2
-        TabOrder = 8
+        TabOrder = 5
       end
       object lkpStatus: TDBLookupComboBox
         Left = 225
@@ -487,7 +490,7 @@ inherited frmCadCliente: TfrmCadCliente
         KeyField = 'statusId'
         ListField = 'descricao'
         ListSource = dtsStatus
-        TabOrder = 9
+        TabOrder = 1
       end
       object lkpPessoa: TDBLookupComboBox
         Left = 426
@@ -497,7 +500,7 @@ inherited frmCadCliente: TfrmCadCliente
         KeyField = 'documentoId'
         ListField = 'descricao'
         ListSource = dtsDocumento
-        TabOrder = 10
+        TabOrder = 2
         OnCloseUp = lkpPessoaCloseUp
       end
       object edtCpfCnpj: TMaskEdit
@@ -505,7 +508,7 @@ inherited frmCadCliente: TfrmCadCliente
         Top = 108
         Width = 266
         Height = 21
-        TabOrder = 11
+        TabOrder = 4
         Text = ''
         OnChange = edtCpfCnpjChange
       end
@@ -518,7 +521,7 @@ inherited frmCadCliente: TfrmCadCliente
         EditLabel.Height = 13
         EditLabel.Caption = 'UF'
         MaxLength = 40
-        TabOrder = 12
+        TabOrder = 10
       end
       object edtCredito: TCurrencyEdit
         Left = 306
@@ -589,8 +592,8 @@ inherited frmCadCliente: TfrmCadCliente
       '    S.descricao,'
       '    D.descricao,'
       '    C.documento')
-    Left = 28
-    Top = 264
+    Left = 20
+    Top = 320
     object FDQListagemclienteId: TFDAutoIncField
       DisplayLabel = 'C'#243'digo'
       FieldName = 'clienteId'
@@ -647,6 +650,7 @@ inherited frmCadCliente: TfrmCadCliente
       Origin = 'dataNascimento'
     end
     object FDQListagemstatusId: TIntegerField
+      DisplayLabel = 'Status'
       FieldName = 'statusId'
       Origin = 'statusId'
     end
@@ -665,6 +669,7 @@ inherited frmCadCliente: TfrmCadCliente
     object FDQListagemcreditoCliente: TFMTBCDField
       DisplayLabel = 'Cr'#233'dito do Cliente'
       FieldName = 'creditoCliente'
+      Origin = 'creditoCliente'
       ReadOnly = True
       Required = True
       Precision = 38
@@ -673,7 +678,7 @@ inherited frmCadCliente: TfrmCadCliente
   end
   inherited dtslistagem: TDataSource
     Left = 60
-    Top = 264
+    Top = 320
   end
   object FDQStatus: TFDQuery
     Active = True
@@ -684,7 +689,7 @@ inherited frmCadCliente: TfrmCadCliente
       'FROM STATUSCLIENTES'
       'ORDER BY descricao')
     Left = 308
-    Top = 296
+    Top = 352
     object FDQStatusstatusId: TIntegerField
       FieldName = 'statusId'
       Origin = 'statusId'
@@ -700,7 +705,7 @@ inherited frmCadCliente: TfrmCadCliente
   object dtsStatus: TDataSource
     DataSet = FDQStatus
     Left = 364
-    Top = 296
+    Top = 344
   end
   object FDQDocumento: TFDQuery
     Active = True
@@ -709,8 +714,8 @@ inherited frmCadCliente: TfrmCadCliente
       'SELECT documentoId , descricao'
       'FROM DOCUMENTOS '
       'ORDER BY descricao')
-    Left = 500
-    Top = 304
+    Left = 492
+    Top = 344
     object FDQDocumentodocumentoId: TIntegerField
       FieldName = 'documentoId'
       Required = True
@@ -723,7 +728,7 @@ inherited frmCadCliente: TfrmCadCliente
   object dtsDocumento: TDataSource
     DataSet = FDQDocumento
     Left = 564
-    Top = 304
+    Top = 352
   end
   object ImageListStatus: TImageList
     Left = 180
@@ -1009,8 +1014,8 @@ inherited frmCadCliente: TfrmCadCliente
       'credito'
       'FROM CREDITO'
       'ORDER BY credito')
-    Left = 172
-    Top = 296
+    Left = 164
+    Top = 344
     object FDQCreditocreditoId: TFDAutoIncField
       FieldName = 'creditoId'
       ReadOnly = True
@@ -1027,7 +1032,7 @@ inherited frmCadCliente: TfrmCadCliente
   end
   object dtsCredito: TDataSource
     DataSet = FDQCredito
-    Left = 228
-    Top = 296
+    Left = 220
+    Top = 352
   end
 end

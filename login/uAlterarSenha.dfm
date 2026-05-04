@@ -88,7 +88,7 @@ object frmAlterarSenha: TfrmAlterarSenha
       2B8CB23192B53697B93C9CBC3FA0BF45A6C24AABC64FB0C954B5CD59BAD15FBF
       D363C4D7244E6EFF00FFFF00FF244E6E244E6E244E6E244E6E244E6E244E6E24
       4E6E244E6E244E6E244E6E244E6E244E6E244E6E244E6EFF00FF}
-    TabOrder = 0
+    TabOrder = 3
     OnClick = btnFecharClick
   end
   object btnAlterar: TBitBtn
@@ -124,7 +124,7 @@ object frmAlterarSenha: TfrmAlterarSenha
       C5C8C68EDDA862DF863FCC6637C76134C55D33C35B32C35835C35737C24F65C1
       75C3C7C4FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFBACEC089DBA268DB8959
       D97851D46F55CE7371C986AFC6B3FF00FFFF00FFFF00FFFF00FF}
-    TabOrder = 1
+    TabOrder = 4
     OnClick = btnAlterarClick
   end
   object edtSenhaAtual: TEdit
@@ -138,7 +138,7 @@ object frmAlterarSenha: TfrmAlterarSenha
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 0
   end
   object edtSenhaNova: TEdit
     Left = 240
@@ -151,7 +151,7 @@ object frmAlterarSenha: TfrmAlterarSenha
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    TabOrder = 3
+    TabOrder = 1
   end
   object edtRepetirNovaSenha: TEdit
     Left = 240
@@ -164,6 +164,6 @@ object frmAlterarSenha: TfrmAlterarSenha
     Font.Name = 'Tahoma'
     Font.Style = []
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 2
   end
 end

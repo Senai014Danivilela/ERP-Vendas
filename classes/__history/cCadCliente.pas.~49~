@@ -28,8 +28,8 @@ uses System.Classes,
       F_statusId:Integer;
       F_documentoId:Integer;
       F_documento:string;
-      F_creditoId:Integer;
       F_credito:Double;
+      F_limiteCredito: Double;
 
    public
    constructor Create(aConexao: TFDConnection);
@@ -56,6 +56,7 @@ published
    property documentoId      :Integer    read F_documentoId    write F_documentoId ;
    property documento        :string     read F_documento      write F_documento ;
    property credito          :Double     read F_credito        write F_credito ;
+   property limiteCredito    :Double     read F_limiteCredito  write F_limiteCredito;
   end;
   implementation
 
@@ -108,6 +109,8 @@ begin
     FDQ.Free;
   end;
 end;
+{$ENDREGION}
+
 {$REGION 'Atualizar'}
  function TCliente.Atualizar: Boolean;
 var FDQ: TFDQuery;
@@ -129,7 +132,8 @@ begin
             '       dataNascimento = :dataNascimento, '+
             '       statusId       = :statusId, '+
              '      documentoId    = :documentoId, '+
-            '       documento      = :documento '+
+            '       documento      = :documento, '+
+            '       limiteCredito  = :limiteCredito'+
              ' WHERE clienteID = :clienteID');
     FDQ.ParamByName('clienteID')     .AsInteger  := Self.F_clienteId;
     FDQ.ParamByName('nome')          .AsString   := Self.F_nome;
@@ -144,6 +148,7 @@ begin
     FDQ.ParamByName('statusId')      .AsInteger  := Self.F_statusId;
     FDQ.ParamByName('documentoId')   .AsInteger  := Self.F_documentoId;
     FDQ.ParamByName('documento')     .AsString   := Self.F_documento;
+    FDQ.ParamByName('limiteCredito') .AsFloat    := Self.F_limiteCredito;
 
     Try
       FConexao.StartTransaction;
@@ -178,10 +183,10 @@ begin
     // 🔹 1. INSERT CLIENTE + PEGAR ID (FORMA SEGURA)
     FDQ.SQL.Text :=
       'INSERT INTO CLIENTES ('+
-      'nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, statusId, documentoId, documento) '+
+      'nome, endereco, cidade, bairro, estado, cep, telefone, email, dataNascimento, statusId, documentoId, documento,limiteCredito) '+
       'OUTPUT INSERTED.clienteId '+
       'VALUES ('+
-      ':nome, :endereco, :cidade, :bairro, :estado, :cep, :telefone, :email, :dataNascimento, :statusId, :documentoId, :documento)';
+      ':nome, :endereco, :cidade, :bairro, :estado, :cep, :telefone, :email, :dataNascimento, :statusId, :documentoId, :documento, :limiteCredito)';
 
     FDQ.ParamByName('nome').AsString             := Self.nome;
     FDQ.ParamByName('endereco').AsString         := Self.endereco;
@@ -195,6 +200,7 @@ begin
     FDQ.ParamByName('statusId').AsInteger        := Self.statusId;
     FDQ.ParamByName('documentoId').AsInteger     := Self.documentoId;
     FDQ.ParamByName('documento').AsString        := Self.documento;
+    FDQ.ParamByName('limiteCredito').AsFloat     := Self.F_limiteCredito;
 
     // 🔥 Executa e já pega o ID
     FDQ.Open;
@@ -255,9 +261,10 @@ begin
                 '       dataNascimento, '+
                 '       statusId, '+
                 '       documentoId, '+
-                '       documento '+
-                '  FROM CLIENTES '+
-                ' WHERE clienteID=:clienteID');
+                '       documento, '+
+                '       limiteCredito '+
+                'FROM CLIENTES '+
+                'WHERE clienteID=:clienteID');
     FDQ.ParamByName('clienteID').AsInteger := id;
     try
       FDQ.close;
@@ -276,6 +283,7 @@ begin
       Self.F_statusId      := FDQ.FieldByName('statusId').AsInteger;
       Self.F_documentoId   := FDQ.FieldByName('documentoId').AsInteger;
       Self.F_documento     := FDQ.FieldByName('documento').AsString;
+      Self.F_limiteCredito := FDQ.FieldByName('limiteCredito').AsFloat;
 
     except
       Result := False;
@@ -291,64 +299,31 @@ end;
 procedure TCliente.AtualizarStatus;
 var
   saldo: Double;
-  diasSemCompra: Integer;
-  temVenda: Boolean;
-  FDQ: TFDQuery;
+  limite: Double;
+  oCredito: TCredito;
 begin
-  FDQ := TFDQuery.Create(nil);
+  oCredito := TCredito.Create(FConexao);
   try
-    FDQ.Connection := FConexao;
+    saldo := oCredito.ObterSaldo(Self.codigo);
 
-    // 💰 SALDO
-    saldo := TCredito.ObterSaldo(Self.codigo);
+    limite := Self.limiteCredito * 1.1;
 
-    // 📦 TEM VENDA?
-    FDQ.SQL.Text := 'SELECT COUNT(*) qtd FROM VENDAS WHERE clienteId = :id';
-    FDQ.ParamByName('id').AsInteger := Self.codigo;
-    FDQ.Open;
-    temVenda := FDQ.FieldByName('qtd').AsInteger > 0;
+    // 🔴 BLOQUEADO
+    if saldo < -limite then
+      Self.statusId := 2
 
-    // ⏱ ÚLTIMA COMPRA
-    FDQ.Close;
-    FDQ.SQL.Text :=
-      'SELECT MAX(dataVenda) data FROM VENDAS WHERE clienteId = :id';
-    FDQ.ParamByName('id').AsInteger := Self.codigo;
-    FDQ.Open;
-
-    if not FDQ.FieldByName('data').IsNull then
-      diasSemCompra := DaysBetween(Date, FDQ.FieldByName('data').AsDateTime)
-    else
-      diasSemCompra := 9999;
-
-    // 🚨 REGRAS DE STATUS
-
-    if saldo <= -5000 then
-      Self.statusId := 2 // BLOQUEADO
-
+    // 🟡 ATENÇÃO
     else if saldo < 0 then
-      Self.statusId := 3 // ATENÇÃO
+      Self.statusId := 3
 
-    else if not temVenda then
-      Self.statusId := 5 // PROSPECTO
+    // ⚪ NÃO MEXE EM PROSPECTO/INATIVO
+    else if not (Self.statusId in [4,5]) then
+      Self.statusId := 1;
 
-    else if diasSemCompra > 90 then
-      Self.statusId := 4 // INATIVO
-
-    else
-      Self.statusId := 1; // ATIVO
-
-    // 💾 ATUALIZA NO BANCO
-    FDQ.Close;
-    FDQ.SQL.Text :=
-      'UPDATE CLIENTES SET statusId = :status WHERE clienteId = :id';
-
-    FDQ.ParamByName('status').AsInteger := Self.statusId;
-    FDQ.ParamByName('id').AsInteger := Self.codigo;
-
-    FDQ.ExecSQL;
+    Self.Atualizar;
 
   finally
-    FDQ.Free;
+    oCredito.Free;
   end;
 end;
 {$ENDREGION}

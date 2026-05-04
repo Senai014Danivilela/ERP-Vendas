@@ -39,9 +39,6 @@ type
     USUARIOSVSAOES1: TMenuItem;
     Panel3: TPanel;
     GridPanel1: TGridPanel;
-    dbcht1: TDBChart;
-    brsrsSeries1: TBarSeries;
-    Label1: TLabel;
     DBChart3: TDBChart;
     PieSeries2: TPieSeries;
     DBChart2: TDBChart;
@@ -53,6 +50,7 @@ type
     DBChart1: TDBChart;
     Series1: TPieSeries;
     SAIR1: TMenuItem;
+    Label1: TLabel;
     //trmAtualizacaoDashBoard: TTimer;
     procedure mnuuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -217,62 +215,54 @@ end;
 
 procedure TMenuPrincipal.FormCreate(Sender: TObject);
 begin
-   frmAtualizaDB:=TfrmAtualizaDB.Create(Self);
+   frmAtualizaDB := TfrmAtualizaDB.Create(Self);
    frmAtualizaDB.Show;
    frmAtualizaDB.Refresh;
-  dtmPrincipal:= TdtmPrincipal.Create(Self);
-  AtualizacaoBancoDados(frmAtualizaDB);
 
-   TAcaoAcesso.CriarAcoes(TfrmCadCategorias,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmCadCliente,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmCadProduto,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmCadUsuario,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmCadAcaoAcesso,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmAlterarSenha,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmProVenda,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelVendaPorData,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelClienteFicha,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelClientes,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadPRodutoComGrupoCategoria,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelCadPRoduto,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmRelCategoria,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmUsuarioVsAcoes,dtmPrincipal.dtmPrincipalDB);
-    TAcaoAcesso.CriarAcoes(TfrmSelecionarData,dtmPrincipal.dtmPrincipalDB);
-     TAcaoAcesso.CriarAcoes(TfrmProCredito,dtmPrincipal.dtmPrincipalDB);
+   dtmPrincipal := TdtmPrincipal.Create(Self);
+   AtualizacaoBancoDados(frmAtualizaDB);
 
-      TAcaoAcesso.PreencherAcoes(dtmPrincipal.dtmPrincipalDB);
-     DTMGrafico:=TDTMGrafico.Create(Self);
-  AtualizarDshBoard;
+   // ?? CRIA AS AÇÕES DOS FORMS
+   TAcaoAcesso.CriarAcoes(TfrmCadCategorias, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmCadCliente, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmCadProduto, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmCadUsuario, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmCadAcaoAcesso, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmAlterarSenha, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmProVenda, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelVendaPorData, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelClienteFicha, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelClientes, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelCadPRodutoComGrupoCategoria, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelCadPRoduto, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmRelCategoria, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmUsuarioVsAcoes, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmSelecionarData, dtmPrincipal.dtmPrincipalDB);
+   TAcaoAcesso.CriarAcoes(TfrmProCredito, dtmPrincipal.dtmPrincipalDB);
+
+
+    TAcaoAcesso.PreencherUsuariosVsAcoes(dtmPrincipal.dtmPrincipalDB);
+
+   DTMGrafico := TDTMGrafico.Create(Self);
+   AtualizarDshBoard;
+
    frmAtualizaDB.Free;
-   //dtmPrincipal.dtmPrincipalDB.Connected:=True;
 end;
 
 procedure TMenuPrincipal.FormShow(Sender: TObject);
 begin
-  oUsuarioLogado := TUsuarioLogado.Create;
-
-  frmLogin := TfrmLogin.Create(Self);
   try
-    if frmLogin.ShowModal <> mrOk then
-    begin
-      Application.Terminate;
-      Exit;
-    end;
+    oUsuarioLogado := TUsuarioLogado.Create;
 
-//    // ?? valida usuário logado
-//    if oUsuarioLogado.codigo <= 0 then
-//    begin
-//      MessageDlg('Usuário inválido!', mtError, [mbOK], 0);
-//      Application.Terminate;
-//      Exit;
-//    end;
-
-    stbPricipal.Panels[0].Text := 'USUARIO: ' + oUsuarioLogado.nome;
+    frmLogin:=TfrmLogin.Create(Self);
+    frmLogin.ShowModal;
 
   finally
-    frmLogin.Free;
+    frmLogin.Release;
+    //StbPrincipal.Panels[0].Text:='USU RIO: '+oUsuarioLogado.nome;
   end;
 end;
+
 
 
 procedure TMenuPrincipal.HISTORICODETRANSAO1Click(Sender: TObject);

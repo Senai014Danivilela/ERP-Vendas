@@ -28,8 +28,6 @@ object MenuPrincipal: TMenuPrincipal
       item
         Width = 150
       end>
-    ExplicitTop = 427
-    ExplicitWidth = 913
   end
   object Panel3: TPanel
     Left = 0
@@ -41,12 +39,11 @@ object MenuPrincipal: TMenuPrincipal
     ParentBackground = False
     TabOrder = 1
     OnClick = Panel3Click
-    ExplicitWidth = 913
     object Label1: TLabel
       Left = 393
       Top = 4
-      Width = 152
-      Height = 21
+      Width = 145
+      Height = 24
       Caption = 'DASHBOARD'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWhite
@@ -106,8 +103,6 @@ object MenuPrincipal: TMenuPrincipal
         Value = 50.000000000000000000
       end>
     TabOrder = 2
-    ExplicitWidth = 913
-    ExplicitHeight = 386
     object DBChart3: TDBChart
       Left = 459
       Top = 201
@@ -122,9 +117,6 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 2
-      ExplicitLeft = 465
-      ExplicitTop = 199
-      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object PieSeries2: TPieSeries
@@ -199,9 +191,6 @@ object MenuPrincipal: TMenuPrincipal
       Align = alClient
       BevelInner = bvLowered
       TabOrder = 0
-      ExplicitTop = 193
-      ExplicitWidth = 455
-      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series2: TFastLineSeries
@@ -227,8 +216,6 @@ object MenuPrincipal: TMenuPrincipal
       Chart3DPercent = 10
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 455
-      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series3: TBarSeries
@@ -257,9 +244,6 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 3
-      ExplicitLeft = 456
-      ExplicitWidth = 456
-      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object Series1: TPieSeries
@@ -395,7 +379,7 @@ object MenuPrincipal: TMenuPrincipal
   end
   object Timer1: TTimer
     Interval = 10
-    Left = 304
-    Top = 16
+    Left = 64
+    Top = 68
   end
 end

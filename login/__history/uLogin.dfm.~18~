@@ -27,6 +27,9 @@ object frmLogin: TfrmLogin
     Color = clBackground
     ParentBackground = False
     TabOrder = 0
+    ExplicitLeft = -7
+    ExplicitWidth = 320
+    ExplicitHeight = 369
     object Image1: TImage
       Left = -33
       Top = 0
@@ -1258,7 +1261,7 @@ object frmLogin: TfrmLogin
         0049454E44AE426082}
     end
     object Panel2: TPanel
-      Left = 341
+      Left = 309
       Top = 0
       Width = 301
       Height = 369
@@ -1327,7 +1330,7 @@ object frmLogin: TfrmLogin
           2B8CB23192B53697B93C9CBC3FA0BF45A6C24AABC64FB0C954B5CD59BAD15FBF
           D363C4D7244E6EFF00FFFF00FF244E6E244E6E244E6E244E6E244E6E244E6E24
           4E6E244E6E244E6E244E6E244E6E244E6E244E6E244E6EFF00FF}
-        TabOrder = 2
+        TabOrder = 0
         OnClick = btnFecharClick
       end
       object btnAcessar: TBitBtn
@@ -1363,7 +1366,7 @@ object frmLogin: TfrmLogin
           C5C8C68EDDA862DF863FCC6637C76134C55D33C35B32C35835C35737C24F65C1
           75C3C7C4FF00FFFF00FFFF00FFFF00FFFF00FFFF00FFBACEC089DBA268DB8959
           D97851D46F55CE7371C986AFC6B3FF00FFFF00FFFF00FFFF00FF}
-        TabOrder = 3
+        TabOrder = 1
         OnClick = btnAcessarClick
       end
       object edtUsuario: TEdit
@@ -1377,7 +1380,7 @@ object frmLogin: TfrmLogin
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 2
         Text = 'a'
       end
       object edtSenha: TEdit
@@ -1391,7 +1394,7 @@ object frmLogin: TfrmLogin
         Font.Name = 'Tahoma'
         Font.Style = []
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 3
         Text = 'a'
       end
     end

@@ -24,7 +24,7 @@ uses
   uSelecionarData in 'relatorio\uSelecionarData.pas' {frmSelecionarData},
   uRelCategorias in 'relatorio\uRelCategorias.pas' {frmRelCategoria},
   uRelCadProdutoComGrupoCategoria in 'relatorio\uRelCadProdutoComGrupoCategoria.pas' {frmRelCadPRodutoComGrupoCategoria},
-  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData},
+  uRelProVenda2 in 'relatorio\uRelProVenda2.pas' {frmRelProVenda2},
   uFuncaoCriptografia in 'heranca\uFuncaoCriptografia.pas',
   UCadUsuario in 'cadastro\UCadUsuario.pas' {frmCadUsuario},
   cCadUsuario in 'classes\cCadUsuario.pas',
@@ -34,11 +34,17 @@ uses
   cUsuarioLogado in 'cUsuarioLogado.pas',
   cAtulizacaoBancoDeDados in 'classes\cAtulizacaoBancoDeDados.pas',
   cAtualizacaoTabelaMSSQL in 'classes\cAtualizacaoTabelaMSSQL.pas',
-  cArquivoIni in 'classes\cArquivoIni.pas',
   cAcaoAcesso in 'classes\cAcaoAcesso.pas',
   uCadAcaoAcesso in 'cadastro\uCadAcaoAcesso.pas' {frmCadAcaoAcesso},
   uUsuarioVsAcoes in 'login\uUsuarioVsAcoes.pas' {frmUsuarioVsAcoes},
-  uDTMGrafico in 'DataModule\uDTMGrafico.pas' {DTMGrafico: TDataModule};
+  uDTMGrafico in 'DataModule\uDTMGrafico.pas' {DTMGrafico: TDataModule},
+  cFuncao in 'classes\cFuncao.pas',
+  uTelaHerancaConsulta in 'heranca\uTelaHerancaConsulta.pas' {frmTelaHerancaConsulta},
+  uConCategoria in 'Consulta\uConCategoria.pas' {frmConCategoria},
+  cArquivoIni in 'classes\cArquivoIni.pas',
+  cCredito in 'classes\cCredito.pas',
+  uProCredito in 'processo\uProCredito.pas' {frmProCredito},
+  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData};
 
 {$R *.res}
 

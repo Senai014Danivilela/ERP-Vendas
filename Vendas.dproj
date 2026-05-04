@@ -168,7 +168,6 @@
         <DCCReference Include="login\uLogin.pas">
             <Form>frmLogin</Form>
         </DCCReference>
-        <DCCReference Include="terceiros\Enter.pas"/>
         <DCCReference Include="login\uAlterarSenha.pas">
             <Form>frmAlterarSenha</Form>
             <FormType>dfm</FormType>
@@ -209,6 +208,7 @@
             <Form>frmRelVendaPorData</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="terceiros\Enter.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

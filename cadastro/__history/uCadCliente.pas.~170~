@@ -88,9 +88,6 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
 
 
   private
@@ -163,14 +160,7 @@ end;
 
 
 
-procedure TfrmCadCliente.btnPesquisarClick(Sender: TObject);
-begin
-  inherited;
-   if lblIndice.Caption = 'creditoCliente' then begin
-     FDQListagem.SQL.Text:=' SELECT credito From credito where credito = :qntcredito';
-     FDQListagem.ParamByName('qntcredito').AsFloat :=  StrToFloat(mskPesquisar.Text);
-   end;
-end;
+
 
 procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
 var
@@ -287,6 +277,8 @@ begin
   inherited;
 
 end;
+
+
 
 procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

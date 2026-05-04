@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMConexao, Vcl.Menus,uFrmAtualizaDB,
   Vcl.ComCtrls,cAtulizacaoBancoDeDados,cAtualizacaoTabelaMSSQL,cArquivoIni,RLReport,uTelaHeranca, Vcl.ExtCtrls,uDTMGrafico,
   VclTee.TeeGDIPlus, Data.DB, VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VCLTee.DBChart, Vcl.StdCtrls,cFuncao,
-  cUsuarioLogado,uProCredito;
+  cUsuarioLogado,uProCredito,Enter;
 
 type
   TMenuPrincipal = class(TForm)
@@ -75,10 +75,12 @@ type
     procedure HISTORICODETRANSAO1Click(Sender: TObject);
     procedure SAIR1Click(Sender: TObject);
   private
+    TeclaEnter: TMREnter;
     procedure AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
     procedure AtualizarDshBoard;
 
     { Private declarations }
+
   public
     { Public declarations }
   end;
@@ -222,6 +224,11 @@ begin
    dtmPrincipal := TdtmPrincipal.Create(Self);
    AtualizacaoBancoDados(frmAtualizaDB);
 
+   TeclaEnter:=TMREnter.Create(Self);
+   TeclaEnter.FocusEnabled:= true;
+   TeclaEnter.FocusColor:=clInfoBk;
+
+
    // ?? CRIA AS AÇÕES DOS FORMS
    TAcaoAcesso.CriarAcoes(TfrmCadCategorias, dtmPrincipal.dtmPrincipalDB);
    TAcaoAcesso.CriarAcoes(TfrmCadCliente, dtmPrincipal.dtmPrincipalDB);
@@ -283,6 +290,7 @@ end;
 
 procedure TMenuPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+ FreeAndNil(TeclaEnter);
  FreeAndNil(dtmPrincipal);
   FreeAndNil(DTMGrafico);
  if Assigned(oUsuarioLogado)then

@@ -323,7 +323,7 @@ inherited frmCadCliente: TfrmCadCliente
           item
             Expanded = False
             FieldName = 'creditoCliente'
-            Width = 89
+            Width = 104
             Visible = True
           end>
       end
@@ -647,6 +647,7 @@ inherited frmCadCliente: TfrmCadCliente
       Origin = 'dataNascimento'
     end
     object FDQListagemstatusId: TIntegerField
+      DisplayLabel = 'Status'
       FieldName = 'statusId'
       Origin = 'statusId'
     end

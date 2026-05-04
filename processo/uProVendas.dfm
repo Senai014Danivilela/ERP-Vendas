@@ -6,12 +6,10 @@ inherited frmProVenda: TfrmProVenda
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Height = 367
+    ActivePage = tabManutencao
     TabOrder = 0
     ExplicitHeight = 367
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 339
       inherited grdListagem: TDBGrid
         Height = 281
@@ -46,9 +44,6 @@ inherited frmProVenda: TfrmProVenda
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 339
       object CATEGORIA: TLabel
         Left = 177
@@ -313,13 +308,11 @@ inherited frmProVenda: TfrmProVenda
               item
                 Expanded = False
                 FieldName = 'valorUnitario'
-                Width = 64
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
-                Width = 64
                 Visible = True
               end>
           end

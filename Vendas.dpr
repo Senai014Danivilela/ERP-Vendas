@@ -29,7 +29,6 @@ uses
   UCadUsuario in 'cadastro\UCadUsuario.pas' {frmCadUsuario},
   cCadUsuario in 'classes\cCadUsuario.pas',
   uLogin in 'login\uLogin.pas' {frmLogin},
-  Enter in 'terceiros\Enter.pas',
   uAlterarSenha in 'login\uAlterarSenha.pas' {frmAlterarSenha},
   cUsuarioLogado in 'cUsuarioLogado.pas',
   cAtulizacaoBancoDeDados in 'classes\cAtulizacaoBancoDeDados.pas',
@@ -44,7 +43,8 @@ uses
   cArquivoIni in 'classes\cArquivoIni.pas',
   cCredito in 'classes\cCredito.pas',
   uProCredito in 'processo\uProCredito.pas' {frmProCredito},
-  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData};
+  uRelVendaPorData in 'relatorio\uRelVendaPorData.pas' {frmRelVendaPorData},
+  Enter in 'terceiros\Enter.pas';
 
 {$R *.res}
 

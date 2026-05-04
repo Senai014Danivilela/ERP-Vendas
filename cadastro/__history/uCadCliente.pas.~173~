@@ -88,9 +88,6 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
 
 
   private
@@ -163,14 +160,7 @@ end;
 
 
 
-procedure TfrmCadCliente.btnPesquisarClick(Sender: TObject);
-begin
-  inherited;
-   if lblIndice = 'creditoCliente' then begin
-     FDQListagem.SQL.Text:=' SELECT credito From credito where credito = :qntcredito';
-     FDQListagem.ParamByName('qntcredito').AsFloat :=  mskPesquisar.Text;
-   end;
-end;
+
 
 procedure TfrmCadCliente.edtCEPExit(Sender: TObject);
 var
@@ -288,6 +278,8 @@ begin
 
 end;
 
+
+
 procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
@@ -326,7 +318,7 @@ begin
   inherited;
   CentralizarDadosGrid(grdListagem);
   CentralizarTitulosGrid(grdListagem);
-  CarregarColunas(grdListagem);
+  SalvarColunas(grdListagem);
 end;
 
 function TfrmCadCliente.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
@@ -352,26 +344,26 @@ begin
   oCliente.documentoId    := lkpPessoa.KeyValue;
   oCliente.documento      := edtCpfCnpj.Text;
 
-  // ? NÃO USAR MAIS
+  //
   // oCliente.credito := edtCredito.Value;
 
-  // ?? INSERT OU UPDATE
+  //  INSERT OU UPDATE
   if EstadoDoCadastro = ecInserir then
     Result := oCliente.Inserir
   else
     Result := oCliente.Atualizar;
 
-  // ?? CONTROLE DE CRÉDITO (ÚNICO LUGAR)
+  //  CONTROLE DE CRÉDITO (ÚNICO LUGAR)
   if Result then
   begin
-    // ?? NOVO CLIENTE
+    //  NOVO CLIENTE
     if EstadoDoCadastro = ecInserir then
     begin
       if edtCredito.Value > 0 then
         oCredito.AdicionarCredito(oCliente.codigo, edtCredito.Value);
     end
 
-    // ?? ALTERAÇÃO
+    //  ALTERAÇÃO
     else
     begin
       diferenca := edtCredito.Value - CreditoOriginal;
@@ -383,7 +375,7 @@ begin
         oCredito.DescontarCredito(oCliente.codigo, -Abs(diferenca));
     end;
 
-    // ?? STATUS
+    //  STATUS
     oCliente.AtualizarStatus;
   end;
 end;

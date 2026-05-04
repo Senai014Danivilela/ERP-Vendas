@@ -75,6 +75,7 @@ type
     FDQListagemtipoPessoa: TStringField;
     FDQListagemdocumento: TStringField;
     FDQListagemcreditoCliente: TFMTBCDField;
+    edtTotalCredito: TCurrencyEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
@@ -88,6 +89,8 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
+    procedure edtCreditoChange(Sender: TObject);
+    //procedure edtCreditoEnter(Sender: TObject);
 
 
   private
@@ -235,6 +238,25 @@ begin
   edtCpfCnpj.SelStart := Length(edtCpfCnpj.Text); // cursor no final
 end;
 
+procedure TfrmCadCliente.edtCreditoChange(Sender: TObject);
+begin
+  inherited;
+
+end;
+
+//procedure TfrmCadCliente.edtCreditoEnter(Sender: TObject);
+//begin
+//  inherited;
+//  edtTotalCredito.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
+//end;
+//
+//
+//function TfrmCadCliente.TotalizarCredito(CreditoAtual,Qu:Double):Double;
+// begin
+//     Result:=valorUnitario + Quantidade;
+// end;
+
+
 procedure TfrmCadCliente.edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
 num: string;
@@ -316,6 +338,7 @@ end;
 procedure TfrmCadCliente.FormShow(Sender: TObject);
 begin
   inherited;
+  SalvarColunas(grdListagem);
   CentralizarDadosGrid(grdListagem);
   CentralizarTitulosGrid(grdListagem);
   CarregarColunas(grdListagem);
@@ -344,26 +367,26 @@ begin
   oCliente.documentoId    := lkpPessoa.KeyValue;
   oCliente.documento      := edtCpfCnpj.Text;
 
-  // ? NÃO USAR MAIS
+  //
   // oCliente.credito := edtCredito.Value;
 
-  // ?? INSERT OU UPDATE
+  //  INSERT OU UPDATE
   if EstadoDoCadastro = ecInserir then
     Result := oCliente.Inserir
   else
     Result := oCliente.Atualizar;
 
-  // ?? CONTROLE DE CRÉDITO (ÚNICO LUGAR)
+  //  CONTROLE DE CRÉDITO (ÚNICO LUGAR)
   if Result then
   begin
-    // ?? NOVO CLIENTE
+    //  NOVO CLIENTE
     if EstadoDoCadastro = ecInserir then
     begin
       if edtCredito.Value > 0 then
         oCredito.AdicionarCredito(oCliente.codigo, edtCredito.Value);
     end
 
-    // ?? ALTERAÇÃO
+    //  ALTERAÇÃO
     else
     begin
       diferenca := edtCredito.Value - CreditoOriginal;
@@ -375,7 +398,7 @@ begin
         oCredito.DescontarCredito(oCliente.codigo, -Abs(diferenca));
     end;
 
-    // ?? STATUS
+    //  STATUS
     oCliente.AtualizarStatus;
   end;
 end;

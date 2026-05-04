@@ -88,8 +88,6 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
-    //procedure btnPesquisarClick(Sender: TObject);
 
 
   private
@@ -159,6 +157,8 @@ begin
   edtDataNascimento.Date:=Date;
   edtNome.SetFocus;
 end;
+
+
 
 
 
@@ -278,6 +278,8 @@ begin
 
 end;
 
+
+
 procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
@@ -316,6 +318,7 @@ begin
   inherited;
   CentralizarDadosGrid(grdListagem);
   CentralizarTitulosGrid(grdListagem);
+  SalvarColunas(grdListagem);
   CarregarColunas(grdListagem);
 end;
 
@@ -342,26 +345,26 @@ begin
   oCliente.documentoId    := lkpPessoa.KeyValue;
   oCliente.documento      := edtCpfCnpj.Text;
 
-  // ? NÃO USAR MAIS
+  //
   // oCliente.credito := edtCredito.Value;
 
-  // ?? INSERT OU UPDATE
+  //  INSERT OU UPDATE
   if EstadoDoCadastro = ecInserir then
     Result := oCliente.Inserir
   else
     Result := oCliente.Atualizar;
 
-  // ?? CONTROLE DE CRÉDITO (ÚNICO LUGAR)
+  //  CONTROLE DE CRÉDITO (ÚNICO LUGAR)
   if Result then
   begin
-    // ?? NOVO CLIENTE
+    //  NOVO CLIENTE
     if EstadoDoCadastro = ecInserir then
     begin
       if edtCredito.Value > 0 then
         oCredito.AdicionarCredito(oCliente.codigo, edtCredito.Value);
     end
 
-    // ?? ALTERAÇÃO
+    //  ALTERAÇÃO
     else
     begin
       diferenca := edtCredito.Value - CreditoOriginal;
@@ -373,7 +376,7 @@ begin
         oCredito.DescontarCredito(oCliente.codigo, -Abs(diferenca));
     end;
 
-    // ?? STATUS
+    //  STATUS
     oCliente.AtualizarStatus;
   end;
 end;

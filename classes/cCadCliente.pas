@@ -88,12 +88,12 @@ begin
     FConexao.StartTransaction;
 
     try
-      // 🔥 apaga crédito primeiro
+      // apaga crédito primeiro
       FDQ.SQL.Text := 'DELETE FROM CREDITO WHERE clienteId = :id';
       FDQ.ParamByName('id').AsInteger := Self.codigo;
       FDQ.ExecSQL;
 
-      // 🔥 depois cliente
+      //  depois cliente
       FDQ.SQL.Text := 'DELETE FROM CLIENTES WHERE clienteId = :id';
       FDQ.ParamByName('id').AsInteger := Self.codigo;
       FDQ.ExecSQL;

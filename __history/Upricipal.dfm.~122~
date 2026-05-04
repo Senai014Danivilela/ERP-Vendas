@@ -2,8 +2,8 @@ object MenuPrincipal: TMenuPrincipal
   Left = 0
   Top = 0
   Caption = 'MenuPrincipal'
-  ClientHeight = 446
-  ClientWidth = 913
+  ClientHeight = 463
+  ClientWidth = 919
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,29 +21,32 @@ object MenuPrincipal: TMenuPrincipal
   TextHeight = 13
   object stbPricipal: TStatusBar
     Left = 0
-    Top = 427
-    Width = 913
+    Top = 444
+    Width = 919
     Height = 19
     Panels = <
       item
         Width = 150
       end>
+    ExplicitTop = 427
+    ExplicitWidth = 913
   end
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 913
+    Width = 919
     Height = 41
     Align = alTop
     Color = 8282689
     ParentBackground = False
     TabOrder = 1
     OnClick = Panel3Click
+    ExplicitWidth = 913
     object Label1: TLabel
-      Left = 360
+      Left = 393
       Top = 4
-      Width = 145
-      Height = 24
+      Width = 152
+      Height = 21
       Caption = 'DASHBOARD'
       Font.Charset = ANSI_CHARSET
       Font.Color = clWhite
@@ -56,8 +59,8 @@ object MenuPrincipal: TMenuPrincipal
   object GridPanel1: TGridPanel
     Left = 0
     Top = 41
-    Width = 913
-    Height = 386
+    Width = 919
+    Height = 403
     Align = alClient
     ColumnCollection = <
       item
@@ -103,11 +106,13 @@ object MenuPrincipal: TMenuPrincipal
         Value = 50.000000000000000000
       end>
     TabOrder = 2
+    ExplicitWidth = 913
+    ExplicitHeight = 386
     object DBChart3: TDBChart
-      Left = 456
-      Top = 193
-      Width = 456
-      Height = 192
+      Left = 459
+      Top = 201
+      Width = 459
+      Height = 201
       Title.Text.Strings = (
         'TOP 10 Produtos mais Vendidos ')
       Legend.TextStyle = ltsLeftPercent
@@ -117,6 +122,9 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 2
+      ExplicitLeft = 465
+      ExplicitTop = 199
+      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object PieSeries2: TPieSeries
@@ -171,15 +179,17 @@ object MenuPrincipal: TMenuPrincipal
         Frame.OuterBrush.Gradient.StartColor = clSilver
         Frame.OuterBrush.Gradient.Visible = True
         Frame.Width = 4
+        Bevel.Bright = -5
+        MultiPie = mpDisabled
         OtherSlice.Legend.TextStyle = ltsPercent
         OtherSlice.Legend.Visible = False
       end
     end
     object DBChart2: TDBChart
       Left = 1
-      Top = 193
-      Width = 455
-      Height = 192
+      Top = 201
+      Width = 458
+      Height = 201
       Title.Text.Strings = (
         'Vendas da Ultima Semana')
       Legend.CheckBoxesStyle = cbsRadio
@@ -189,14 +199,17 @@ object MenuPrincipal: TMenuPrincipal
       Align = alClient
       BevelInner = bvLowered
       TabOrder = 0
+      ExplicitTop = 193
+      ExplicitWidth = 455
+      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series2: TFastLineSeries
         DataSource = DTMGrafico.FDQVendasUltimaSemana
-        SeriesColor = clYellow
+        SeriesColor = 7684354
         Title = 'VendaUltimaSemana'
         XLabelsSource = 'Label'
-        LinePen.Color = clYellow
+        LinePen.Color = 7684354
         XValues.Name = 'X'
         XValues.Order = loAscending
         YValues.Name = 'Y'
@@ -207,13 +220,15 @@ object MenuPrincipal: TMenuPrincipal
     object DBChart4: TDBChart
       Left = 1
       Top = 1
-      Width = 455
-      Height = 192
+      Width = 458
+      Height = 200
       Title.Text.Strings = (
         'Produtos em Estoque')
       Chart3DPercent = 10
       Align = alClient
       TabOrder = 1
+      ExplicitWidth = 455
+      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series3: TBarSeries
@@ -229,10 +244,10 @@ object MenuPrincipal: TMenuPrincipal
       end
     end
     object DBChart1: TDBChart
-      Left = 456
+      Left = 459
       Top = 1
-      Width = 456
-      Height = 192
+      Width = 459
+      Height = 200
       Title.Text.Strings = (
         'Venda por Cliente')
       Chart3DPercent = 10
@@ -242,6 +257,9 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 3
+      ExplicitLeft = 456
+      ExplicitWidth = 456
+      ExplicitHeight = 192
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object Series1: TPieSeries
@@ -377,7 +395,7 @@ object MenuPrincipal: TMenuPrincipal
   end
   object Timer1: TTimer
     Interval = 10
-    Left = 288
-    Top = 65528
+    Left = 304
+    Top = 16
   end
 end

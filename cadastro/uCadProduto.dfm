@@ -6,6 +6,7 @@ inherited frmCadProduto: TfrmCadProduto
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Height = 394
+    ActivePage = tabManutencao
     TabOrder = 0
     ExplicitHeight = 394
     inherited tabListagem: TTabSheet

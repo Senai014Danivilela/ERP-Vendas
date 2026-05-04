@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
-  Vcl.ExtCtrls, Vcl.ComCtrls,uDTMConexao, RxToolEdit, RxCurrEdit,uDTMVenda,uEnum,cProVendas,cCadCliente,cCredito;
+  Vcl.ExtCtrls, Vcl.ComCtrls,uDTMConexao, RxToolEdit, RxCurrEdit,uDTMVenda,uEnum,cProVendas,cCadCliente,cCredito,uRelProVenda2;
 
 type
   TfrmProVenda = class(TForm1)
@@ -53,6 +53,11 @@ type
     procedure btnGravarClick(Sender: TObject);
     procedure btnApagarItemClick(Sender: TObject);
     procedure DBGridItensVendaDblClick(Sender: TObject);
+    procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
+    procedure FormShow(Sender: TObject);
+    procedure DBGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
 
   private
 
@@ -111,13 +116,13 @@ begin
 
   if (EstadoDoCadastro = ecInserir) then
   begin
-    // ?? 1. CARREGA CLIENTE
+    //  1. CARREGA CLIENTE
     oCliente.Selecionar(oVenda.ClienteID);
 
-    // ?? 2. BLOQUEADO?
+    //  2. BLOQUEADO
     oCliente.PodeVender;
 
-    // ?? 3. VALIDA LIMITE CORRETO
+    //  3. VALIDA LIMITE CORRETO
     saldo := oCredito.ObterSaldo(oCliente.codigo);
     limite := oCliente.limiteCredito * 1.1;
 
@@ -137,7 +142,7 @@ begin
 
     oVenda.VendaId := IdVenda;
 
-    //  PROSPECTO/INATIVO ? ATIVO
+    //  PROSPECTO/INATIVO  ATIVO
     if (oCliente.statusId = 5) or (oCliente.statusId = 4) then
     begin
       oCliente.statusId := 1;
@@ -145,7 +150,7 @@ begin
     end;
 
     // DESCONTA CRÉDITO
-    oCredito.DescontarCredito(oCliente.codigo, oVenda.TotalVenda);
+    oCredito.DescontarCredito(oCliente.codigo, oVenda.TotalVenda,oVenda.VendaId);
 
     // ATUALIZA STATUS
     oCliente.AtualizarStatus;
@@ -158,12 +163,43 @@ begin
       Exit;
     end;
   end;
+  frmRelProVenda2:=TfrmRelProVenda2.Create(self);
+  frmRelProVenda2.FDQVenda.Close;
+  frmRelProVenda2.FDQVenda.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda2.FDQVenda.Open;
+
+  frmRelProVenda2.FDQVendasItens.Close;
+  frmRelProVenda2.FDQVendasItens.ParamByName('VendaId').AsInteger:= oVenda.VendaId;
+  frmRelProVenda2.FDQVendasItens.Open;
+
+  frmRelProVenda2.Relatorio.PreviewModal;
+  frmRelProVenda2.Release;
 
   Result := True;
 end;
 
 
- procedure TfrmProVenda.lkpProdutoExit(Sender: TObject);
+ procedure TfrmProVenda.grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+ var
+  Grid: TDBGrid;
+begin
+
+  Grid := Sender as TDBGrid;
+
+  //ZEBRAAAARRRRR
+  if not (gdSelected in State) then
+  begin
+    if Odd(Grid.DataSource.DataSet.RecNo) then
+      Grid.Canvas.Brush.Color := clWhite
+    else
+      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
+procedure TfrmProVenda.lkpProdutoExit(Sender: TObject);
 begin
   inherited;
   if TDBLookupComboBox(Sender).KeyValue<>Null then begin
@@ -302,6 +338,26 @@ begin
   CarregarRegistroSelecionado;
 end;
 
+procedure TfrmProVenda.DBGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+ var
+  Grid: TDBGrid;
+begin
+
+  Grid := Sender as TDBGrid;
+
+  //ZEBRAAAARRRRR
+  if not (gdSelected in State) then
+  begin
+    if Odd(Grid.DataSource.DataSet.RecNo) then
+      Grid.Canvas.Brush.Color := clWhite
+    else
+      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
 procedure TfrmProVenda.DBGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
   inherited;
@@ -347,6 +403,14 @@ begin
 
    IndiceAtual :='nome';
   end;
+
+procedure TfrmProVenda.FormShow(Sender: TObject);
+begin
+  inherited;
+  CentralizarDadosGrid(grdListagem);
+  CentralizarTitulosGrid(grdListagem);
+  CarregarColunas(grdListagem);
+end;
 
 procedure TfrmProVenda.CarregarRegistroSelecionado;
 begin

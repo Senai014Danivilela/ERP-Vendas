@@ -179,7 +179,7 @@ end;
 
  procedure TfrmProVenda.grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
   State: TGridDrawState);
-var
+ var
   Grid: TDBGrid;
 begin
 
