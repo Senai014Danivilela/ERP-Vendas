@@ -323,7 +323,7 @@ inherited frmCadCliente: TfrmCadCliente
           item
             Expanded = False
             FieldName = 'creditoCliente'
-            Width = 89
+            Width = 104
             Visible = True
           end>
       end
@@ -592,12 +592,14 @@ inherited frmCadCliente: TfrmCadCliente
     Left = 28
     Top = 264
     object FDQListagemclienteId: TFDAutoIncField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'clienteId'
       Origin = 'clienteId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object FDQListagemnome: TStringField
+      DisplayLabel = 'Nome'
       FieldName = 'nome'
       Origin = 'nome'
       Size = 60
@@ -623,16 +625,19 @@ inherited frmCadCliente: TfrmCadCliente
       Size = 2
     end
     object FDQListagemcep: TStringField
+      DisplayLabel = 'CEP'
       FieldName = 'cep'
       Origin = 'cep'
       Size = 10
     end
     object FDQListagemtelefone: TStringField
+      DisplayLabel = 'Telefone'
       FieldName = 'telefone'
       Origin = 'telefone'
       Size = 14
     end
     object FDQListagememail: TStringField
+      DisplayLabel = 'Email'
       FieldName = 'email'
       Origin = 'email'
       Size = 100
@@ -642,6 +647,7 @@ inherited frmCadCliente: TfrmCadCliente
       Origin = 'dataNascimento'
     end
     object FDQListagemstatusId: TIntegerField
+      DisplayLabel = 'Status'
       FieldName = 'statusId'
       Origin = 'statusId'
     end
@@ -658,6 +664,7 @@ inherited frmCadCliente: TfrmCadCliente
       Origin = 'documento'
     end
     object FDQListagemcreditoCliente: TFMTBCDField
+      DisplayLabel = 'Cr'#233'dito do Cliente'
       FieldName = 'creditoCliente'
       Origin = 'creditoCliente'
       ReadOnly = True

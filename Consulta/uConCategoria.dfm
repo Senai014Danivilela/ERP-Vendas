@@ -2,17 +2,7 @@ inherited frmConCategoria: TfrmConCategoria
   Caption = 'frmConCategoria'
   PixelsPerInch = 96
   TextHeight = 13
-  inherited Panel1: TPanel
-    ExplicitWidth = 801
-    inherited mskPesquisa: TMaskEdit
-      ExplicitLeft = 1
-      ExplicitTop = 19
-      ExplicitWidth = 799
-    end
-  end
   inherited Panel2: TPanel
-    ExplicitWidth = 801
-    ExplicitHeight = 320
     inherited grdPesquisa: TDBGrid
       Columns = <
         item
@@ -28,13 +18,6 @@ inherited frmConCategoria: TfrmConCategoria
         end>
     end
   end
-  inherited Panel3: TPanel
-    ExplicitTop = 361
-    ExplicitWidth = 801
-    inherited btnFechar: TBitBtn
-      ExplicitLeft = 726
-    end
-  end
   inherited FDQListagem: TFDQuery
     Active = True
     SQL.Strings = (
@@ -43,12 +26,14 @@ inherited frmConCategoria: TfrmConCategoria
       'FROM CATEGORIAS'
       '  ')
     object FDQListagemcategoriaId: TFDAutoIncField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'categoriaId'
       Origin = 'categoriaId'
       ProviderFlags = [pfInWhere, pfInKey]
       ReadOnly = True
     end
     object FDQListagemdescricao: TStringField
+      DisplayLabel = 'Descri'#231#227'o'
       FieldName = 'descricao'
       Origin = 'descricao'
       Size = 30

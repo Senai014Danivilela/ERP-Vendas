@@ -39,7 +39,6 @@ type
     USUARIOSVSAOES1: TMenuItem;
     Panel3: TPanel;
     GridPanel1: TGridPanel;
-    Label1: TLabel;
     DBChart3: TDBChart;
     PieSeries2: TPieSeries;
     DBChart2: TDBChart;
@@ -51,6 +50,7 @@ type
     DBChart1: TDBChart;
     Series1: TPieSeries;
     SAIR1: TMenuItem;
+    Label1: TLabel;
     //trmAtualizacaoDashBoard: TTimer;
     procedure mnuuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
