@@ -35,6 +35,8 @@ inherited frmCadCliente: TfrmCadCliente
     ExplicitWidth = 763
     ExplicitHeight = 405
     inherited tabListagem: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 755
       ExplicitHeight = 377
       inherited pnlListagemTopo: TPanel
@@ -275,10 +277,6 @@ inherited frmCadCliente: TfrmCadCliente
           Font.Style = [fsBold]
           ParentFont = False
         end
-        inherited mskPesquisar: TMaskEdit
-          Top = 21
-          ExplicitTop = 21
-        end
         inherited btnPesquisar: TBitBtn
           Width = 90
           ExplicitWidth = 90
@@ -331,6 +329,8 @@ inherited frmCadCliente: TfrmCadCliente
     end
     inherited tabManutencao: TTabSheet
       ParentDoubleBuffered = False
+      ExplicitLeft = 4
+      ExplicitTop = 24
       ExplicitWidth = 755
       ExplicitHeight = 377
       object CEP: TLabel
@@ -529,7 +529,6 @@ inherited frmCadCliente: TfrmCadCliente
         DisplayFormat = ' ,0.00; ,0.00'
         TabOrder = 13
         OnChange = edtCreditoChange
-        OnEnter = edtCreditoEnter
       end
       object edtTotalCredito: TCurrencyEdit
         Left = 464

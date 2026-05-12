@@ -1,11 +1,12 @@
 inherited frmCadProduto: TfrmCadProduto
-  Caption = 'cadastro de Produto'
+  Caption = ' Produto'
   ClientHeight = 435
   ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Height = 394
+    ActivePage = tabManutencao
     TabOrder = 0
     ExplicitHeight = 394
     inherited tabListagem: TTabSheet
@@ -65,36 +66,36 @@ inherited frmCadProduto: TfrmCadProduto
     inherited tabManutencao: TTabSheet
       ExplicitHeight = 366
       object DESCRICAO: TLabel
-        Left = 3
-        Top = 97
+        Left = 19
+        Top = 101
         Width = 59
         Height = 13
         Caption = 'DESCRICAO'
       end
       object Label1: TLabel
-        Left = 3
-        Top = 182
+        Left = 19
+        Top = 186
         Width = 33
         Height = 26
         Caption = 'VALOR'#13#10
       end
       object QUANTIDADE: TLabel
-        Left = 139
-        Top = 182
+        Left = 155
+        Top = 186
         Width = 56
         Height = 13
         Caption = 'Quantidade'
       end
       object CATEGORIA: TLabel
-        Left = 276
-        Top = 57
+        Left = 292
+        Top = 61
         Width = 59
         Height = 13
         Caption = 'CATEGORIA'
       end
       object btnIncluirCategoria: TSpeedButton
-        Left = 531
-        Top = 69
+        Left = 547
+        Top = 73
         Width = 23
         Height = 22
         Glyph.Data = {
@@ -127,8 +128,8 @@ inherited frmCadProduto: TfrmCadProduto
         OnClick = btnIncluirCategoriaClick
       end
       object btnPesquisarCategoria: TSpeedButton
-        Left = 574
-        Top = 69
+        Left = 590
+        Top = 73
         Width = 23
         Height = 22
         Glyph.Data = {
@@ -162,8 +163,8 @@ inherited frmCadProduto: TfrmCadProduto
       end
       object edtProdutoId: TLabeledEdit
         Tag = 1
-        Left = 3
-        Top = 32
+        Left = 19
+        Top = 36
         Width = 153
         Height = 21
         EditLabel.Width = 33
@@ -175,8 +176,8 @@ inherited frmCadProduto: TfrmCadProduto
       end
       object edtNome: TLabeledEdit
         Tag = 2
-        Left = 3
-        Top = 72
+        Left = 19
+        Top = 76
         Width = 266
         Height = 19
         Ctl3D = False
@@ -190,8 +191,8 @@ inherited frmCadProduto: TfrmCadProduto
         TabOrder = 1
       end
       object edtDescricao: TMemo
-        Left = 1
-        Top = 118
+        Left = 17
+        Top = 122
         Width = 596
         Height = 63
         Lines.Strings = (
@@ -200,23 +201,23 @@ inherited frmCadProduto: TfrmCadProduto
         TabOrder = 3
       end
       object edtValor: TCurrencyEdit
-        Left = 3
-        Top = 201
+        Left = 19
+        Top = 205
         Width = 121
         Height = 21
         TabOrder = 4
       end
       object edtQuantidade: TCurrencyEdit
-        Left = 139
-        Top = 201
+        Left = 155
+        Top = 205
         Width = 121
         Height = 21
         DisplayFormat = ' ,0.00; ,0.00'
         TabOrder = 5
       end
       object lkpCategoria: TDBLookupComboBox
-        Left = 276
-        Top = 70
+        Left = 292
+        Top = 74
         Width = 249
         Height = 21
         KeyField = 'categoriaId'
@@ -225,23 +226,22 @@ inherited frmCadProduto: TfrmCadProduto
         TabOrder = 2
       end
       object pnlImage: TPanel
-        Left = 603
-        Top = 0
-        Width = 134
-        Height = 116
+        Left = 648
+        Top = 36
+        Width = 140
+        Height = 127
         BorderStyle = bsSingle
         TabOrder = 6
         object imgImagem: TImage
           Left = 1
           Top = 1
-          Width = 128
-          Height = 110
+          Width = 134
+          Height = 121
           Align = alClient
           PopupMenu = ppmImagem
-          ExplicitLeft = -7
-          ExplicitTop = 89
-          ExplicitWidth = 132
-          ExplicitHeight = 114
+          ExplicitLeft = 32
+          ExplicitWidth = 97
+          ExplicitHeight = 88
         end
       end
     end
@@ -266,8 +266,8 @@ inherited frmCadProduto: TfrmCadProduto
       '             C.descricao As DescricaoCategoria'
       'FROM PRODUTOS as P'
       'LEFT JOIN CATEGORIAS AS C ON C.categoriaId = P.categoriaId')
-    Left = 292
-    Top = 8
+    Left = 324
+    Top = 56
     object FDQListagemprodutoId: TFDAutoIncField
       DisplayLabel = 'CODIGO'
       FieldName = 'produtoId'
@@ -314,8 +314,8 @@ inherited frmCadProduto: TfrmCadProduto
     end
   end
   inherited dtslistagem: TDataSource
-    Left = 364
-    Top = 8
+    Left = 380
+    Top = 48
   end
   object FDQCategoria: TFDQuery
     Active = True

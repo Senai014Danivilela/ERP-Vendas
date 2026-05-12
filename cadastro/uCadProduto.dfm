@@ -64,6 +64,9 @@ inherited frmCadProduto: TfrmCadProduto
       end
     end
     inherited tabManutencao: TTabSheet
+      ExplicitLeft = 4
+      ExplicitTop = 24
+      ExplicitWidth = 791
       ExplicitHeight = 366
       object DESCRICAO: TLabel
         Left = 19

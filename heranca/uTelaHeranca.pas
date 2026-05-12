@@ -46,6 +46,7 @@ type
     procedure btnPesquisarClick(Sender: TObject);
     procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure tabManutencaoContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
   private
     { Private declarations }
     SelectOriginal:string;
@@ -616,7 +617,7 @@ for i := 0 to ComponentCount - 1 do
       TDBGrid(Components[i]).OnDrawColumnCell := grdListagemDrawColumnCell;
   end;
       FDQListagem.Connection:=dtmPrincipal.dtmPrincipalDB;
-
+     CarregarColunas(grdListagem);
 // ← sem ponto e vírgula, com espaço no final de cada linha!
 
       dtslistagem.DataSet:=FDQListagem;
@@ -656,43 +657,6 @@ begin
     ExibirLabelIndice(IndiceAtual,lblIndice);
 end;
          {$ENDREGION}
-
-{$REGION ' AREA DE PESQUISA'}
-//procedure TForm1.mskPesquisarChange(Sender: TObject);
-//var Date:TDateTime;
-//begin
-//  if(trim(TMaskEdit(Sender).Text) = '')then
-//    Exit;
-//
-//  if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftString, ftWideString] )then
-//  begin
-//    FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [loPartialKey])
-//  end
-//
-//   else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftFloat, ftCurrency, ftFMTBcd] )then
-//  begin
-//   try
-//     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])
-//   except
-//
-//   end;
-//  end
-//
-//  else if(FDQListagem.FieldByName(IndiceAtual).DataType in [ftDate, ftDateTime, ftTimeStamp] )then
-//  begin
-//   if TryStrToDate(TMaskEdit(Sender).Text, Date) then
-//   begin
-//     FDQListagem.Locate(IndiceAtual, Date, []);
-//   end
-//  end
-//
-//  else
-//     FDQListagem.Locate(IndiceAtual, TMaskEdit(Sender).Text, [])  ;
-//
-// Exit;
-//end;
-
-{$endregion}
 
 {$REGION ' Bloqueia CTRL_DEL  '}
 procedure TForm1.BloqueiaCTRL_DEL_DBGrid(var Key: Word; Shift: TShiftState);
@@ -739,7 +703,12 @@ begin
       Result := Result + Texto[i];
   end;
 end;
-    {$endregion}
+    procedure TForm1.tabManutencaoContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
+begin
+
+end;
+
+{$endregion}
 
 {$REGION ' SALVANDO E CARREGANDO POSIÇÂO NA GRID  '}
 

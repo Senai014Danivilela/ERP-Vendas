@@ -27,6 +27,7 @@ object Form1: TForm1
     ActivePage = tabListagem
     Align = alClient
     TabOrder = 1
+    ExplicitTop = 1
     object tabListagem: TTabSheet
       Caption = 'listagem'
       object pnlListagemTopo: TPanel
@@ -97,6 +98,7 @@ object Form1: TForm1
         Height = 250
         Align = alClient
         Anchors = [akTop, akRight]
+        Color = clWhite
         DataSource = dtslistagem
         DrawingStyle = gdsClassic
         FixedColor = clGray
@@ -122,10 +124,9 @@ object Form1: TForm1
     object tabManutencao: TTabSheet
       Caption = 'Manutencao'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      OnContextPopup = tabManutencaoContextPopup
+      ExplicitLeft = -15
+      ExplicitTop = 80
     end
   end
   object pnlRodape: TPanel

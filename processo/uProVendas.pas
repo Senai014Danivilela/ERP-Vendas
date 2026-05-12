@@ -56,6 +56,7 @@ type
     procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
     procedure FormShow(Sender: TObject);
+    procedure edtTotalProdutoChange(Sender: TObject);
 
   private
 
@@ -354,6 +355,8 @@ begin
   inherited;
   edtTotalProduto.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
 end;
+
+
 
 procedure TfrmProVenda.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

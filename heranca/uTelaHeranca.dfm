@@ -45,7 +45,7 @@ object Form1: TForm1
         end
         object mskPesquisar: TMaskEdit
           Left = 8
-          Top = 20
+          Top = 21
           Width = 233
           Height = 21
           TabOrder = 0
@@ -123,6 +123,11 @@ object Form1: TForm1
     object tabManutencao: TTabSheet
       Caption = 'Manutencao'
       ImageIndex = 1
+      OnContextPopup = tabManutencaoContextPopup
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
   end
   object pnlRodape: TPanel
@@ -137,8 +142,8 @@ object Form1: TForm1
       41)
     object btnNovo: TBitBtn
       Tag = 99
-      Left = 1
-      Top = 7
+      Left = -7
+      Top = 6
       Width = 75
       Height = 25
       Caption = '&NOVO'
@@ -174,8 +179,8 @@ object Form1: TForm1
     end
     object btnAlterar: TBitBtn
       Tag = 99
-      Left = 82
-      Top = 7
+      Left = 74
+      Top = 6
       Width = 75
       Height = 25
       Caption = '&ALTERAR'
