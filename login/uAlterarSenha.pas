@@ -19,6 +19,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnFecharClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     procedure LimparEdits;
     { Private declarations }
@@ -65,6 +66,12 @@ end;
 procedure TfrmAlterarSenha.btnFecharClick(Sender: TObject);
 begin
    Close;
+end;
+
+procedure TfrmAlterarSenha.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+            Close;
 end;
 
 procedure TfrmAlterarSenha.FormShow(Sender: TObject);

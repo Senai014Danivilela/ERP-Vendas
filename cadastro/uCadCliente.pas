@@ -76,6 +76,7 @@ type
     FDQListagemdocumento: TStringField;
     FDQListagemcreditoCliente: TFMTBCDField;
     edtTotalCredito: TCurrencyEdit;
+    Label12: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);
@@ -89,7 +90,9 @@ type
     procedure lblCpfCnpjClick(Sender: TObject);
     procedure edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormDestroy(Sender: TObject);
-    procedure edtCreditoChange(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure btnGravarClick(Sender: TObject);
+    procedure FDQListagemAfterScroll(DataSet: TDataSet);
     //procedure edtCreditoEnter(Sender: TObject);
 
 
@@ -151,6 +154,20 @@ begin
    end;
 
    inherited;
+
+end;
+
+procedure TfrmCadCliente.btnGravarClick(Sender: TObject);
+begin
+ if not EmailValido(EdtEmail.Text) then
+  begin
+    ShowMessage('E-mail inválido!');
+    EdtEmail.SetFocus;
+    Exit;
+  end;
+
+  ShowMessage('Cadastro salvo!');
+  inherited;
 
 end;
 
@@ -238,25 +255,6 @@ begin
   edtCpfCnpj.SelStart := Length(edtCpfCnpj.Text); // cursor no final
 end;
 
-procedure TfrmCadCliente.edtCreditoChange(Sender: TObject);
-begin
-  inherited;
-
-end;
-
-//procedure TfrmCadCliente.edtCreditoEnter(Sender: TObject);
-//begin
-//  inherited;
-//  edtTotalCredito.Value:=TotalizarProduto(edtValorUnitario.Value, edtQuantidade.Value);
-//end;
-//
-//
-//function TfrmCadCliente.TotalizarCredito(CreditoAtual,Qu:Double):Double;
-// begin
-//     Result:=valorUnitario + Quantidade;
-// end;
-
-
 procedure TfrmCadCliente.edtTelefoneKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 var
 num: string;
@@ -302,6 +300,24 @@ end;
 
 
 
+procedure TfrmCadCliente.FDQListagemAfterScroll(DataSet: TDataSet);
+var
+  saldo: Double;
+begin
+  if FDQListagem.IsEmpty then
+  begin
+    edtTotalCredito.Value := 0;
+    Exit;
+  end;
+  try
+    saldo := oCredito.ObterSaldo(
+               FDQListagem.FieldByName('clienteId').AsInteger);
+    edtTotalCredito.Value := saldo;
+  except
+    edtTotalCredito.Value := 0;
+  end;
+end;
+
 procedure TfrmCadCliente.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
@@ -335,9 +351,16 @@ begin
 
 end;
 
+procedure TfrmCadCliente.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    Close;
+end;
+
 procedure TfrmCadCliente.FormShow(Sender: TObject);
 begin
   inherited;
+  FDQListagem.AfterScroll := FDQListagemAfterScroll;
   SalvarColunas(grdListagem);
   CentralizarDadosGrid(grdListagem);
   CentralizarTitulosGrid(grdListagem);
@@ -361,6 +384,7 @@ begin
   oCliente.bairro         := edtBairro.Text;
   oCliente.cep            := edtCEP.Text;
   oCliente.telefone       := edtTelefone.Text;
+//oCliente.uf             := edtUF.Text;
   oCliente.email          := edtEmail.Text;
   oCliente.dataNascimento := edtDataNascimento.Date;
   oCliente.statusId       := lkpStatus.KeyValue;

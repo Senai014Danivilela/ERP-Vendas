@@ -74,6 +74,7 @@ type
     procedure trmAtualizacaoDashBoardTimer(Sender: TObject);
     procedure HISTORICODETRANSAO1Click(Sender: TObject);
     procedure SAIR1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     TeclaEnter: TMREnter;
     procedure AtualizacaoBancoDados(aForm: TfrmAtualizaDB);
@@ -254,6 +255,12 @@ begin
    AtualizarDshBoard;
 
    frmAtualizaDB.Free;
+end;
+
+procedure TMenuPrincipal.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+  if Key = VK_ESCAPE then
+    Close;
 end;
 
 procedure TMenuPrincipal.FormShow(Sender: TObject);

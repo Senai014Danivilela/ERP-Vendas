@@ -3,6 +3,7 @@ inherited frmCadCliente: TfrmCadCliente
   ClientHeight = 446
   ClientWidth = 763
   OnDestroy = FormDestroy
+  ExplicitTop = -23
   ExplicitWidth = 769
   ExplicitHeight = 475
   PixelsPerInch = 96
@@ -35,8 +36,6 @@ inherited frmCadCliente: TfrmCadCliente
     ExplicitWidth = 763
     ExplicitHeight = 405
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
       ExplicitWidth = 755
       ExplicitHeight = 377
       inherited pnlListagemTopo: TPanel
@@ -329,8 +328,8 @@ inherited frmCadCliente: TfrmCadCliente
     end
     inherited tabManutencao: TTabSheet
       ParentDoubleBuffered = False
-      ExplicitLeft = 4
-      ExplicitTop = 24
+      ExplicitLeft = 8
+      ExplicitTop = 28
       ExplicitWidth = 755
       ExplicitHeight = 377
       object CEP: TLabel
@@ -384,6 +383,13 @@ inherited frmCadCliente: TfrmCadCliente
         Width = 110
         Height = 13
         Caption = 'ADICIONAR CREDITO:'
+      end
+      object Label12: TLabel
+        Left = 464
+        Top = 261
+        Width = 84
+        Height = 13
+        Caption = 'CREDITO ATUAL:'
       end
       object edtClienteId: TLabeledEdit
         Tag = 1
@@ -528,7 +534,6 @@ inherited frmCadCliente: TfrmCadCliente
         Height = 21
         DisplayFormat = ' ,0.00; ,0.00'
         TabOrder = 13
-        OnChange = edtCreditoChange
       end
       object edtTotalCredito: TCurrencyEdit
         Left = 464
@@ -556,6 +561,7 @@ inherited frmCadCliente: TfrmCadCliente
     end
   end
   inherited FDQListagem: TFDQuery
+    AfterScroll = FDQListagemAfterScroll
     SQL.Strings = (
       'SELECT '
       '    C.clienteId,'

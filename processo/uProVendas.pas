@@ -56,7 +56,7 @@ type
     procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
     procedure FormShow(Sender: TObject);
-    procedure edtTotalProdutoChange(Sender: TObject);
+    //procedure edtTotalProdutoChange(Sender: TObject);
 
   private
 

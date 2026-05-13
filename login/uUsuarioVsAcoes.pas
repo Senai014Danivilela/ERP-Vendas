@@ -33,6 +33,7 @@ type
     procedure grdAcoesDblClick(Sender: TObject);
     procedure grdAcoesDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     private
     { Private declarations }
    // procedure SelecionarAcoesAcessoPorUsuario;
@@ -66,6 +67,12 @@ begin
   FDQAcoes.Open;
 end;
 
+
+procedure TfrmUsuarioVsAcoes.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+ if Key = VK_ESCAPE then
+            Close;
+end;
 
 procedure TfrmUsuarioVsAcoes.FormShow(Sender: TObject);
 begin

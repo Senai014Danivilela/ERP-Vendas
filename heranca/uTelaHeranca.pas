@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ComCtrls, Vcl.ExtCtrls,uEnum,uDTMConexao,RxToolEdit,RxCurrEdit,cUsuarioLogado,cArquivoIni,System.Math,Inifiles,
-  System.JSON, System.Net.HttpClient, System.Net.URLClient;
+  System.JSON, System.Net.HttpClient, System.Net.URLClient,System.RegularExpressions;
 
 type
   TForm1 = class(TForm)
@@ -47,6 +47,11 @@ type
     procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
     procedure tabManutencaoContextPopup(Sender: TObject; MousePos: TPoint; var Handled: Boolean);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+   //
+
+    //procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+
   private
     { Private declarations }
     SelectOriginal:string;
@@ -59,6 +64,7 @@ type
     function ExisteCampoObrigatorio: Boolean;
     procedure DesabilitarEditPK;
     procedure LimparEdits;
+
 
 
 
@@ -76,6 +82,7 @@ type
     procedure CarregarColunas(aGrid: TDBGrid);
     procedure SalvarColunas(aGrid: TDBGrid);
     function BuscarCEP(const CEP: string): TJSONObject;
+    function EmailValido(Email: string): Boolean;
   end;
 
 var
@@ -632,6 +639,16 @@ end;
 
 
 
+
+
+
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+
+        if Key = VK_ESCAPE then
+            Close;
+end;
+
 procedure TForm1.FormShow(Sender: TObject);
 begin
      if (FDQListagem.SQL.Text<>EmptyStr) then begin
@@ -865,5 +882,12 @@ begin
 end;
 {$endregion}
 
+function TForm1.EmailValido(Email: string): Boolean;
+begin
+  Result := TRegEx.IsMatch(
+    Email,
+    '^[\w\.-]+@[\w\.-]+\.\w+$'
+  );
+end;
 
 end.
