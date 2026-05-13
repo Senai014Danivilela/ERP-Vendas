@@ -282,7 +282,7 @@ inherited frmProVenda: TfrmProVenda
             Color = clHighlightText
             DataSource = dtmVenda.dtsItensVenda
             DrawingStyle = gdsClassic
-            FixedColor = clGray
+            FixedColor = 4737096
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
@@ -295,7 +295,7 @@ inherited frmProVenda: TfrmProVenda
             TitleFont.Color = clWhite
             TitleFont.Height = -11
             TitleFont.Name = 'Tahoma'
-            TitleFont.Style = [fsBold]
+            TitleFont.Style = []
             OnDrawColumnCell = DBGridItensVendaDrawColumnCell
             OnDblClick = DBGridItensVendaDblClick
             OnKeyDown = DBGridItensVendaKeyDown
@@ -324,7 +324,7 @@ inherited frmProVenda: TfrmProVenda
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
-                Width = 72
+                Width = 64
                 Visible = True
               end>
           end

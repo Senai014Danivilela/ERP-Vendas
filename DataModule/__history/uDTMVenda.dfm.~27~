@@ -49,6 +49,7 @@ object dtmVenda: TdtmVenda
     object FDQProdutosvalor: TFMTBCDField
       DisplayLabel = 'Valor'
       FieldName = 'valor'
+      DisplayFormat = 'R$'
       Precision = 18
       Size = 5
     end
@@ -65,25 +66,25 @@ object dtmVenda: TdtmVenda
     Left = 200
     Top = 40
     object cdsItensVendaprodutoId: TIntegerField
+      DisplayLabel = 'C'#243'digo'
       FieldName = 'produtoId'
     end
     object cdsItensVendaNomeProduto: TStringField
+      DisplayLabel = 'Nome do Produto'
       FieldName = 'NomeProduto'
       Size = 60
     end
-    object cdsItensVendaquantiadade: TFloatField
-      FieldName = 'quantiadade'
+    object cdsItensVendaquantidade: TFloatField
+      DisplayLabel = 'Quantidade'
+      FieldName = 'quantidade'
     end
     object cdsItensVendavalorUnitario: TFloatField
+      DisplayLabel = 'Valor Unitario'
       FieldName = 'valorUnitario'
     end
     object cdsItensVendavalorTotalProduto: TFloatField
+      DisplayLabel = 'Total do Produto'
       FieldName = 'valorTotalProduto'
-    end
-    object cdsItensVendavalorTotalVenda: TAggregateField
-      FieldName = 'valorTotalVenda'
-      DisplayName = ''
-      Expression = 'SUM(ValorTotalProduto)'
     end
   end
   object dtsProdutos: TDataSource

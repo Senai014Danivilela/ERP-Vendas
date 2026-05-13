@@ -8,6 +8,8 @@ inherited frmProVenda: TfrmProVenda
     Height = 367
     ActivePage = tabManutencao
     TabOrder = 0
+    ExplicitLeft = 32
+    ExplicitTop = -6
     ExplicitHeight = 367
     inherited tabListagem: TTabSheet
       ExplicitHeight = 339
@@ -121,6 +123,7 @@ inherited frmProVenda: TfrmProVenda
             Height = 80
             Align = alTop
             TabOrder = 1
+            ExplicitTop = -1
             object Label3: TLabel
               Left = 0
               Top = 18
@@ -166,7 +169,7 @@ inherited frmProVenda: TfrmProVenda
               Width = 81
               Height = 21
               TabStop = False
-              DisplayFormat = ' ,0.00; ,0.00'
+              DisplayFormat = 'R$ ,0.00; ,0.00'
               ReadOnly = True
               TabOrder = 1
             end
@@ -259,7 +262,7 @@ inherited frmProVenda: TfrmProVenda
               Width = 80
               Height = 21
               TabStop = False
-              DisplayFormat = ' ,0.00; ,0.00'
+              DisplayFormat = 'R$ ,0.00; ,0.00'
               ParentColor = True
               ReadOnly = True
               TabOrder = 3
@@ -282,7 +285,7 @@ inherited frmProVenda: TfrmProVenda
             Color = clHighlightText
             DataSource = dtmVenda.dtsItensVenda
             DrawingStyle = gdsClassic
-            FixedColor = 4737096
+            FixedColor = clGray
             Font.Charset = DEFAULT_CHARSET
             Font.Color = clWindowText
             Font.Height = -11
@@ -295,7 +298,7 @@ inherited frmProVenda: TfrmProVenda
             TitleFont.Color = clWhite
             TitleFont.Height = -11
             TitleFont.Name = 'Tahoma'
-            TitleFont.Style = []
+            TitleFont.Style = [fsBold]
             OnDrawColumnCell = DBGridItensVendaDrawColumnCell
             OnDblClick = DBGridItensVendaDblClick
             OnKeyDown = DBGridItensVendaKeyDown
@@ -324,7 +327,7 @@ inherited frmProVenda: TfrmProVenda
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
-                Width = 64
+                Width = 72
                 Visible = True
               end>
           end
@@ -420,6 +423,7 @@ inherited frmProVenda: TfrmProVenda
       DisplayLabel = 'Total Venda'
       FieldName = 'totalVenda'
       Origin = 'totalVenda'
+      DisplayFormat = 'R$ ,0.00;-R$ ,0.00'
       Precision = 18
       Size = 5
     end

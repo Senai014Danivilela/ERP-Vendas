@@ -333,7 +333,8 @@ function TCliente.PodeVender: Boolean;
 begin
   // 🚫 BLOQUEADO
   if Self.statusId = 2 then
-    raise Exception.Create('Cliente BLOQUEADO!');
+    raise Exception.Create('O cliente ' +nome+ ' não pode realizar a compra por que seu Status dentro'+
+   'do sistema está BLOQUEADO ');
 
   Result := True;
 end;
