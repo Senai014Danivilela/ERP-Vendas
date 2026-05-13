@@ -139,6 +139,7 @@ begin
      edtEndereco.Text        :=oCliente.endereco;
      edtBairro.Text          :=oCliente.bairro;
      edtCidade.Text          :=oCliente.cidade;
+     edtUF.Text              :=oCliente.estado;
      edtTelefone.Text        :=oCliente.telefone;
      edtEmail.Text           :=oCliente.email;
      edtDataNascimento.Date  :=oCliente.dataNascimento;
@@ -384,7 +385,7 @@ begin
   oCliente.bairro         := edtBairro.Text;
   oCliente.cep            := edtCEP.Text;
   oCliente.telefone       := edtTelefone.Text;
-//oCliente.uf             := edtUF.Text;
+  oCliente.estado         := edtUF.Text;
   oCliente.email          := edtEmail.Text;
   oCliente.dataNascimento := edtDataNascimento.Date;
   oCliente.statusId       := lkpStatus.KeyValue;
