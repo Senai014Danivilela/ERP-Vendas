@@ -56,6 +56,8 @@ type
     procedure grdListagemDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
       State: TGridDrawState);
     procedure FormShow(Sender: TObject);
+    procedure DBGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+      State: TGridDrawState);
     //procedure edtTotalProdutoChange(Sender: TObject);
 
   private
@@ -335,6 +337,26 @@ procedure TfrmProVenda.DBGridItensVendaDblClick(Sender: TObject);
 begin
   inherited;
   CarregarRegistroSelecionado;
+end;
+
+procedure TfrmProVenda.DBGridItensVendaDrawColumnCell(Sender: TObject; const Rect: TRect; DataCol: Integer; Column: TColumn;
+  State: TGridDrawState);
+ var
+  Grid: TDBGrid;
+begin
+
+  Grid := Sender as TDBGrid;
+
+  //ZEBRAAAARRRRR
+  if not (gdSelected in State) then
+  begin
+    if Odd(Grid.DataSource.DataSet.RecNo) then
+      Grid.Canvas.Brush.Color := clWhite
+    else
+      Grid.Canvas.Brush.Color := $00F0F0F0; // cinza claro
+  end;
+
+  Grid.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure TfrmProVenda.DBGridItensVendaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

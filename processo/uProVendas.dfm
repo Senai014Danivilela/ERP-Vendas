@@ -10,9 +10,6 @@ inherited frmProVenda: TfrmProVenda
     TabOrder = 0
     ExplicitHeight = 367
     inherited tabListagem: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 339
       inherited grdListagem: TDBGrid
         Height = 281
@@ -47,9 +44,6 @@ inherited frmProVenda: TfrmProVenda
       end
     end
     inherited tabManutencao: TTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 791
       ExplicitHeight = 339
       object CATEGORIA: TLabel
         Left = 177
@@ -285,14 +279,24 @@ inherited frmProVenda: TfrmProVenda
             Width = 787
             Height = 155
             Align = alClient
+            Color = clHighlightText
             DataSource = dtmVenda.dtsItensVenda
+            DrawingStyle = gdsClassic
+            FixedColor = 4737096
+            Font.Charset = DEFAULT_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -11
+            Font.Name = 'Tahoma'
+            Font.Style = []
             Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgCancelOnExit]
+            ParentFont = False
             TabOrder = 0
             TitleFont.Charset = DEFAULT_CHARSET
-            TitleFont.Color = clWindowText
+            TitleFont.Color = clWhite
             TitleFont.Height = -11
             TitleFont.Name = 'Tahoma'
             TitleFont.Style = []
+            OnDrawColumnCell = DBGridItensVendaDrawColumnCell
             OnDblClick = DBGridItensVendaDblClick
             OnKeyDown = DBGridItensVendaKeyDown
             Columns = <
