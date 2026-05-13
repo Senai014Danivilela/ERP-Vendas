@@ -6,7 +6,6 @@ inherited frmProVenda: TfrmProVenda
   TextHeight = 13
   inherited pgcPrincipal: TPageControl
     Height = 367
-    ActivePage = tabManutencao
     TabOrder = 0
     ExplicitLeft = 32
     ExplicitTop = -6
@@ -311,23 +310,25 @@ inherited frmProVenda: TfrmProVenda
               item
                 Expanded = False
                 FieldName = 'NomeProduto'
+                Width = 360
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'quantidade'
+                Width = 74
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorUnitario'
-                Width = 64
+                Width = 80
                 Visible = True
               end
               item
                 Expanded = False
                 FieldName = 'valorTotalProduto'
-                Width = 72
+                Width = 108
                 Visible = True
               end>
           end
