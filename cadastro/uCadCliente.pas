@@ -371,14 +371,16 @@ end;
 function TfrmCadCliente.Gravar(EstadoDoCadastro: TEstadoCadastro): Boolean;
 var
   diferenca: Double;
+  saldoAtual: Double;
+  novoStatus: Integer;
 begin
-  // ?? ID
+  // ID
   if edtClienteId.Text <> '' then
     oCliente.codigo := StrToInt(edtClienteId.Text)
   else
     oCliente.codigo := 0;
 
-  // ?? DADOS
+  // DADOS
   oCliente.nome           := edtNome.Text;
   oCliente.endereco       := edtEndereco.Text;
   oCliente.cidade         := edtCidade.Text;
@@ -392,43 +394,55 @@ begin
   oCliente.documentoId    := lkpPessoa.KeyValue;
   oCliente.documento      := edtCpfCnpj.Text;
 
-  //
-  // oCliente.credito := edtCredito.Value;
+  // VALIDAÇÃO: não permite status "positivo" com crédito negativo
+  if EstadoDoCadastro = ecAlterar then
+  begin
+    saldoAtual := oCredito.ObterSaldo(oCliente.codigo);
+    novoStatus := oCliente.statusId;
 
-  //  INSERT OU UPDATE
+    if (saldoAtual < 0) and (novoStatus in [1, 4, 5]) then
+    begin
+      MessageDlg(
+        'Não é possível definir este status.' + #13#10 +
+        'O cliente possui saldo negativo de R$ ' +
+        FormatFloat('#,##0.00', saldoAtual) + '.' + #13#10 +
+        'Regularize o crédito antes de alterar o status.',
+        mtWarning, [mbOK], 0);
+      lkpStatus.SetFocus;
+      Result := False;
+      Exit;
+    end;
+  end;
+
+  // INSERT OU UPDATE
   if EstadoDoCadastro = ecInserir then
     Result := oCliente.Inserir
   else
     Result := oCliente.Atualizar;
 
-  //  CONTROLE DE CRÉDITO (ÚNICO LUGAR)
+  // CONTROLE DE CRÉDITO (ÚNICO LUGAR)
   if Result then
   begin
-    //  NOVO CLIENTE
+    // NOVO CLIENTE
     if EstadoDoCadastro = ecInserir then
     begin
       if edtCredito.Value > 0 then
         oCredito.AdicionarCredito(oCliente.codigo, edtCredito.Value);
     end
-
-    //  ALTERAÇÃO
+    // ALTERAÇÃO
     else
     begin
       diferenca := edtCredito.Value - CreditoOriginal;
-
       if diferenca > 0 then
         oCredito.AdicionarCredito(oCliente.codigo, diferenca)
-
       else if diferenca < 0 then
         oCredito.DescontarCredito(oCliente.codigo, -Abs(diferenca));
     end;
 
-    //  STATUS
+    // STATUS
     oCliente.AtualizarStatus;
   end;
 end;
-
-
 
 
 procedure TfrmCadCliente.grdListagemDrawColumnCell(Sender: TObject;
