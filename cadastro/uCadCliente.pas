@@ -8,7 +8,7 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit,cCadCliente,uEnum, System.ImageList, Vcl.ImgList,System.JSON,
-  System.Net.HttpClient, System.Net.URLClient, RxCurrEdit, cCredito;
+  System.Net.HttpClient, System.Net.URLClient, RxCurrEdit, cCredito, Vcl.Imaging.pngimage;
 
 type
   TfrmCadCliente = class(TForm1)
@@ -77,6 +77,7 @@ type
     FDQListagemcreditoCliente: TFMTBCDField;
     edtTotalCredito: TCurrencyEdit;
     Label12: TLabel;
+    Image6: TImage;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);
     procedure btnAlterarClick(Sender: TObject);

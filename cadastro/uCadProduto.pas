@@ -9,7 +9,7 @@ uses
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
   Vcl.ExtCtrls, Vcl.ComCtrls, RxToolEdit, RxCurrEdit,cCadProduto,uEnum,uDTMConexao,uCadCategoria,cFuncao,uConCategoria,
   Vcl.Menus,
-         Vcl.Imaging.jpeg;
+         Vcl.Imaging.jpeg, Vcl.Imaging.pngimage;
 
 type
   TfrmCadProduto = class(TForm1)
@@ -43,6 +43,7 @@ type
     LimparImagem1: TMenuItem;
     PnlImg: TPanel;
     imgProduto: TImage;
+    Image1: TImage;
     procedure btnAlterarClick(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

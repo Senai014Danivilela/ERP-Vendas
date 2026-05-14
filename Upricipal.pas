@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uDTMConexao, Vcl.Menus,uFrmAtualizaDB,
   Vcl.ComCtrls,cAtulizacaoBancoDeDados,cAtualizacaoTabelaMSSQL,cArquivoIni,RLReport,uTelaHeranca, Vcl.ExtCtrls,uDTMGrafico,
   VclTee.TeeGDIPlus, Data.DB, VCLTee.TeEngine, VCLTee.Series, VCLTee.TeeProcs, VCLTee.Chart, VCLTee.DBChart, Vcl.StdCtrls,cFuncao,
-  cUsuarioLogado,uProCredito,Enter;
+  cUsuarioLogado,uProCredito,Enter, Vcl.Imaging.pngimage;
 
 type
   TMenuPrincipal = class(TForm)
@@ -50,7 +50,7 @@ type
     DBChart1: TDBChart;
     Series1: TPieSeries;
     SAIR1: TMenuItem;
-    Label1: TLabel;
+    Image1: TImage;
     //trmAtualizacaoDashBoard: TTimer;
     procedure mnuuFecharClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

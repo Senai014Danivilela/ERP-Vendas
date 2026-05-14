@@ -2,8 +2,20 @@ inherited frmConCategoria: TfrmConCategoria
   Caption = 'frmConCategoria'
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Panel1: TPanel
+    Color = 8282689
+    ParentBackground = False
+    inherited lblIndice: TLabel
+      Width = 109
+      Caption = 'Campo de Pesquisa'
+      Font.Color = clWhite
+      ExplicitWidth = 109
+    end
+  end
   inherited Panel2: TPanel
     inherited grdPesquisa: TDBGrid
+      ParentFont = False
+      TitleFont.Color = clWhite
       Columns = <
         item
           Expanded = False

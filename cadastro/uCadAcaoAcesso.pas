@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Vcl.ExtCtrls,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
-  Vcl.ComCtrls,cAcaoAcesso,uEnum,uDTMConexao,cUsuarioLogado;
+  Vcl.ComCtrls,cAcaoAcesso,uEnum,uDTMConexao,cUsuarioLogado, Vcl.Imaging.pngimage;
 
 type
   TfrmCadAcaoAcesso = class(TForm1)
@@ -17,6 +17,7 @@ type
     edtAcaoAcessoId: TLabeledEdit;
     edtDescricao: TLabeledEdit;
     edtChave: TLabeledEdit;
+    Image6: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnNovoClick(Sender: TObject);

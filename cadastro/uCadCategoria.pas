@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, uTelaHeranca, Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.DBCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.Mask,
-  Vcl.ExtCtrls, Vcl.ComCtrls,cCadCategoria,uDTMConexao,uEnum;
+  Vcl.ExtCtrls, Vcl.ComCtrls,cCadCategoria,uDTMConexao,uEnum, Vcl.Imaging.pngimage;
 
 type
   TfrmCadCategorias = class(TForm1)
@@ -15,6 +15,7 @@ type
     edtDescricao: TLabeledEdit;
     FDQListagemcategoriaId: TFDAutoIncField;
     FDQListagemdescricao: TStringField;
+    Image6: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnGravarClick(Sender: TObject);
