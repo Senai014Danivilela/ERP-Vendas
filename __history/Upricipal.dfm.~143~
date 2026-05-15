@@ -23,7 +23,7 @@ object MenuPrincipal: TMenuPrincipal
   object Label1: TLabel
     Left = 32
     Top = 440
-    Width = 31
+    Width = 97
     Height = 13
     Caption = 'Label1'
   end
@@ -1713,6 +1713,8 @@ object MenuPrincipal: TMenuPrincipal
         Value = 50.000000000000000000
       end>
     TabOrder = 2
+    ExplicitTop = 89
+    ExplicitHeight = 355
     object DBChart3: TDBChart
       Left = 459
       Top = 171
@@ -1727,6 +1729,8 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 2
+      ExplicitTop = 177
+      ExplicitHeight = 177
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object PieSeries2: TPieSeries
@@ -1801,6 +1805,8 @@ object MenuPrincipal: TMenuPrincipal
       Align = alClient
       BevelInner = bvLowered
       TabOrder = 0
+      ExplicitTop = 177
+      ExplicitHeight = 177
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series2: TFastLineSeries
@@ -1826,6 +1832,7 @@ object MenuPrincipal: TMenuPrincipal
       Chart3DPercent = 10
       Align = alClient
       TabOrder = 1
+      ExplicitHeight = 176
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 13
       object Series3: TBarSeries
@@ -1854,6 +1861,9 @@ object MenuPrincipal: TMenuPrincipal
       View3DOptions.Rotation = 360
       Align = alClient
       TabOrder = 3
+      ExplicitLeft = 465
+      ExplicitTop = 6
+      ExplicitHeight = 166
       DefaultCanvas = 'TGDIPlusCanvas'
       ColorPaletteIndex = 15
       object Series1: TPieSeries

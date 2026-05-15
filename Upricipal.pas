@@ -292,7 +292,7 @@ begin
 
   finally
     frmLogin.Release;
-    //StbPrincipal.Panels[0].Text:='USU RIO: '+oUsuarioLogado.nome;
+    stbPricipal.Panels[0].Text:='USUARIO: '+oUsuarioLogado.nome;
   end;
 end;
 
